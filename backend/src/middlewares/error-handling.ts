@@ -8,6 +8,12 @@ export type ErrorType = {
 
 export default function errorHandler(error: ErrorType, req: Request, res: Response, next: NextFunction) {
 
+    
+    if (error.type === "conflict" || error.type === "unprocessableEntity") {
+        return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
+
+
     if (error.type === "unauthorized") {
         return res.status(httpStatus.UNAUTHORIZED).send(error.message);
     }
