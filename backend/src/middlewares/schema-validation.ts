@@ -1,8 +1,7 @@
 
-import { NextFunction } from "express";
-import { ObjectSchema } from "joi";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
+import { ObjectSchema } from "joi";
 
 export function validate(schema: ObjectSchema, type: 'body' | 'params') {
     return (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +14,7 @@ export function validate(schema: ObjectSchema, type: 'body' | 'params') {
         } else {
             let errorMessage = '';
             error.details.forEach((d) => (errorMessage += d.message + ' '));
-            return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(errorMessage)
+            return res.status(httpStatus.BAD_REQUEST).send(errorMessage)
         }
     };
 }
