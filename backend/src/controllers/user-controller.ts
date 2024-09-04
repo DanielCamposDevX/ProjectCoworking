@@ -8,7 +8,7 @@ import { createUserData } from "../types/user-types";
 async function createUser(req: customRequest, res: Response): Promise<void> {
   const userdata = req.body as createUserData;
   const user = await userServices.createUser(userdata);
-  res.status(201).json(user);
+  res.status(201).json({ id: user.id, email: user.email, nome: user.nome, papel: user.papel  });
 }
 
 

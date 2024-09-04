@@ -57,5 +57,11 @@ describe("Create User", () => {
      }
     const response = await server.post('/api/auth/register').send(newUserData);
     expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("id");
+    expect(response.body).toMatchObject({
+      email: newUserData.email,
+      nome: newUserData.nome,
+      papel: newUserData.papel,
+    });
   })
 })
