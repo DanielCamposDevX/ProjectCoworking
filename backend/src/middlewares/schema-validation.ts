@@ -14,7 +14,7 @@ export function validate(schema: ObjectSchema, type: 'body' | 'params') {
         } else {
             let errorMessage = '';
             error.details.forEach((d) => (errorMessage += d.message + ' '));
-            return res.status(httpStatus.BAD_REQUEST).send(errorMessage)
+            return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(errorMessage)
         }
     };
 }

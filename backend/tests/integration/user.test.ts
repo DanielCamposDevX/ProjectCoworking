@@ -31,7 +31,7 @@ describe("Create User", () => {
       data: 'invalid'
      }
     const response = await server.post('/api/auth/register').send(newUserData);
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
   })
 
 
@@ -44,7 +44,7 @@ describe("Create User", () => {
      }
     await createFakeUser({ email: newUserData.email });
     const response = await server.post('/api/auth/register').send(newUserData);
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.status).toBe(httpStatus.CONFLICT);
     expect(response.text).toBe("Já existe um usuário com esse email cadastrado");
   })
 
