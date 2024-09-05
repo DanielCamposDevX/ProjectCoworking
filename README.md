@@ -297,7 +297,7 @@ Os itens estão separados por níveis, e o nível 1 é o mínimo que esperamos q
 | [ ] | Remover usuários em projetos         |  F B  |
 | [ ] | Tipagem de dados           |  F B  |
 | [ X ] | Registro de usuários no sistema     |  F B  |
-| [ ] | Autenticação via login         |  F B  |
+| [ X ] | Autenticação via login         |  F B  |
 | [ ] | Validações de campos     |  F B  |
 
 
