@@ -7,7 +7,8 @@ const userRouter = Router();
 
 userRouter
     .post("/api/auth/register", validate(userSchema, "body"), userControllers.createUser)
-    .post("/api/auth/login", validate( loginSchema, "body"), userControllers.loginUser);
+    .post("/api/auth/login", validate( loginSchema, "body"), userControllers.loginUser)
+
 
 
 

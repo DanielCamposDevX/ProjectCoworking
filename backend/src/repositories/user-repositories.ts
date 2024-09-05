@@ -22,14 +22,18 @@ async function createSession(id: number) {
             userId: id
         }
     })
-    if (!session) {
-        return await prisma.session.create({
+    if(session){
+        await prisma.session.delete({
+            where: {
+                id: session.id
+            } 
+        })
+    }
+    return await prisma.session.create({
             data: {
                 userId: id
             }
         })
-    }
-    return session
 }
 
 
