@@ -4,3 +4,8 @@ export type createUserData = {
   email: string,
   papel: string,
 }
+
+export type loginUserData = {
+  email: string,
+  senha: string,
+}

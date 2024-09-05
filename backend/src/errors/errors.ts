@@ -16,12 +16,21 @@ function conflict(resource: string | string[]): ErrorType {
 
 function notFound(resource: string | string[]): ErrorType {
    return {
-     type: "conflict",
+     type: "notfound",
      message: `${resource ? resource : "ERROR 404"}`
+  }
+ }
+
+ function unauthorized(resource: string | string[]): ErrorType {
+   return {
+     type: "unauthorized",
+     message: `${resource ? resource : "ERROR 401"}`
   }
  }
 
 
 
 
-export const errors = { unprocEntity, conflict, notFound };
+
+
+export const errors = { unprocEntity, conflict, notFound,unauthorized };

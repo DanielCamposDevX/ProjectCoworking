@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
-import { createUserData } from "types/user-types";
-
+import "dotenv/config";
 import { errors } from 'errors/errors';
+import jwt from 'jsonwebtoken';
 import { userRepositories } from 'repositories/user-repositories';
+import { createUserData, loginUserData } from "types/user-types";
 
 
 
@@ -15,8 +16,19 @@ async function createUser(userData: createUserData) {
     return create;
 }
 
+async function loginUser(userData: loginUserData) {
+    const user = await userRepositories.findUserByEmail(userData.email)
+    if (!user) { throw errors.notFound("Email não cadastrado!") };
+    if (!bcrypt.compareSync(userData.senha, user.senha)) {
+        throw errors.unauthorized("Senha inválida!");
+    }
+    const session = await userRepositories.createSession(user.id);
+    const token = jwt.sign({ token: session.token, id: user.id }, process.env.JWT_KEY, { expiresIn: "1d" })
+    return token;
+}
 
 
 
 
-export const userServices = { createUser };
+
+export const userServices = { createUser, loginUser };

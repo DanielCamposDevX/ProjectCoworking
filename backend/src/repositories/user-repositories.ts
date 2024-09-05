@@ -16,4 +16,21 @@ async function createUser(userData: createUserData) {
 }
 
 
-export const userRepositories = {  createUser, findUserByEmail }
+async function createSession(id: number) {
+    const session = await prisma.session.findFirst({
+        where: {
+            userId: id
+        }
+    })
+    if (!session) {
+        return await prisma.session.create({
+            data: {
+                userId: id
+            }
+        })
+    }
+    return session
+}
+
+
+export const userRepositories = {  createUser, findUserByEmail, createSession }

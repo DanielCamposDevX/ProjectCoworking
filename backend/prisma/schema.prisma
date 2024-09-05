@@ -24,4 +24,12 @@ model Usuario {
   senha    String
   papel    String
   projetos Projeto[] @relation("ProjetosUsuarios")
+  Session  Session?
+}
+
+model Session {
+  id     Int     @id @default(autoincrement())
+  userId Int     @unique
+  user   Usuario @relation(fields: [userId], references: [id])
+  token  String  @unique @default(uuid())
 }

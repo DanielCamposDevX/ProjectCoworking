@@ -1,16 +1,21 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { userServices } from "services/user/user-services";
-import { customRequest } from "../middlewares/jwt-verification";
-import { createUserData } from "../types/user-types";
+import { createUserData, loginUserData } from "../types/user-types";
 
 
 
-async function createUser(req: customRequest, res: Response): Promise<void> {
+async function createUser(req: Request, res: Response): Promise<void> {
   const userdata = req.body as createUserData;
   const user = await userServices.createUser(userdata);
   res.status(201).json({ id: user.id, email: user.email, nome: user.nome, papel: user.papel  });
 }
 
+async function loginUser(req: Request, res: Response) {
+  const userdata = req.body as loginUserData;
+  const token = await userServices.loginUser(userdata)
+  res.status(200).send(token)
+}
 
 
-export const userControllers = { createUser };
+
+export const userControllers = { createUser, loginUser };
