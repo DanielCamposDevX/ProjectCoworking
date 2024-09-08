@@ -1,4 +1,5 @@
 'use client';
+import { useAuth } from '@/app/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { usePost } from '@/hooks/useApi';
@@ -20,12 +21,17 @@ export default function LoginForm() {
 
   const { error, loading, post } = usePost();
 
+  const { setToken } = useAuth();
+
   const onSubmit = (data: loginUserFormData) => {
     post({ url: '/api/auth/login', body: data })
-      .then(() => {
-        router.push('/');
+      .then(res => {
+        setToken(res);
+        router.push('/home');
       })
-      .catch(() => {});
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   return (

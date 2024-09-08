@@ -1,7 +1,7 @@
 import BackGround from '@/assets/blue-geometry.jpg';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import LoginForm from '@/forms/loginForm';
+import LoginForm from '@/forms/login-form';
 import Image from 'next/image';
 import Link from 'next/link';
 import Transition from '../components/default/transitions';

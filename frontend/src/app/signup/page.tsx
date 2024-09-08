@@ -1,4 +1,4 @@
-import SignupForm from '@/forms/signupForm';
+import SignupForm from '@/forms/signup-form';
 import Transition from '../../components/default/transitions';
 import SideImage from './components/sideImage';
 

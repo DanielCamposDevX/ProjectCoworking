@@ -1,6 +1,6 @@
 import { api } from "@/app/config/api";
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export function usePost() {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState<string| null>(null);
@@ -22,4 +22,33 @@ export function usePost() {
   };
 
   return { response, error, loading, post };
+}
+
+export function useGet({ url }: { url: string }) {
+  const [response, setResponse] = useState<unknown>(null);
+  const [error, setError] = useState<string| null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if(api.defaults.headers.common['Authorization'] !== ''){
+      get();
+    }
+  },[api.defaults.headers.common['Authorization']]);
+
+  const get = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await api.get(url)
+      setResponse(res.data);
+      return res.data;
+    } catch (error) {
+      setError((error as AxiosError).response?.data as string || 'Erro desconhecido');
+      return {}
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { response, error, loading, get };
 }
