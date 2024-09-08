@@ -10,6 +10,7 @@ async function getProjects(page = 1, limit = 10) {
 }
 
 async function createProject(data: projectType) {
+   data.data_inicio = new Date(data.data_inicio);
    return await projectsRepositories.createProject(data);
 }
 
