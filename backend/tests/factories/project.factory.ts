@@ -20,3 +20,16 @@ export async function createFakeProject(data:createFakeProjectData) {
       }
   })
 }
+
+export async function insertUserInProject(projectId:number, userId:number) {
+  await prisma.projeto.update({
+    where: { id: projectId },
+    data: {
+      usuarios: {
+        connect: {
+          id: userId
+        }
+      }
+    }
+  })
+}

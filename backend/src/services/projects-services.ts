@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { errors } from "errors/errors";
 import { projectsRepositories } from "repositories/projects-repositories";
+import { userRepositories } from "repositories/user-repositories";
 
 
 
@@ -58,9 +59,45 @@ async function deleteProject(id: number) {
   await projectsRepositories.deleteProject(id);
 }
 
+async function getProjectUsers(id: number, page=1, limit=10) {
+  const project = await projectsRepositories.getProjectById(id);
+  if (!project) {
+    throw errors.notFound('Projeto não encontrado');
+  }
+  const users = await projectsRepositories.getProjectUsers(id, page, limit);
+  return users;
+}
+
+async function postProjectUsers(id: number,userId: number) {
+  const user = await userRepositories.findUserById(userId);
+  if (!user) {
+    throw errors.notFound('Usuário não encontrado');
+  }
+  const project = await projectsRepositories.getProjectById(id);
+  if (!project) {
+    throw errors.notFound('Projeto não encontrado');
+  }
+  await projectsRepositories.postProjectUsers(id, userId);
+  return user;
+}
+
+async function deleteProjectUsers(id: number, userId: number) {
+  console.log(userId,'user')
+  const user = await userRepositories.findUserById(userId);
+  if (!user) {
+    throw errors.notFound('Usuário não encontrado');
+  }
+  const project = await projectsRepositories.getProjectById(id);
+  if (!project) {
+    throw errors.notFound('Projeto não encontrado');
+  }
+
+  await projectsRepositories.deleteProjectUsers(id);
+}
 
 
 
 
 
-export const projectServices = { getProjects , createProject , updateProject,deleteProject };
+
+export const projectServices = { getProjects , createProject , updateProject,deleteProject , getProjectUsers, postProjectUsers, deleteProjectUsers };

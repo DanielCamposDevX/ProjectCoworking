@@ -45,7 +45,72 @@ async function deleteProject(id: number) {
   });
 }
 
+async function getProjectUsers(id: number, page: number, limit: number) {
+  try{
+  const skip = (page - 1) * limit;
+  const project = await prisma.projeto.findUnique({
+    where: { id },
+    select: {
+      usuarios: {
+        select: {
+          id: true
+        },
+        skip,
+        take: limit
+      }
+    }
+  });
+
+  const userDetails = await prisma.usuario.findMany({
+    where: {
+      id: { in: project.usuarios.map(user => user.id) }
+    }
+  });
+
+  const totalUsers = await prisma.usuario.count({
+    where: {
+      projetos: {
+        some: {
+          id
+        }
+      }
+    }
+  });
+
+  return { users: userDetails, total: totalUsers };}catch(err){console.log(err)}
+}
+
+
+async function postProjectUsers(id: number, usuario_id: number) {
+  return await prisma.projeto.update({
+    where: {
+      id
+    },
+    data: {
+      usuarios: {
+        connect: {
+          id: usuario_id
+        }
+      }
+    }
+  });
+}
+
+async function deleteProjectUsers(userId: number) {
+  return await prisma.projeto.update({
+    where: {
+      id: userId
+    },
+    data: {
+      usuarios: {
+        disconnect: {
+          id: userId
+        }
+      }
+    }
+  });
+}
 
 
 
-export const projectsRepositories = { getProjects, createProject, updateProject, getProjectById,deleteProject };
+export const projectsRepositories = { getProjects, createProject, updateProject, getProjectById,deleteProject,getProjectUsers, deleteProjectUsers, postProjectUsers };

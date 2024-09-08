@@ -17,3 +17,7 @@ export const updateProjectSchema = Joi.object({
   data_fim: Joi.string().isoDate().optional(),
   status: Joi.string().valid(...statusEnum).optional() 
 })
+
+export const projectUserSchema = Joi.object({
+  usuario_id: Joi.number().required()
+})
