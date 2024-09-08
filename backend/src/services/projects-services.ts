@@ -82,7 +82,7 @@ async function postProjectUsers(id: number,userId: number) {
 }
 
 async function deleteProjectUsers(id: number, userId: number) {
-  console.log(userId,'user')
+
   const user = await userRepositories.findUserById(userId);
   if (!user) {
     throw errors.notFound('Usuário não encontrado');

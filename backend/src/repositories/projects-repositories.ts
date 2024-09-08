@@ -46,7 +46,6 @@ async function deleteProject(id: number) {
 }
 
 async function getProjectUsers(id: number, page: number, limit: number) {
-  try{
   const skip = (page - 1) * limit;
   const project = await prisma.projeto.findUnique({
     where: { id },
@@ -77,7 +76,7 @@ async function getProjectUsers(id: number, page: number, limit: number) {
     }
   });
 
-  return { users: userDetails, total: totalUsers };}catch(err){console.log(err)}
+  return { users: userDetails, total: totalUsers };
 }
 
 
