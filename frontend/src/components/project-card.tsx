@@ -6,10 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import UpdateProjectForm from '@/forms/update-project-form';
 import { projectType } from '@/types/project-type';
 import { Trash2 } from 'lucide-react';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 
 export default function ProjectCard({ project }: { project: projectType }) {
@@ -42,7 +44,23 @@ export default function ProjectCard({ project }: { project: projectType }) {
         </CardTitle>
       </CardHeader>
       <CardContent className="overflow-hidden p-5 h-2/4">
-        <h1 className="text-justify">{project.status}</h1>
+        <Badge
+          style={{
+            backgroundColor:
+              project.status === 'CONCLUIDO'
+                ? 'green'
+                : project.status === 'EM ANDAMENTO'
+                ? 'yellow'
+                : 'gray',
+          }}
+          className="text-justify"
+        >
+          {project.status === 'CONCLUIDO'
+            ? 'Concluído'
+            : project.status === 'EM ANDAMENTO'
+            ? 'Em andamento'
+            : 'Pendente'}
+        </Badge>
         <h1 className="text-justify">
           {moment(project.data_inicio).format('DD-MM-YYYY')}
         </h1>
@@ -54,8 +72,9 @@ export default function ProjectCard({ project }: { project: projectType }) {
           )}
         </h1>
       </CardContent>
-      <CardFooter className="flex flex-col items-start justi text-sm gap-2 h-1/4">
+      <CardFooter className="flex items-center justify-between text-sm gap-2 h-1/4">
         <p className="text-justify">{project.descricao}</p>
+        <UpdateProjectForm project={project} />
       </CardFooter>
     </Card>
   );

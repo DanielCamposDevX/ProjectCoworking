@@ -18,9 +18,7 @@ export default function Home() {
   }, [response]);
 
   return (
-    <div
-      className={`min-h-screen w-full flex flex-col  items-center bg-[#4CA2A620]`}
-    >
+    <div className={`min-h-screen w-full flex flex-col  items-center `}>
       <main className="mt-16 flex flex-1 flex-col gap-10 p-10 items-center relative">
         {loading ? (
           <Loader2 className="animate-spin h-7 w-7 mt-10" />

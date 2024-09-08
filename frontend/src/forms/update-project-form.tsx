@@ -1,4 +1,5 @@
 'use client';
+import { api } from '@/app/config/api';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -6,7 +7,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,53 +17,85 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { usePost } from '@/hooks/useApi';
+import { useGet } from '@/hooks/useApi';
 import {
-  createProjectFormData,
-  createProjectFormSchema,
+  updateProjectFormData,
+  updateProjectFormSchema,
 } from '@/schemas/project-schema';
+import { projectType } from '@/types/project-type';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertDialogCancel } from '@radix-ui/react-alert-dialog';
-import { LoaderCircle, PlusCircle } from 'lucide-react';
+import {
+  AlertDialogCancel,
+  AlertDialogTrigger,
+} from '@radix-ui/react-alert-dialog';
+import { LoaderCircle, Pencil } from 'lucide-react';
 import moment from 'moment';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export default function CreateProjectForm() {
+export default function UpdateProjectForm({
+  project,
+}: {
+  project: projectType;
+}) {
   const {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
-  } = useForm<createProjectFormData>({
-    resolver: zodResolver(createProjectFormSchema),
+    reset,
+  } = useForm<updateProjectFormData>({
+    resolver: zodResolver(updateProjectFormSchema),
   });
+  const [loading, setLoading] = useState(false);
+  const { response } = useGet({ url: `/api/projetos/${project.id}/usuarios` });
 
-  const { loading, post } = usePost();
+  useEffect(() => {
+    if (project) {
+      const formattedProject = {
+        ...project,
+        data_inicio: moment(project.data_inicio).format('YYYY-MM-DD'),
+        data_fim: moment(project.data_fim).format('YYYY-MM-DD'),
+      };
+      reset(formattedProject as unknown as updateProjectFormData);
+    }
+  }, [response]);
 
-  const onSubmit = (data: createProjectFormData) => {
-    post({
-      url: '/api/projetos',
-      body: {
-        ...data,
-        data_inicio: moment(data.data_inicio).startOf('day').toDate(),
-      },
-    }).then(() => {
-      toast.success('Projeto criado com sucesso');
-      window.location.reload();
-    });
+  const onSubmit = (data: updateProjectFormData) => {
+    setLoading(true);
+    data.data_inicio = moment(data.data_inicio).add(1, 'day').toDate();
+    const dataFim = data.data_fim ? new Date(data.data_fim) : undefined;
+    if (dataFim instanceof Date && isNaN(dataFim.getTime())) {
+      delete data.data_fim;
+    }
+    console.log(data);
+    api
+      .put(`/api/projetos/${project.id}`, data)
+      .then(() => {
+        toast.success('Projeto atualizado com sucesso');
+        // window.location.reload();
+        setLoading(false);
+      })
+      .catch(err => {
+        toast.error(err);
+        setLoading(false);
+      });
   };
+
+  const status = useWatch({ name: 'status', control });
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button className="gap-2">
-          Criar novo projeto <PlusCircle className="h-5 w-5" />
+      <AlertDialogTrigger>
+        <Button variant={'ghost'}>
+          <Pencil className="h-5 w-5" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-[425px] bg-white">
         <AlertDialogHeader>
-          <AlertDialogTitle>Criar Novo Projeto</AlertDialogTitle>
+          <AlertDialogTitle>Editar Projeto</AlertDialogTitle>
           <AlertDialogDescription>
             Preencha os detalhes do projeto abaixo.
           </AlertDialogDescription>
@@ -101,18 +133,25 @@ export default function CreateProjectForm() {
           </div>
 
           <div>
-            <label
-              htmlFor="dataInicio"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label className="block text-sm font-medium text-gray-700">
               Data de Início
             </label>
             <Input
-              id="dataInicio"
               type="date"
               {...register('data_inicio')}
               error={errors?.data_inicio?.message}
               required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Data de Fim
+            </label>
+            <Input
+              type="date"
+              {...register('data_fim')}
+              error={errors?.data_fim?.message}
             />
           </div>
 
@@ -124,10 +163,10 @@ export default function CreateProjectForm() {
               Status
             </label>
             <Select
-              defaultValue=""
+              value={status}
               aria-invalid={errors.status ? 'true' : 'false'}
               required
-              onValueChange={value => setValue('status', value)} // Atualiza o valor no React Hook Form
+              onValueChange={value => setValue('status', value)}
             >
               <SelectTrigger className="w-full border rounded-full py-7 px-3">
                 <SelectValue placeholder="Selecione o status" />
@@ -163,7 +202,7 @@ export default function CreateProjectForm() {
               {loading ? (
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                'Criar projeto'
+                'Editar projeto'
               )}
             </Button>
           </AlertDialogFooter>
