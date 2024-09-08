@@ -1,4 +1,4 @@
-# **Backend** 
+# **Backend**
 
 O backend será responsável por fornecer uma API RESTful que permitirá a interação com os dados do sistema. A API terá endpoints para realizar operações CRUD (Create, Read, Update, Delete) em projetos e usuários além da autenticação do login e registro de usuários usando JWT.
 
@@ -11,9 +11,9 @@ O backend será responsável por fornecer uma API RESTful que permitirá a inter
 
 Solicitamos que façam o uso do Node JS em uma versão 18 ou superior
 
-## Endpoints da API 
+## Endpoints da API
 
-Esperamos os seguintes endpoints da API para este primeiro projeto: 
+Esperamos os seguintes endpoints da API para este primeiro projeto:
 
 ### **Projetos**
 
@@ -30,13 +30,11 @@ Esperamos os seguintes endpoints da API para este primeiro projeto:
       "data_inicio": "2024-01-01",
       "data_fim": "2024-12-31",
       "status": "Em andamento"
-    },
+    }
   ]
   ```
 
   - **Resposta de Erro (404):** Retorna uma mensagem indicando que nenhum projeto foi encontrado.
- 
-    
 
 - **Cadastrar Projeto (POST):** `/api/projetos`
 
@@ -53,8 +51,6 @@ Esperamos os seguintes endpoints da API para este primeiro projeto:
 
   - **Resposta de Sucesso (200):** Retorna o novo projeto criado.
   - **Resposta de Erro (400):** Retorna uma mensagem indicando que o corpo da requisição está incorreto.
- 
-    
 
 - **Editar Projeto (PUT):** `/api/projetos/:id`
 
@@ -72,13 +68,10 @@ Esperamos os seguintes endpoints da API para este primeiro projeto:
 
   - **Resposta de Sucesso (200):** Retorna o projeto atualizado.
   - **Resposta de Erro (400):** Retorna uma mensagem indicando que o corpo da requisição está incorreto.
-    
 
 - **Remover Projeto (DELETE):** `/api/projetos/:id`
   - **Resposta de Sucesso (204):** Confirma que o projeto foi removido com sucesso.
   - **Resposta de Erro (400):** Retorna uma mensagem indicando problemas na remoção.
-    
-
 
 ### **Usuários em Projetos**
 
@@ -93,13 +86,11 @@ Esperamos os seguintes endpoints da API para este primeiro projeto:
       "nome": "Nome do Usuário",
       "email": "email@exemplo.com",
       "papel": "Desenvolvedor"
-    },
+    }
   ]
   ```
 
   - **Resposta de Erro (404):** Retorna uma mensagem indicando que nenhum usuário foi encontrado para o projeto especificado..
- 
-    
 
 - **Cadastrar Usuário em Projeto (POST):** `/api/projetos/{projetoId}/usuarios`
 
@@ -114,12 +105,9 @@ Esperamos os seguintes endpoints da API para este primeiro projeto:
   - **Resposta de Sucesso (201):** Retorna o usuário adicionado ao projeto.
   - **Resposta de Erro (400):** Retorna uma mensagem indicando que o corpo da requisição está incorreto.
 
-    
-    
 - **Remover Usuário em Projeto (DELETE):** `/api/projetos/{projetoId}/usuarios/{usuarioId}`
   - **Resposta de Sucesso (204):** Confirma que o usuário foi removido do projeto com sucesso.
   - **Resposta de Erro (400):** Retorna uma mensagem indicando problemas na remoção.
-
 
 ### **Autenticação**
 
@@ -137,14 +125,14 @@ Esperamos os seguintes endpoints da API para este primeiro projeto:
   ```
 
   - **Resposta de Sucesso (201):** Usuário criado com sucesso:
-    
+
   ```json
   {
-    "id": 1, 
-    "nome": "Nome do Usuário", 
-    "email": "email@exemplo.com", 
-    "papel": "Desenvolvedor", 
-    "token": "jwt_token" 
+    "id": 1,
+    "nome": "Nome do Usuário",
+    "email": "email@exemplo.com",
+    "papel": "Desenvolvedor",
+    "token": "jwt_token"
   }
   ```
 

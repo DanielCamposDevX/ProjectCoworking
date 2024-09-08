@@ -1,13 +1,12 @@
-import "dotenv/config";
-import { errors } from "errors/errors";
-import { projectsRepositories } from "repositories/projects-repositories";
-import { userRepositories } from "repositories/user-repositories";
+import 'dotenv/config';
+import { errors } from 'errors/errors';
+import { projectsRepositories } from 'repositories/projects-repositories';
+import { userRepositories } from 'repositories/user-repositories';
+import { projectType, updateProjectType } from 'types/project-type';
 
-
-
-async function getProjects(page=1, limit=10) {
-    const projects = await projectsRepositories.getProjects(page, limit);
-    return projects;
+async function getProjects(page = 1, limit = 10) {
+  const projects = await projectsRepositories.getProjects(page, limit);
+  return projects;
 }
 
 async function createProject(data: projectType) {
@@ -23,9 +22,11 @@ async function updateProject(id: number, data: updateProjectType) {
   if (data.data_inicio && data.data_fim) {
     const dataInicio = new Date(data.data_inicio);
     const dataFim = new Date(data.data_fim);
-    
+
     if (dataInicio > dataFim) {
-      throw errors.badRequest('Data de início não pode ser maior que a data de fim');
+      throw errors.badRequest(
+        'Data de início não pode ser maior que a data de fim',
+      );
     }
   }
 
@@ -34,7 +35,9 @@ async function updateProject(id: number, data: updateProjectType) {
     const dataFim = new Date(project.data_fim);
 
     if (dataInicio > dataFim) {
-      throw errors.badRequest('Data de início não pode ser maior que a data de fim');
+      throw errors.badRequest(
+        'Data de início não pode ser maior que a data de fim',
+      );
     }
   }
 
@@ -43,7 +46,9 @@ async function updateProject(id: number, data: updateProjectType) {
     const dataInicio = new Date(project.data_inicio);
 
     if (dataFim < dataInicio) {
-      throw errors.badRequest('Data de fim não pode ser anterior à data de início');
+      throw errors.badRequest(
+        'Data de fim não pode ser anterior à data de início',
+      );
     }
   }
 
@@ -59,7 +64,7 @@ async function deleteProject(id: number) {
   await projectsRepositories.deleteProject(id);
 }
 
-async function getProjectUsers(id: number, page=1, limit=10) {
+async function getProjectUsers(id: number, page = 1, limit = 10) {
   const project = await projectsRepositories.getProjectById(id);
   if (!project) {
     throw errors.notFound('Projeto não encontrado');
@@ -68,7 +73,7 @@ async function getProjectUsers(id: number, page=1, limit=10) {
   return users;
 }
 
-async function postProjectUsers(id: number,userId: number) {
+async function postProjectUsers(id: number, userId: number) {
   const user = await userRepositories.findUserById(userId);
   if (!user) {
     throw errors.notFound('Usuário não encontrado');
@@ -82,7 +87,6 @@ async function postProjectUsers(id: number,userId: number) {
 }
 
 async function deleteProjectUsers(id: number, userId: number) {
-
   const user = await userRepositories.findUserById(userId);
   if (!user) {
     throw errors.notFound('Usuário não encontrado');
@@ -95,9 +99,12 @@ async function deleteProjectUsers(id: number, userId: number) {
   await projectsRepositories.deleteProjectUsers(id);
 }
 
-
-
-
-
-
-export const projectServices = { getProjects , createProject , updateProject,deleteProject , getProjectUsers, postProjectUsers, deleteProjectUsers };
+export const projectServices = {
+  getProjects,
+  createProject,
+  updateProject,
+  deleteProject,
+  getProjectUsers,
+  postProjectUsers,
+  deleteProjectUsers,
+};

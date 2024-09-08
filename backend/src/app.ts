@@ -1,9 +1,9 @@
 import cors from 'cors';
-import express, { Express } from "express";
-import "express-async-errors";
-import { connectDb, disconnectDB } from "./config/database";
-import errorHandler from "./middlewares/error-handling";
-import IndexRouter from "./routes/index.routes";
+import express, { Express } from 'express';
+import 'express-async-errors';
+import { connectDb, disconnectDB } from './config/database';
+import errorHandler from './middlewares/error-handling';
+import IndexRouter from './routes/index.routes';
 
 const app = express();
 
@@ -22,10 +22,8 @@ export async function init(): Promise<Express> {
   }
 }
 
-
 export async function close(): Promise<void> {
-   await disconnectDB();
+  await disconnectDB();
 }
-
 
 export default app;

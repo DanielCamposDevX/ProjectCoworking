@@ -1,4 +1,5 @@
-import { prisma } from "../config/database";
+import { projectType, updateProjectType } from 'types/project-type';
+import { prisma } from '../config/database';
 
 async function getProjects(page: number, limit: number) {
   const skip = (page - 1) * limit;
@@ -6,9 +7,9 @@ async function getProjects(page: number, limit: number) {
   const [projects, totalProjects] = await prisma.$transaction([
     prisma.projeto.findMany({
       skip,
-      take: limit
+      take: limit,
     }),
-    prisma.projeto.count() 
+    prisma.projeto.count(),
   ]);
 
   return { projects, total: totalProjects };
@@ -17,31 +18,31 @@ async function getProjects(page: number, limit: number) {
 async function getProjectById(id: number) {
   return await prisma.projeto.findUnique({
     where: {
-      id
-    }
+      id,
+    },
   });
 }
 
-async function createProject(data:projectType) {
+async function createProject(data: projectType) {
   return await prisma.projeto.create({
-    data
+    data,
   });
 }
 
 async function updateProject(id: number, data: updateProjectType) {
   return await prisma.projeto.update({
     where: {
-      id
+      id,
     },
-    data
+    data,
   });
 }
 
 async function deleteProject(id: number) {
   return await prisma.projeto.delete({
     where: {
-      id
-    }
+      id,
+    },
   });
 }
 
@@ -52,64 +53,70 @@ async function getProjectUsers(id: number, page: number, limit: number) {
     select: {
       usuarios: {
         select: {
-          id: true
+          id: true,
         },
         skip,
-        take: limit
-      }
-    }
+        take: limit,
+      },
+    },
   });
 
   const userDetails = await prisma.usuario.findMany({
     where: {
-      id: { in: project.usuarios.map(user => user.id) }
-    }
+      id: { in: project.usuarios.map((user) => user.id) },
+    },
   });
 
   const totalUsers = await prisma.usuario.count({
     where: {
       projetos: {
         some: {
-          id
-        }
-      }
-    }
+          id,
+        },
+      },
+    },
   });
 
   return { users: userDetails, total: totalUsers };
 }
 
-
 async function postProjectUsers(id: number, usuario_id: number) {
   return await prisma.projeto.update({
     where: {
-      id
+      id,
     },
     data: {
       usuarios: {
         connect: {
-          id: usuario_id
-        }
-      }
-    }
+          id: usuario_id,
+        },
+      },
+    },
   });
 }
 
 async function deleteProjectUsers(userId: number) {
   return await prisma.projeto.update({
     where: {
-      id: userId
+      id: userId,
     },
     data: {
       usuarios: {
         disconnect: {
-          id: userId
-        }
-      }
-    }
+          id: userId,
+        },
+      },
+    },
   });
 }
 
-
-
-export const projectsRepositories = { getProjects, createProject, updateProject, getProjectById,deleteProject,getProjectUsers, deleteProjectUsers, postProjectUsers };
+export const projectsRepositories = {
+  getProjects,
+  createProject,
+  updateProject,
+  getProjectById,
+  deleteProject,
+  getProjectUsers,
+  deleteProjectUsers,
+  postProjectUsers,
+};
