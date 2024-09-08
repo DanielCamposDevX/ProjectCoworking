@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { customRequest } from "middlewares/jwt-verification";
 import { userServices } from "services/user/user-services";
 import { createUserData, loginUserData } from "../types/user-types";
 
@@ -16,6 +17,11 @@ async function loginUser(req: Request, res: Response) {
   res.status(200).send(token)
 }
 
+async function getAuthUser(req: customRequest, res: Response) {
+  const user = await userServices.getAuthUser(req.token, req.id)
+  res.status(200).json(user);
+}
 
 
-export const userControllers = { createUser, loginUser };
+
+export const userControllers = { createUser, loginUser, getAuthUser };

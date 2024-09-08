@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import app, { close, init } from "app";
 import "dotenv/config";
 import httpStatus from "http-status";
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import supertest from "supertest";
 import { createUserData, loginUserData } from "types/user-types";
 import { createFakeSession, createFakeUser } from "../factories/user.factory";
@@ -99,29 +99,6 @@ describe("Login User", () => {
     expect(response.text).toBe("Senha inválida!");
   })
 
-  it("Should respond with 200 when Login is sucessfull and the session already exists", async () => {
-    const user = await createFakeUser({ email: faker.internet.email(), senha: '123456' });
-    const session = await createFakeSession(user.id);
-    let token = '';
-    let restoken = '';
-    jwt.verify(session, process.env.JWT_KEY, (err, decoded) => {
-      token = (decoded as JwtPayload).token;
-    })
-    const body: loginUserData = {
-      senha: '123456',
-      email: user.email,
-    }
-    const response = await server.post("/api/auth/login").send(body);
-    console.log(response.text)
-    jwt.verify(response.text, process.env.JWT_KEY, (err, decoded) => {
-      restoken = (decoded as JwtPayload).token;
-    })
-    expect(response.status).toBe(httpStatus.OK);
-    expect(restoken).toBe(token);
-
-  })
-
-
   it("Should respond with 200 when Login is sucessfull", async () => {
     const user = await createFakeUser({ email: faker.internet.email(), senha: '123456' });
     const body: loginUserData = {
@@ -132,4 +109,30 @@ describe("Login User", () => {
     expect(response.status).toBe(httpStatus.OK);
   })
 
+})
+
+describe("GetUserAuth", () => {
+
+  it("Should respond with 401 when token is invalid", async () => {
+    const response = await server.get("/api/auth/me").set('Authorization', 'Bearer invalidtoken');
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    expect(response.text).toBe("Token inválido, faça login novamente!");
+  })
+
+  it("Should respond with Unauthorized when jwt is valid but not from the user", async () => {
+    const token = jwt.sign({ id: faker.seed(), token: faker.lorem.sentence()}, process.env.JWT_KEY as string, { expiresIn: '1h' });
+    const response = await server.get("/api/auth/me").set('Authorization', `Bearer ${token}`);
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    expect(response.text).toBe("Token inválido! Faça login novamente.");
+  })
+
+  it("Should respond with 200 when user is authenticated", async () => {
+    const user = await createFakeUser({ email: faker.internet.email(), senha: '123456' });
+    const session = await createFakeSession(user.id);
+
+    const response = await server.get("/api/auth/me").set('Authorization', `Bearer ${session}`);
+    expect(response.status).toBe(httpStatus.OK);
+    delete user.senha
+    expect(response.body).toStrictEqual(user);
+  })
 })

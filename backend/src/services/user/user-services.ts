@@ -27,8 +27,16 @@ async function loginUser(userData: loginUserData) {
     return token;
 }
 
+async function getAuthUser(token: string,userId:number) {
+    const session = await userRepositories.findSession(token, userId);
+    if(!session || session.token !== token){throw errors.unauthorized("Token inválido! Faça login novamente.")}
+    const user = await userRepositories.findUserById(userId);
+    delete user.senha;
+    return user;
+}
 
 
 
 
-export const userServices = { createUser, loginUser };
+
+export const userServices = { createUser, loginUser,getAuthUser };
