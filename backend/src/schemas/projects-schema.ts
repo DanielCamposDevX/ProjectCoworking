@@ -9,3 +9,11 @@ export const projectSchema = Joi.object({
   data_inicio: Joi.string().isoDate().required(), 
   status: Joi.string().valid(...statusEnum).required() 
 })
+
+export const updateProjectSchema = Joi.object({
+  nome: Joi.string().optional(),
+  descricao: Joi.string().optional(),
+  data_inicio: Joi.string().isoDate().optional(), 
+  data_fim: Joi.string().isoDate().optional(),
+  status: Joi.string().valid(...statusEnum).optional() 
+})

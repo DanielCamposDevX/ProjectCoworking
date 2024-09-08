@@ -17,6 +17,12 @@ async function createProject(req: customRequest, res: Response) {
   res.status(201).json(project);
 }
 
+async function updateProject(req: customRequest, res: Response) {
+  await userServices.getAuthUser(req.token, req.id)
+  const project = await projectServices.updateProject(Number(req.params.id), req.body);
+  res.status(200).json(project);
+}
 
 
-export const projectControllers = { getProjects, createProject };
+
+export const projectControllers = { getProjects, createProject, updateProject };

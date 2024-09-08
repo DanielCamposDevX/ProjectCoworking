@@ -14,12 +14,30 @@ async function getProjects(page: number, limit: number) {
   return { projects, total: totalProjects };
 }
 
+async function getProjectById(id: number) {
+  return await prisma.projeto.findUnique({
+    where: {
+      id
+    }
+  });
+}
+
 async function createProject(data:projectType) {
   return await prisma.projeto.create({
     data
   });
 }
 
+async function updateProject(id: number, data: updateProjectType) {
+  return await prisma.projeto.update({
+    where: {
+      id
+    },
+    data
+  });
+}
 
 
-export const projectsRepositories = { getProjects, createProject }
+
+
+export const projectsRepositories = { getProjects, createProject, updateProject, getProjectById };

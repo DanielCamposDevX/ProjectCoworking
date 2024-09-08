@@ -28,9 +28,16 @@ function notFound(resource: string | string[]): ErrorType {
   }
  }
 
+ function badRequest(resource: string | string[]): ErrorType {
+   return {
+     type: "badRequest",
+     message: `${resource}`
+   }
+}
 
 
 
 
 
-export const errors = { unprocEntity, conflict, notFound,unauthorized };
+
+export const errors = { unprocEntity, conflict, notFound,unauthorized,badRequest };

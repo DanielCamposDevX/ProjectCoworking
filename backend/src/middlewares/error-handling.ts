@@ -23,6 +23,9 @@ export default function errorHandler(error: ErrorType, req: Request, res: Respon
     if (error.type === "notfound") {
         return res.status(httpStatus.NOT_FOUND).send(error.message);
     }
+    if (error.type === "badRequest") {
+        return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
 
 
 
