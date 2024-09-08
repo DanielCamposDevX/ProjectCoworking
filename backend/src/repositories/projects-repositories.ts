@@ -37,7 +37,15 @@ async function updateProject(id: number, data: updateProjectType) {
   });
 }
 
+async function deleteProject(id: number) {
+  return await prisma.projeto.delete({
+    where: {
+      id
+    }
+  });
+}
 
 
 
-export const projectsRepositories = { getProjects, createProject, updateProject, getProjectById };
+
+export const projectsRepositories = { getProjects, createProject, updateProject, getProjectById,deleteProject };

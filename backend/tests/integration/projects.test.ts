@@ -175,3 +175,37 @@ describe("Update projects", () => {
     expect(response.body).toHaveProperty('id');
   })
 })
+
+describe("Delete projects", () => {
+  
+  it("Should respond with 401 when token is invalid", async () => {
+    const response = await server.delete(`/api/projetos/${faker.number.int()}`).set('Authorization', 'Bearer invalidtoken');
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    expect(response.text).toBe("Token inválido, faça login novamente!");
+  })
+
+  it("Should respond with Unauthorized when jwt is valid but not from the user", async () => {
+    const token = jwt.sign({ id: faker.seed(), token: faker.lorem.sentence()}, process.env.JWT_KEY as string, { expiresIn: '1h' });
+    const response = await server.delete(`/api/projetos/${faker.number.int()}`).set('Authorization', `Bearer ${token}`).send({
+      nome: faker.lorem.sentence(),
+      descricao: faker.lorem.sentence(),
+      status: "Pendente",
+      data_inicio: faker.date.recent(),
+    });
+    expect(response.status).toBe(httpStatus.UNAUTHORIZED);
+    expect(response.text).toBe("Token inválido! Faça login novamente.");
+  })
+  
+  it("Should respond with 401 when deleted", async () => {
+    const user = await createFakeUser({ email: faker.internet.email(), senha: '123456' });
+    const session = await createFakeSession(user.id);
+    const project = await createFakeProject({});
+    const response = await server.delete(`/api/projetos/${project.id}`).set('Authorization', `Bearer ${session}`).send({
+      nome: faker.lorem.sentence(),
+      descricao: faker.lorem.sentence(),
+      status: "Pendente",
+      data_inicio: faker.date.recent(),
+    });
+    expect(response.status).toBe(httpStatus.NO_CONTENT);
+  })
+})

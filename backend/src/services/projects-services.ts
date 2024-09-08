@@ -49,9 +49,18 @@ async function updateProject(id: number, data: updateProjectType) {
   return await projectsRepositories.updateProject(id, data);
 }
 
+async function deleteProject(id: number) {
+  const project = await projectsRepositories.getProjectById(id);
+  if (!project) {
+    throw errors.notFound('Projeto não encontrado');
+  }
+
+  await projectsRepositories.deleteProject(id);
+}
 
 
 
 
 
-export const projectServices = { getProjects , createProject , updateProject };
+
+export const projectServices = { getProjects , createProject , updateProject,deleteProject };

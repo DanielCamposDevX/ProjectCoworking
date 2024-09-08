@@ -23,6 +23,12 @@ async function updateProject(req: customRequest, res: Response) {
   res.status(200).json(project);
 }
 
+async function deleteProject(req: customRequest, res: Response) {
+  await userServices.getAuthUser(req.token, req.id)
+  await projectServices.deleteProject(Number(req.params.id));
+  res.status(204).send();
+}
 
 
-export const projectControllers = { getProjects, createProject, updateProject };
+
+export const projectControllers = { getProjects, createProject, updateProject,deleteProject };

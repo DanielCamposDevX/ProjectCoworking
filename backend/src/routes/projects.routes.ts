@@ -10,6 +10,7 @@ projectRouter
     .get("/api/projetos", authUser, projectControllers.getProjects)
     .post("/api/projetos",authUser, validate(projectSchema, "body"), projectControllers.createProject)
     .put("/api/projetos/:id",authUser, validate(updateProjectSchema, "body"), projectControllers.updateProject)
+    .delete("/api/projetos/:id",authUser, projectControllers.deleteProject);
 
     
 
