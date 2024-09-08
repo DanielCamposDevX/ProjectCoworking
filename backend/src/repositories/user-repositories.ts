@@ -1,5 +1,5 @@
-import { prisma } from '../config/database';
-import { createUserData } from '../types/user-types';
+import { prisma } from '../config/database.js';
+import { createUserData } from '../types/user-types.js';
 
 async function findUserByEmail(email: string) {
    return await prisma.usuario.findFirst({

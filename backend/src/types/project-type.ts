@@ -1,7 +1,9 @@
+import { StatusProjeto } from '@prisma/client';
+
 export type projectType = {
    nome: string;
    descricao?: string;
-   status: string;
+   status: StatusProjeto;
    data_inicio: Date;
    data_fim?: Date;
 };
@@ -9,7 +11,7 @@ export type projectType = {
 export type updateProjectType = {
    nome?: string;
    descricao?: string;
-   status?: string;
+   status?: StatusProjeto;
    data_inicio?: Date;
    data_fim?: Date;
 };

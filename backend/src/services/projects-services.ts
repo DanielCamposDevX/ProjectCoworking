@@ -1,8 +1,8 @@
 import 'dotenv/config';
-import { errors } from 'errors/errors';
-import { projectsRepositories } from 'repositories/projects-repositories';
-import { userRepositories } from 'repositories/user-repositories';
-import { projectType, updateProjectType } from 'types/project-type';
+import { errors } from '../errors/errors.js';
+import { projectsRepositories } from '../repositories/projects-repositories';
+import { userRepositories } from '../repositories/user-repositories.js';
+import { projectType, updateProjectType } from '../types/project-type.js';
 
 async function getProjects(page = 1, limit = 10) {
    const projects = await projectsRepositories.getProjects(page, limit);

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { customRequest } from 'middlewares/jwt-verification';
-import { userServices } from 'services/user-services';
-import { createUserData, loginUserData } from '../types/user-types';
+import { customRequest } from '../middlewares/jwt-verification.js';
+import { userServices } from '../services/user-services.js';
+import { createUserData, loginUserData } from '../types/user-types.js';
 
 async function createUser(req: Request, res: Response): Promise<void> {
    const userdata = req.body as createUserData;

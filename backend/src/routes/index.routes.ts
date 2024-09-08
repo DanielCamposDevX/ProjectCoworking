@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import projectRouter from './projects.routes';
-import userRouter from './user.routes';
+import projectRouter from './projects.routes.js';
+import userRouter from './user.routes.js';
 
 const IndexRouter = Router();
 IndexRouter.use(userRouter).use(projectRouter);

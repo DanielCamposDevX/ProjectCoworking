@@ -1,4 +1,4 @@
-import { ErrorType } from 'middlewares/error-handling';
+import { ErrorType } from '../middlewares/error-handling.js';
 
 function unprocEntity(resource: string | string[]): ErrorType {
    return {

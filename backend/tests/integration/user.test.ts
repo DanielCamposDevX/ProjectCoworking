@@ -4,7 +4,7 @@ import 'dotenv/config';
 import httpStatus from 'http-status';
 import jwt from 'jsonwebtoken';
 import supertest from 'supertest';
-import { createUserData, loginUserData } from 'types/user-types';
+import { createUserData, loginUserData } from '../../src/types/user-types';
 import { createFakeSession, createFakeUser } from '../factories/user.factory';
 import { cleanDb } from '../helpers';
 

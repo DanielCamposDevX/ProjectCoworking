@@ -1,5 +1,5 @@
-import { projectType, updateProjectType } from 'types/project-type';
-import { prisma } from '../config/database';
+import { prisma } from '../config/database.js';
+import { projectType, updateProjectType } from '../types/project-type.js';
 
 async function getProjects(page: number, limit: number) {
    const skip = (page - 1) * limit;

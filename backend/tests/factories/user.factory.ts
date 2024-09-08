@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import bcrypt from 'bcrypt';
-import { prisma } from 'config/database';
 import jwt from 'jsonwebtoken';
+import { prisma } from '../../src/config/database';
 
 type createfakeUserData = {
    senha?: string;

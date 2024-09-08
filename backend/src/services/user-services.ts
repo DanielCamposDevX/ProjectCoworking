@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
-import { errors } from 'errors/errors';
 import jwt from 'jsonwebtoken';
-import { userRepositories } from 'repositories/user-repositories';
-import { createUserData, loginUserData } from 'types/user-types';
+import { errors } from '../errors/errors.js';
+import { userRepositories } from '../repositories/user-repositories.js';
+import { createUserData, loginUserData } from '../types/user-types.js';
 
 async function createUser(userData: createUserData) {
    const exists = await userRepositories.findUserByEmail(userData.email);

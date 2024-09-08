@@ -1,9 +1,9 @@
 import cors from 'cors';
 import express, { Express } from 'express';
 import 'express-async-errors';
-import { connectDb, disconnectDB } from './config/database';
-import errorHandler from './middlewares/error-handling';
-import IndexRouter from './routes/index.routes';
+import { connectDb, disconnectDB } from './config/database.js';
+import errorHandler from './middlewares/error-handling.js';
+import IndexRouter from './routes/index.routes.js';
 
 const app = express();
 

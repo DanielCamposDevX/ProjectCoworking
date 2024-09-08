@@ -1,12 +1,12 @@
-import { projectControllers } from 'controllers/projects-controller';
 import { Router } from 'express';
-import { authUser } from 'middlewares/jwt-verification';
-import { validate } from 'middlewares/schema-validation';
+import { projectControllers } from '../controllers/projects-controller.js';
+import { authUser } from '../middlewares/jwt-verification.js';
+import { validate } from '../middlewares/schema-validation.js';
 import {
    projectSchema,
    projectUserSchema,
    updateProjectSchema,
-} from 'schemas/projects-schema';
+} from '../schemas/projects-schema.js';
 
 const projectRouter = Router();
 

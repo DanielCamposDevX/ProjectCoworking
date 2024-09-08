@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { customRequest } from 'middlewares/jwt-verification';
-import { projectServices } from 'services/projects-services';
-import { userServices } from 'services/user-services';
+import { customRequest } from '../middlewares/jwt-verification.js';
+import { projectServices } from '../services/projects-services.js';
+import { userServices } from '../services/user-services.js';
 
 async function getProjects(req: customRequest, res: Response) {
    await userServices.getAuthUser(req.token, req.id);

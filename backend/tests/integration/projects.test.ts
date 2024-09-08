@@ -104,7 +104,7 @@ describe('Post projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.recent(),
          });
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
@@ -123,7 +123,7 @@ describe('Post projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.recent(),
          });
       expect(response.status).toBe(httpStatus.CREATED);
@@ -167,7 +167,7 @@ describe('Update projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.recent(),
          });
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
@@ -186,7 +186,7 @@ describe('Update projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.past(),
             data_fim: faker.date.future(),
          });
@@ -206,7 +206,7 @@ describe('Update projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.future(),
             data_fim: faker.date.past(),
          });
@@ -226,7 +226,7 @@ describe('Update projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.past(),
             data_fim: faker.date.future(),
          });
@@ -256,7 +256,7 @@ describe('Delete projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.recent(),
          });
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
@@ -276,7 +276,7 @@ describe('Delete projects', () => {
          .send({
             nome: faker.lorem.sentence(),
             descricao: faker.lorem.sentence(),
-            status: 'Pendente',
+            status: 'PENDENTE',
             data_inicio: faker.date.recent(),
          });
       expect(response.status).toBe(httpStatus.NO_CONTENT);

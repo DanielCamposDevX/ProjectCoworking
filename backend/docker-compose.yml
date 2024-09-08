@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  # Serviço do MySQL
+  mysql:
+    image: mysql:latest
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: codi
+      MYSQL_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Serviço da aplicação Node.js
+  app:
+    build: .
+    container_name: codi-backend
+    environment:
+      DATABASE_URL: mysql://root:root@mysql:3306/codi?allowPublicKeyRetrieval=true
+      JWT_KEY: secreta
+    working_dir: /usr/src/codi
+    command: bash -c "npx prisma migrate dev && npm run start"
+    ports:
+      - "4000:4000" 
+    depends_on:
+      - mysql
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
