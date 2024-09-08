@@ -14,6 +14,12 @@ async function getProjects(page: number, limit: number) {
   return { projects, total: totalProjects };
 }
 
+async function createProject(data:projectType) {
+  return await prisma.projeto.create({
+    data
+  });
+}
 
 
-export const projectsRepositories = { getProjects }
+
+export const projectsRepositories = { getProjects, createProject }

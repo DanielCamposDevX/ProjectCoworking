@@ -28,6 +28,6 @@ export async function createFakeSession(userId: number) {
           userId
       }
   });
-  const token = jwt.sign({ token: session.token, id: session.userId }, process.env.JWT_KEY, { expiresIn: 300 })
+  const token = jwt.sign({ token: session.token, id: session.userId }, process.env.JWT_KEY, { expiresIn: '1d' })
   return token;
 }

@@ -1,0 +1,11 @@
+import Joi from "joi";
+
+
+const statusEnum = ['Pendente', 'Em andamento', 'Concluído'];
+
+export const projectSchema = Joi.object({
+  nome: Joi.string().required(),
+  descricao: Joi.string().optional(),
+  data_inicio: Joi.string().isoDate().required(), 
+  status: Joi.string().valid(...statusEnum).required() 
+})

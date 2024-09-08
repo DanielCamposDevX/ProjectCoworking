@@ -11,6 +11,12 @@ async function getProjects(req: customRequest, res: Response) {
   res.status(200).json(projects);
 }
 
+async function createProject(req: customRequest, res: Response) {
+  await userServices.getAuthUser(req.token, req.id)
+  const project = await projectServices.createProject(req.body);
+  res.status(201).json(project);
+}
 
 
-export const projectControllers = { getProjects };
+
+export const projectControllers = { getProjects, createProject };

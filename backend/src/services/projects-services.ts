@@ -8,9 +8,13 @@ async function getProjects(page=1, limit=10) {
     return projects;
 }
 
+async function createProject(data) {
+  return await projectsRepositories.createProject(data);
+}
 
 
 
 
 
-export const projectServices = { getProjects};
+
+export const projectServices = { getProjects , createProject};
