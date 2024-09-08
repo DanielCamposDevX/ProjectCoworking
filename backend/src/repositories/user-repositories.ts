@@ -2,60 +2,60 @@ import { prisma } from '../config/database';
 import { createUserData } from '../types/user-types';
 
 async function findUserByEmail(email: string) {
-  return await prisma.usuario.findFirst({
-    where: {
-      email,
-    },
-  });
+   return await prisma.usuario.findFirst({
+      where: {
+         email,
+      },
+   });
 }
 
 async function findUserById(id: number) {
-  return await prisma.usuario.findFirst({
-    where: {
-      id,
-    },
-  });
+   return await prisma.usuario.findFirst({
+      where: {
+         id,
+      },
+   });
 }
 
 async function findSession(token: string, userId: number) {
-  return await prisma.session.findFirst({
-    where: {
-      token,
-      userId,
-    },
-  });
+   return await prisma.session.findFirst({
+      where: {
+         token,
+         userId,
+      },
+   });
 }
 
 async function createUser(userData: createUserData) {
-  return await prisma.usuario.create({
-    data: userData,
-  });
+   return await prisma.usuario.create({
+      data: userData,
+   });
 }
 
 async function createSession(id: number) {
-  const session = await prisma.session.findFirst({
-    where: {
-      userId: id,
-    },
-  });
-  if (session) {
-    await prisma.session.delete({
+   const session = await prisma.session.findFirst({
       where: {
-        id: session.id,
+         userId: id,
       },
-    });
-  }
-  return await prisma.session.create({
-    data: {
-      userId: id,
-    },
-  });
+   });
+   if (session) {
+      await prisma.session.delete({
+         where: {
+            id: session.id,
+         },
+      });
+   }
+   return await prisma.session.create({
+      data: {
+         userId: id,
+      },
+   });
 }
 
 export const userRepositories = {
-  findUserById,
-  findSession,
-  createUser,
-  findUserByEmail,
-  createSession,
+   findUserById,
+   findSession,
+   createUser,
+   findUserByEmail,
+   createSession,
 };

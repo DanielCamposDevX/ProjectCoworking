@@ -13,17 +13,17 @@ app.use(IndexRouter);
 app.use(errorHandler);
 
 export async function init(): Promise<Express> {
-  try {
-    await connectDb();
-    return app;
-  } catch (err) {
-    console.error('Erro ao conectar com o banco de dados:', err);
-    return Promise.reject(err);
-  }
+   try {
+      await connectDb();
+      return app;
+   } catch (err) {
+      console.error('Erro ao conectar com o banco de dados:', err);
+      return Promise.reject(err);
+   }
 }
 
 export async function close(): Promise<void> {
-  await disconnectDB();
+   await disconnectDB();
 }
 
 export default app;
