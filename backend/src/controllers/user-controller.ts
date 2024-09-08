@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { customRequest } from "middlewares/jwt-verification";
-import { userServices } from "services/user/user-services";
+import { userServices } from "services/user-services";
 import { createUserData, loginUserData } from "../types/user-types";
 
 

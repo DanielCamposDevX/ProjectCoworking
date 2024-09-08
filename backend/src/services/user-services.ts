@@ -39,4 +39,5 @@ async function getAuthUser(token: string,userId:number) {
 
 
 
+
 export const userServices = { createUser, loginUser,getAuthUser };

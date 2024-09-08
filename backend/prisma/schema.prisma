@@ -7,14 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum StatusProjeto {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
 model Projeto {
-  id          Int       @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   nome        String
   descricao   String?
   data_inicio DateTime
   data_fim    DateTime?
-  status      String
-  usuarios    Usuario[] @relation("ProjetosUsuarios")
+  status      StatusProjeto
+  usuarios    Usuario[]     @relation("ProjetosUsuarios")
 }
 
 model Usuario {
