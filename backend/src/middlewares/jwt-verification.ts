@@ -13,7 +13,7 @@ export async function authUser(
    res: Response,
    next: NextFunction,
 ) {
-   const token = req.headers['authorization']?.replace('Bearer ', '');
+   const token = req.headers.authorization?.replace('Bearer ', '');
 
    if (!token) {
       return res

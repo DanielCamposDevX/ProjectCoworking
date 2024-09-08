@@ -63,7 +63,7 @@ async function postProjectUsers(req: customRequest, res: Response) {
 
 async function deleteProjectUsers(req: customRequest, res: Response) {
    await userServices.getAuthUser(req.token, req.id);
-   if (isNaN(Number(req.params.usuario_id))) {
+   if (Number.isNaN(Number(req.params.usuario_id))) {
       res.status(400).send('Usuário inválido');
    }
    await projectServices.deleteProjectUsers(

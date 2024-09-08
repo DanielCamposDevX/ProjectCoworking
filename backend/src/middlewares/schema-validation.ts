@@ -13,7 +13,7 @@ export function validate(schema: ObjectSchema, type: 'body' | 'params') {
          next();
       } else {
          let errorMessage = '';
-         error.details.forEach((d) => (errorMessage += d.message + ' '));
+         error.details.forEach((d) => (errorMessage += `${d.message} `));
          return res.status(httpStatus.UNPROCESSABLE_ENTITY).send(errorMessage);
       }
    };
