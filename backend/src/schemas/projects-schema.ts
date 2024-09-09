@@ -3,8 +3,8 @@ import Joi from 'joi';
 const statusEnum = ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDO'];
 
 export const projectSchema = Joi.object({
-   nome: Joi.string().required(),
-   descricao: Joi.string().optional(),
+   nome: Joi.string().required().max(50),
+   descricao: Joi.string().optional().max(180),
    data_inicio: Joi.string().isoDate().required(),
    status: Joi.string()
       .valid(...statusEnum)
@@ -12,8 +12,8 @@ export const projectSchema = Joi.object({
 });
 
 export const updateProjectSchema = Joi.object({
-   nome: Joi.string().optional(),
-   descricao: Joi.string().optional(),
+   nome: Joi.string().optional().max(50),
+   descricao: Joi.string().optional().max(180),
    data_inicio: Joi.string().isoDate().optional(),
    data_fim: Joi.string().isoDate().optional(),
    status: Joi.string()
