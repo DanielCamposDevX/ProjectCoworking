@@ -129,7 +129,9 @@ export function UsersCommand({
                 <TableHeader>
                   <TableRow>
                     <TableHead>Nome</TableHead>
-                    <TableHead className="hidden lg:flex">Email</TableHead>
+                    <TableHead className="hidden lg:flex lg:justify-end lg:items-end">
+                      Email
+                    </TableHead>
                     <TableHead>Papel</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -137,7 +139,7 @@ export function UsersCommand({
                   {users.map(user => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.nome}</TableCell>
-                      <TableCell className="hidden lg:flex">
+                      <TableCell className="hidden lg:flex lg:justify-end lg:items-end">
                         {user.email}
                       </TableCell>
                       <TableCell>{user.papel}</TableCell>

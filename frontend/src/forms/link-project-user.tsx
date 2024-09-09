@@ -122,7 +122,7 @@ export default function LinkProjectUserForm({
         </Table>
         <DialogFooter className="flex justify-center items-center gap-2 w-full">
           <Button
-            className=" z-50 border text-base px-8 py-3 rounded-full mt-4 "
+            className=" z-50 border text-base px-8 py-6 rounded-full mt-4 "
             variant={'secondary'}
             onClick={() => handleClose(false)}
           >
