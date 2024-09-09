@@ -113,7 +113,7 @@ export function UsersCommand({
         Adicionar {open ? <ChevronUp /> : <ChevronDown />}
       </Button>
       {open && (
-        <Command className="rounded-lg border shadow-md md:min-w-[450px] max-w-full h-52 lg:h-min  absolute z-50 top-200 left-0">
+        <Command className="rounded-lg border shadow-md md:min-w-[450px] max-w-full h-52 lg:h-min  absolute z-50 top-200 left-0 lg:left-2/3 ">
           <CommandInput
             placeholder="Pesquisar"
             value={search}

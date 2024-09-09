@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function LoginForm() {
@@ -22,7 +23,15 @@ export default function LoginForm() {
 
   const { error, loading, post } = usePost();
 
-  const { setToken } = useAuth();
+  const { setToken, token } = useAuth();
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('PM-token');
+    if (storedToken) {
+      setToken(storedToken);
+      router.push('/home');
+    }
+  }, [token]);
 
   const onSubmit = (data: loginUserFormData) => {
     post({ url: '/api/auth/login', body: data })
