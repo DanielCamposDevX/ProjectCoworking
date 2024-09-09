@@ -71,7 +71,7 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
           Criar novo projeto <PlusCircle className="h-5 w-5" />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="sm:max-w-[425px] bg-white">
+      <AlertDialogContent className="sm:max-w-[425px] bg-white p-10">
         <AlertDialogHeader>
           <AlertDialogTitle>Criar Novo Projeto</AlertDialogTitle>
           <AlertDialogDescription>

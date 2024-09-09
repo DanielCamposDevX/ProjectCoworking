@@ -7,6 +7,10 @@ export type projectType = {
   status: statusProjeto;
   data_inicio: Date;
   data_fim?: Date;
+  created_by?: number;
+  _count?: {
+    usuarios: number;
+  };
 };
 
 export type updateProjectType = {
@@ -15,4 +19,8 @@ export type updateProjectType = {
   status?: statusProjeto;
   data_inicio?: Date;
   data_fim?: Date;
+  created_by?: number;
+  _count?: {
+    usuarios: number;
+  };
 };

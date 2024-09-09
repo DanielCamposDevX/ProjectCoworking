@@ -6,7 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import LinkProjectUserForm from '@/forms/link-project-user';
 import UpdateProjectForm from '@/forms/update-project-form';
+import { useConfirmationDialog } from '@/hooks/useConfirmationDialog';
 import { projectType } from '@/types/project-type';
 import { Trash2 } from 'lucide-react';
 import moment from 'moment';
@@ -39,17 +41,24 @@ export default function ProjectCard({
   project: projectType;
   get: () => void;
 }) {
-  function handleDelete() {
-    api
-      .delete(`/api/projetos/${project.id}`)
-      .then(() => {
-        toast.success('Projeto removido com sucesso');
-        window.location.reload();
-      })
-      .catch(err => {
-        toast.error(err.response.data);
-      });
+  async function handleDelete() {
+    const result = await confirm();
+    if (result) {
+      api
+        .delete(`/api/projetos/${project.id}`)
+        .then(() => {
+          toast.success('Projeto removido com sucesso');
+          get();
+        })
+        .catch(err => {
+          toast.error(err.response.data);
+        });
+    } else {
+      console.log('Ação de exclusão cancelada.');
+    }
   }
+
+  const { ConfirmationDialog, confirm } = useConfirmationDialog();
 
   return (
     <Card className="w-[300px] bg-card min-h-[200px] rounded-3xl p-2 flex flex-col gap-2 hover:cursor-pointer transition-all hover:shadow-md hover:shadow-blue-100">
@@ -57,7 +66,9 @@ export default function ProjectCard({
         <CardTitle className="text-center text-lg font-bold text-primary flex relative w-full justify-between items-center">
           {project.nome}
           <div className="flex gap-0 justify-end items-center">
+            <LinkProjectUserForm project={project} get={get} />
             <UpdateProjectForm project={project} get={get} />
+            <ConfirmationDialog />
             <Button
               variant={'ghost'}
               className="p-2 rounded-full"
@@ -79,7 +90,9 @@ export default function ProjectCard({
           Fim:{' '}
           {project.data_fim && moment(project.data_fim).format('DD/MM/YYYY')}
         </h1>
-        <p className="text-justify text-sm mt-4">X pessoas no projeto</p>
+        <p className="text-justify text-sm mt-4">
+          {project?._count?.usuarios} pessoas no projeto
+        </p>
       </CardContent>
 
       <CardFooter className="flex flex-col justify-start items-start text-sm gap-2 h-1/4">

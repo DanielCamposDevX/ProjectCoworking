@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useGet } from '@/hooks/useApi';
 import {
   updateProjectFormData,
   updateProjectFormSchema,
@@ -52,7 +51,6 @@ export default function UpdateProjectForm({
     resolver: zodResolver(updateProjectFormSchema),
   });
   const [loading, setLoading] = useState(false);
-  const { response } = useGet({ url: `/api/projetos/${project.id}/usuarios` });
 
   useEffect(() => {
     if (project) {
@@ -63,7 +61,7 @@ export default function UpdateProjectForm({
       };
       reset(formattedProject as unknown as updateProjectFormData);
     }
-  }, [response]);
+  }, [project]);
 
   const onSubmit = (data: updateProjectFormData) => {
     setLoading(true);
@@ -94,7 +92,7 @@ export default function UpdateProjectForm({
           <Pencil className="h-5 w-5" />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="sm:max-w-[425px] bg-white">
+      <AlertDialogContent className="sm:max-w-[425px] bg-white p-10">
         <AlertDialogHeader>
           <AlertDialogTitle>Editar Projeto</AlertDialogTitle>
           <AlertDialogDescription>
