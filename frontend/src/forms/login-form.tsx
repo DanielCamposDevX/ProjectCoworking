@@ -6,6 +6,7 @@ import { usePost } from '@/hooks/useApi';
 import { loginUserFormData, loginUserFormSchema } from '@/schemas/user-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
@@ -61,7 +62,7 @@ export default function LoginForm() {
       </div>
       <label className="text-destructive text-sm">{error}</label>
       <Button
-        className=" z-50 text-white text-base px-8 py-6 rounded-full mt-4"
+        className=" z-50 text-white text-base px-14 py-6 rounded-full mt-4"
         variant={'default'}
         disabled={loading}
       >
@@ -71,6 +72,14 @@ export default function LoginForm() {
           'Login'
         )}
       </Button>
+      <Link href={'/signup'}>
+        <Button
+          className="z-50 text-base px-8 py-6 rounded-full mt-4 flex lg:hidden"
+          variant={'outline'}
+        >
+          Criar conta
+        </Button>
+      </Link>
     </form>
   );
 }

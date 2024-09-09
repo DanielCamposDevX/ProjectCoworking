@@ -1,37 +1,24 @@
-import BackGround from '@/assets/blue-geometry.jpg';
-import { Button } from '@/components/ui/button';
+import SideImage from '@/components/side-image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import LoginForm from '@/forms/login-form';
-import Image from 'next/image';
-import Link from 'next/link';
 import Transition from '../components/default/transitions';
 
 export default function LoginPage() {
   return (
-    <Transition>
-      <div className="h-screen w-full flex justify-center items-center bg-[#4CA2A620]">
-        <main className="flex flex-col lg:flex-row w-10/12 min-w-[350px] h-[85dvh] justify-start lg:justify-center items-center  bg-[#fefefe] rounded-2xl overflow-hidden">
-          <div className="w-full lg:w-1/2 flex-1 max-h-52 lg:max-h-full lg:h-full bg-transparent relative flex flex-col justify-center items-center ">
-            <div className="z-50 flex flex-col gap-4 ">
-              <h1 className="text-white z-50 text-3xl font-extrabold ">
-                Project Manager
-              </h1>
-              <h2 className="text-white z-50 text-lg hidden lg:flex">
-                Novo por aqui? Crie sua conta:
-              </h2>
-              <Link href={'/signup'}>
-                <Button
-                  className="z-50 text-base px-10 py-6 rounded-full hidden lg:flex"
-                  variant={'secondary'}
-                >
-                  Criar conta
-                </Button>
-              </Link>
-            </div>
-            <Image src={BackGround} alt="bg" fill className="absolute" />
-          </div>
-
-          <Card className="w-full lg:w-1/2 shadow-none flex flex-col justify-center items-center border-0 z-40 bg-[#fefefe] ">
+    <div
+      className="h-screen w-full flex justify-center items-center bg-cover bg-no-repeat"
+      style={{ backgroundImage: `url('/background.jpg')` }}
+    >
+      <Transition>
+        <main className="flex flex-col lg:flex-row w-10/12 min-w-[350px] h-[85dvh] justify-start lg:justify-center items-center shadow-xl bg-[#ffffff] lg:bg-[#3F89EC] rounded-2xl overflow-y-scroll lg:overflow-hidden">
+          <SideImage
+            title="Transforme suas ideias em resultados!"
+            subtitle="O Coworking é a solução ideal para equipes que desejam gerenciar projetos de forma integrada e eficiente. Com nossa plataforma, você pode planejar, colaborar e monitorar o progresso de suas atividades em um ambiente intuitivo e dinâmico."
+            buttonText="Criar conta"
+            link="/signup"
+            side="right"
+          />
+          <Card className="w-full lg:w-1/2 h-full rounded-none rounded-ss-[80px] shadow-none flex flex-col justify-center items-center border-0 z-40 bg-[#ffffff] ">
             <CardHeader className="mb-5 flex justify-center items-center">
               <CardTitle className="text-accent-foreground text-xl">
                 Bem vindo de volta!
@@ -45,7 +32,7 @@ export default function LoginPage() {
             </CardContent>
           </Card>
         </main>
-      </div>
-    </Transition>
+      </Transition>
+    </div>
   );
 }

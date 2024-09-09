@@ -93,8 +93,8 @@ body {
 
 
 .gradient {
-  background: rgb(101,153,252);
-  background: linear-gradient(270deg, rgba(101,153,252,1) 6%, rgba(5,94,199,1) 80%, rgba(42,0,64,1) 100%);
+  background: rgb(154,211,252);
+  background: linear-gradient(111deg, rgba(154,211,252,1) 0%, rgba(91,167,250,1) 44%, rgba(32,105,221,1) 100%);
 }
 
 @keyframes spin {

@@ -36,8 +36,10 @@ import { toast } from 'react-toastify';
 
 export default function UpdateProjectForm({
   project,
+  get,
 }: {
   project: projectType;
+  get: () => void;
 }) {
   const {
     register,
@@ -70,16 +72,15 @@ export default function UpdateProjectForm({
     if (dataFim instanceof Date && isNaN(dataFim.getTime())) {
       delete data.data_fim;
     }
-    console.log(data);
     api
       .put(`/api/projetos/${project.id}`, data)
       .then(() => {
         toast.success('Projeto atualizado com sucesso');
-        // window.location.reload();
+        get();
         setLoading(false);
       })
       .catch(err => {
-        toast.error(err);
+        toast.error(err.response.data);
         setLoading(false);
       });
   };
@@ -89,7 +90,7 @@ export default function UpdateProjectForm({
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <Button variant={'ghost'}>
+        <Button variant={'ghost'} className="p-2 rounded-full">
           <Pencil className="h-5 w-5" />
         </Button>
       </AlertDialogTrigger>

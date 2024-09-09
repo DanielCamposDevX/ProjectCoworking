@@ -34,7 +34,7 @@ export default function SignupForm() {
 
   return (
     <form
-      className="h-full w-full flex flex-col justify-center items-center"
+      className="lg:h-full w-full flex flex-col justify-center items-center"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex flex-col gap-3 w-10/12 max-w-[300px]">

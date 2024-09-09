@@ -1,57 +1,32 @@
-import { UserIcon } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useAuth } from '@/app/context/AuthContext';
+import Logo from '@/assets/logo.png';
+import { LogOut } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 
 export default function Header() {
+  const { setToken } = useAuth();
+  const router = useRouter();
+
+  function handleSignOut() {
+    setToken(null);
+    router.push('/');
+  }
+
   return (
-    <div>
-      <div className="px-6 py-10 flex items-center justify-between z-50">
-        <div className="flex">
-          <Avatar className="w-7 h-7 mr-2">
-            <AvatarImage />
-            <AvatarFallback>
-              <UserIcon />
-            </AvatarFallback>
-          </Avatar>
-          <h1 className="text-xl hidden md:flex font-bold cursor-pointer">
-            P<span className="text-blue-400">Manager</span>
+    <div className="w-full bg-white/90">
+      <div className="flex items-center justify-around z-50 h-32">
+        <div className="flex items-center">
+          <h1 className="text-xl">
+            <Image src={Logo} alt="Logo" className={`z-50 w-[200px]`} />
           </h1>
         </div>
         <div className="flex items-center gap-3">
-          {/* {props.userdata && (
-          <>
-            <Button
-              variant={'outline'}
-              className="bg-gray-950/70 border-green-400/50"
-              onClick={() => navigate('/user')}
-            >
-              <span className="text-sm text-muted-foreground mr-2 hidden md:flex">
-                {props.userdata.displayName
-                  ? props.userdata.displayName
-                  : 'Meu Perfil'}
-              </span>
-              <Avatar className="w-7 h-7 md:mr-2">
-                <AvatarImage
-                  src={
-                    props.userdata.photoURL
-                      ? props.userdata.photoURL
-                      : undefined
-                  }
-                />
-                <AvatarFallback>
-                  <UserIcon />
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-            <Button
-              variant={'outline'}
-              onClick={handlesignOut}
-              className="bg-gray-950/70 border-green-400/50"
-            >
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </>
-        )} */}
+          <Button variant="outline" onClick={handleSignOut} className=" border">
+            <LogOut className="h-4 w-4" />
+          </Button>
         </div>
       </div>
       <Separator orientation="horizontal" className="hidden md:flex" />

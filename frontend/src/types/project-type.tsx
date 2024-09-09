@@ -1,4 +1,4 @@
-type statusProjeto = 'EM ANDAMENTO' | 'CONCLUIDO' | 'PENDENTE';
+type statusProjeto = 'EM_ANDAMENTO' | 'CONCLUIDO' | 'PENDENTE';
 
 export type projectType = {
   id: number;

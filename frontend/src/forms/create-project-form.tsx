@@ -26,10 +26,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertDialogCancel } from '@radix-ui/react-alert-dialog';
 import { LoaderCircle, PlusCircle } from 'lucide-react';
 import moment from 'moment';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export default function CreateProjectForm() {
+export default function CreateProjectForm({ get }: { get: () => void }) {
   const {
     register,
     handleSubmit,
@@ -38,6 +39,8 @@ export default function CreateProjectForm() {
   } = useForm<createProjectFormData>({
     resolver: zodResolver(createProjectFormSchema),
   });
+
+  const [open, setOpen] = useState(false);
 
   const { loading, post } = usePost();
 
@@ -48,16 +51,23 @@ export default function CreateProjectForm() {
         ...data,
         data_inicio: moment(data.data_inicio).startOf('day').toDate(),
       },
-    }).then(() => {
-      toast.success('Projeto criado com sucesso');
-      window.location.reload();
-    });
+    })
+      .then(() => {
+        toast.success('Projeto criado com sucesso');
+        get();
+      })
+      .catch(err => {
+        toast.error(err.response.data || 'Erro ao criar projeto');
+      });
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="gap-2">
+        <Button
+          className="gap-2 text-base px-8 py-6 rounded-full bg-white"
+          variant={'secondary'}
+        >
           Criar novo projeto <PlusCircle className="h-5 w-5" />
         </Button>
       </AlertDialogTrigger>
