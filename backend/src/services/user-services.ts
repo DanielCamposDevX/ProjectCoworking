@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
+import { paramsType } from 'types/params-type.js';
 import { errors } from '../errors/errors.js';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { createUserData, loginUserData } from '../types/user-types.js';
@@ -43,4 +44,9 @@ async function getAuthUser(token: string, userId: number) {
    return user;
 }
 
-export const userServices = { createUser, loginUser, getAuthUser };
+async function getUsers(params: paramsType) {
+   const users = await userRepositories.getUsers(params);
+   return users;
+}
+
+export const userServices = { createUser, loginUser, getAuthUser, getUsers };

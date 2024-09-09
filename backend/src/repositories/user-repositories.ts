@@ -1,3 +1,4 @@
+import { paramsType } from 'types/params-type.js';
 import { prisma } from '../config/database.js';
 import { createUserData } from '../types/user-types.js';
 
@@ -52,10 +53,30 @@ async function createSession(id: number) {
    });
 }
 
+async function getUsers(params: paramsType) {
+   const users = await prisma.usuario.findMany({
+      where: {
+         OR: [
+            { nome: { contains: params.search } },
+            { email: { contains: params.search } },
+         ],
+      },
+      select: {
+         nome: true,
+         id: true,
+         email: true,
+         papel: true,
+      },
+   });
+
+   return users;
+}
+
 export const userRepositories = {
    findUserById,
    findSession,
    createUser,
    findUserByEmail,
    createSession,
+   getUsers,
 };

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { paramsType } from 'types/params-type.js';
 import { customRequest } from '../middlewares/jwt-verification.js';
 import { userServices } from '../services/user-services.js';
 import { createUserData, loginUserData } from '../types/user-types.js';
@@ -25,4 +26,19 @@ async function getAuthUser(req: customRequest, res: Response) {
    res.status(200).json(user);
 }
 
-export const userControllers = { createUser, loginUser, getAuthUser };
+async function getUsers(req: customRequest, res: Response) {
+   await userServices.getAuthUser(req.token, req.id);
+   const searchTerm = req.query.search || '';
+   req.query.page = req.query.page || '1';
+   req.query.limit = req.query.limit || '10';
+   const params: paramsType = {
+      page: Number(req.query.page),
+      limit: Number(req.query.limit),
+      search: String(searchTerm),
+   };
+
+   const users = await userServices.getUsers(params);
+   res.status(200).json(users);
+}
+
+export const userControllers = { createUser, loginUser, getAuthUser, getUsers };

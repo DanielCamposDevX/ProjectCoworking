@@ -7,6 +7,7 @@ import { loginSchema, userSchema } from '../schemas/user-schema.js';
 const userRouter = Router();
 
 userRouter
+   .get('/api/usuarios', authUser, userControllers.getUsers)
    .post(
       '/api/auth/register',
       validate(userSchema, 'body'),
