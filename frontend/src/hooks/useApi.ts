@@ -30,16 +30,16 @@ export function useGet({ url }: { url: string }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if(api.defaults.headers.common['Authorization'] !== ''){
-      get();
+    if(api.defaults.headers.common['Authorization']){
+      get({});
     }
   },[api.defaults.headers.common['Authorization']]);
 
-  const get = async () => {
+  const get = async ({newUrl}:{newUrl?: string}) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await api.get(url)
+      const res = await api.get(newUrl || url)
       setResponse(res.data);
       return res.data;
     } catch (error) {
