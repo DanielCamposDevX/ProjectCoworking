@@ -10,7 +10,10 @@ type createFakeProjectData = {
    data_fim?: Date;
 };
 
-export async function createFakeProject(data: createFakeProjectData) {
+export async function createFakeProject(
+   data: createFakeProjectData,
+   userId: number,
+) {
    return await prisma.projeto.create({
       data: {
          nome: data.nome ?? faker.company.name(),
@@ -18,6 +21,7 @@ export async function createFakeProject(data: createFakeProjectData) {
          status: data.status ?? 'PENDENTE',
          data_inicio: data.data_inicio ?? faker.date.recent(),
          data_fim: data.data_fim ?? faker.date.future(),
+         created_by: userId,
       },
    });
 }

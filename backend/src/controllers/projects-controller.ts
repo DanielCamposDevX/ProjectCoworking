@@ -8,6 +8,7 @@ async function getProjects(req: customRequest, res: Response) {
    req.query.page = req.query.page || '1';
    req.query.limit = req.query.limit || '10';
    const projects = await projectServices.getProjects(
+      req.id,
       Number(req.query.page),
       Number(req.query.limit),
    );
@@ -16,7 +17,7 @@ async function getProjects(req: customRequest, res: Response) {
 
 async function createProject(req: customRequest, res: Response) {
    await userServices.getAuthUser(req.token, req.id);
-   const project = await projectServices.createProject(req.body);
+   const project = await projectServices.createProject(req.body, req.id);
    res.status(201).json(project);
 }
 

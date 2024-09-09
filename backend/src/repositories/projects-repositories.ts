@@ -1,18 +1,33 @@
 import { prisma } from '../config/database.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
 
-async function getProjects(page: number, limit: number) {
+async function getProjects(page: number, limit: number, userId: number) {
    const skip = (page - 1) * limit;
 
    const [projects, totalProjects] = await prisma.$transaction([
       prisma.projeto.findMany({
+         where: {
+            OR: [
+               { created_by: userId },
+               { usuarios: { some: { id: userId } } },
+            ],
+         },
          skip,
          take: limit,
       }),
-      prisma.projeto.count(),
+      prisma.projeto.count({
+         where: {
+            OR: [
+               { created_by: userId },
+               { usuarios: { some: { id: userId } } },
+            ],
+         },
+      }),
    ]);
 
-   return { projects, total: totalProjects };
+   const totalPages = Math.ceil(totalProjects / limit);
+
+   return { projects, total: totalProjects, totalPages, currentPage: page };
 }
 
 async function getProjectById(id: number) {
@@ -23,10 +38,17 @@ async function getProjectById(id: number) {
    });
 }
 
-async function createProject(data: projectType) {
-   return await prisma.projeto.create({
-      data,
-   });
+async function createProject(data: projectType, userId: number) {
+   try {
+      return await prisma.projeto.create({
+         data: {
+            ...data,
+            created_by: userId,
+         },
+      });
+   } catch (err) {
+      console.log(err);
+   }
 }
 
 async function updateProject(id: number, data: updateProjectType) {

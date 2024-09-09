@@ -51,7 +51,7 @@ describe('Get projects', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const formattedProject = {
          ...project,
          data_inicio: project.data_inicio.toISOString(),
@@ -64,6 +64,8 @@ describe('Get projects', () => {
       expect(response.body).toStrictEqual({
          projects: [formattedProject],
          total: 1,
+         totalPages: 1,
+         currentPage: 1,
       });
    });
 });
@@ -102,10 +104,10 @@ describe('Post projects', () => {
          .post('/api/projetos')
          .set('Authorization', `Bearer ${token}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
-            data_inicio: faker.date.recent(),
+            data_inicio: faker.date.recent().toISOString(),
          });
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
       expect(response.text).toBe('Token inválido! Faça login novamente.');
@@ -121,10 +123,10 @@ describe('Post projects', () => {
          .post('/api/projetos')
          .set('Authorization', `Bearer ${session}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
-            data_inicio: faker.date.recent(),
+            data_inicio: faker.date.recent().toISOString(),
          });
       expect(response.status).toBe(httpStatus.CREATED);
       expect(response.body).toHaveProperty('id');
@@ -165,10 +167,10 @@ describe('Update projects', () => {
          .put(`/api/projetos/${faker.number.int()}`)
          .set('Authorization', `Bearer ${token}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
-            data_inicio: faker.date.recent(),
+            data_inicio: faker.date.recent().toISOString(),
          });
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
       expect(response.text).toBe('Token inválido! Faça login novamente.');
@@ -184,7 +186,7 @@ describe('Update projects', () => {
          .put(`/api/projetos/${faker.number.int()}`)
          .set('Authorization', `Bearer ${session}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
             data_inicio: faker.date.past(),
@@ -199,12 +201,12 @@ describe('Update projects', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const response = await server
          .put(`/api/projetos/${project.id}`)
          .set('Authorization', `Bearer ${session}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
             data_inicio: faker.date.future(),
@@ -219,12 +221,12 @@ describe('Update projects', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const response = await server
          .put(`/api/projetos/${project.id}`)
          .set('Authorization', `Bearer ${session}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
             data_inicio: faker.date.past(),
@@ -254,10 +256,10 @@ describe('Delete projects', () => {
          .delete(`/api/projetos/${faker.number.int()}`)
          .set('Authorization', `Bearer ${token}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
-            data_inicio: faker.date.recent(),
+            data_inicio: faker.date.recent().toISOString(),
          });
       expect(response.status).toBe(httpStatus.UNAUTHORIZED);
       expect(response.text).toBe('Token inválido! Faça login novamente.');
@@ -269,15 +271,15 @@ describe('Delete projects', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const response = await server
          .delete(`/api/projetos/${project.id}`)
          .set('Authorization', `Bearer ${session}`)
          .send({
-            nome: faker.lorem.sentence(),
+            nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
-            data_inicio: faker.date.recent(),
+            data_inicio: faker.date.recent().toISOString(),
          });
       expect(response.status).toBe(httpStatus.NO_CONTENT);
    });

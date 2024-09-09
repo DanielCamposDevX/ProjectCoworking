@@ -4,14 +4,14 @@ import { projectsRepositories } from '../repositories/projects-repositories';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
 
-async function getProjects(page = 1, limit = 10) {
-   const projects = await projectsRepositories.getProjects(page, limit);
+async function getProjects(userId: number, page = 1, limit = 10) {
+   const projects = await projectsRepositories.getProjects(page, limit, userId);
    return projects;
 }
 
-async function createProject(data: projectType) {
+async function createProject(data: projectType, userId: number) {
    data.data_inicio = new Date(data.data_inicio);
-   return await projectsRepositories.createProject(data);
+   return await projectsRepositories.createProject(data, userId);
 }
 
 async function updateProject(id: number, data: updateProjectType) {

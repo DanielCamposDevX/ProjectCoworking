@@ -19,6 +19,8 @@ model Projeto {
   descricao   String?
   data_inicio DateTime
   data_fim    DateTime?
+  created_by  Int           @default(-1)
+  creator     Usuario       @relation(fields: [created_by], references: [id])
   status      StatusProjeto
   usuarios    Usuario[]     @relation("ProjetosUsuarios")
 }
@@ -31,6 +33,7 @@ model Usuario {
   papel    String
   projetos Projeto[] @relation("ProjetosUsuarios")
   Session  Session?
+  Projeto  Projeto[]
 }
 
 model Session {

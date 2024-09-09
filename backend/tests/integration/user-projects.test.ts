@@ -54,7 +54,7 @@ describe('Get project users', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const response = await server
          .get(`/api/projetos/${project.id}/usuarios`)
          .set('Authorization', `Bearer ${session}`);
@@ -128,7 +128,7 @@ describe('Post project users', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const response = await server
          .post(`/api/projetos/${project.id}/usuarios`)
          .set('Authorization', `Bearer ${session}`)
@@ -144,7 +144,7 @@ describe('Post project users', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const response = await server
          .post(`/api/projetos/${project.id}/usuarios`)
          .set('Authorization', `Bearer ${session}`)
@@ -200,7 +200,7 @@ describe('Delete project users', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       const response = await server
          .delete(`/api/projetos/${project.id}/usuarios/${faker.number.int()}`)
          .set('Authorization', `Bearer ${session}`);
@@ -213,7 +213,7 @@ describe('Delete project users', () => {
          senha: '123456',
       });
       const session = await createFakeSession(user.id);
-      const project = await createFakeProject({});
+      const project = await createFakeProject({}, user.id);
       await insertUserInProject(project.id, user.id);
       const response = await server
          .delete(`/api/projetos/${project.id}/usuarios/${user.id}`)
