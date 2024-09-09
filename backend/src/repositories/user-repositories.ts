@@ -67,6 +67,7 @@ async function getUsers(params: paramsType) {
          email: true,
          papel: true,
       },
+      take: 10,
    });
 
    return users;
