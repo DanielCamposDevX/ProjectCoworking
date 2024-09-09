@@ -7,7 +7,7 @@ services:
     container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: codi
+      MYSQL_DATABASE: codi1
       MYSQL_PASSWORD: root
     volumes:
       - mysql_data:/var/lib/mysql
@@ -17,10 +17,10 @@ services:
     build: .
     container_name: codi-backend
     environment:
-      DATABASE_URL: mysql://root:root@mysql:3306/codi?allowPublicKeyRetrieval=true
+      DATABASE_URL: mysql://root:root@mysql:3306/codi1?allowPublicKeyRetrieval=true
       JWT_KEY: secreta
     working_dir: /usr/src/codi
-    command: bash -c "npx prisma migrate dev && npm run start"
+    command: bash -c "npx prisma migrate deploy && npm run start"
     ports:
       - "4000:4000" 
     depends_on:

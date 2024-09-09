@@ -12,6 +12,13 @@ async function getProjects(page: number, limit: number, userId: number) {
                { usuarios: { some: { id: userId } } },
             ],
          },
+         include: {
+            _count: {
+               select: {
+                  usuarios: true,
+               },
+            },
+         },
          skip,
          take: limit,
       }),

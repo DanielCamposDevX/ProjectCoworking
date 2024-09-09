@@ -56,6 +56,7 @@ describe('Get projects', () => {
          ...project,
          data_inicio: project.data_inicio.toISOString(),
          data_fim: project.data_fim ? project.data_fim.toISOString() : null,
+         _count: { usuarios: 0 },
       };
       const response = await server
          .get('/api/projetos')
