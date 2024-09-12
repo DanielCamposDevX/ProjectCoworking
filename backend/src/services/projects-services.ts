@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { errors } from '../errors/errors.js';
+import { logsRepositories } from '../repositories/logs-repositories.js';
 import { projectsRepositories } from '../repositories/projects-repositories';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
@@ -13,7 +14,10 @@ async function getProjects(userId: number, query: paramsType) {
 
 async function createProject(data: projectType, userId: number) {
    data.data_inicio = new Date(data.data_inicio);
-   return await projectsRepositories.createProject(data, userId);
+   const project = await projectsRepositories.createProject(data, userId);
+   const message = `Projeto ${project.nome} criado por ${project.creator.nome}`;
+   await logsRepositories.createLog(userId, project.id, message);
+   return project;
 }
 
 async function updateProject(
@@ -69,7 +73,11 @@ async function updateProject(
       }
    }
 
-   return await projectsRepositories.updateProject(id, data);
+   const finalProject = await projectsRepositories.updateProject(id, data);
+   const user = await userRepositories.findUserById(userId);
+   const message = `Projeto ${project.nome} atualizado por ${user.id}`;
+   await logsRepositories.createLog(userId, project.id, message);
+   return finalProject;
 }
 
 async function deleteProject(userId: number, id: number) {
@@ -88,7 +96,6 @@ async function deleteProject(userId: number, id: number) {
          );
       }
    }
-
    await projectsRepositories.deleteProject(id);
 }
 
@@ -123,6 +130,8 @@ async function postProjectUsers(id: number, userId: number) {
    }
    await projectsRepositories.postProjectUsers(id, userId);
    await permissionServices.createUserPermission(userId, id);
+   const message = `${user.nome} adicionado no projeto ${project.nome}`;
+   await logsRepositories.createLog(userId, project.id, message);
    return user;
 }
 
@@ -146,6 +155,8 @@ async function deleteProjectUsers(id: number, userId: number) {
          );
       }
    }
+   const message = `${user.nome} removido do projeto ${project.nome}`;
+   await logsRepositories.createLog(userId, project.id, message);
    await projectsRepositories.deleteProjectUsers(id);
 }
 

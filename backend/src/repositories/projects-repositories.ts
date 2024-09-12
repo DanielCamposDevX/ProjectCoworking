@@ -89,6 +89,9 @@ async function createProject(data: projectType, userId: number) {
             ...data,
             created_by: userId,
          },
+         include: {
+            creator: true,
+         },
       });
    } catch (err) {
       console.log(err);
@@ -101,15 +104,32 @@ async function updateProject(id: number, data: updateProjectType) {
          id,
       },
       data,
+      include: {
+         creator: true,
+      },
    });
 }
 
 async function deleteProject(id: number) {
-   return await prisma.projeto.delete({
-      where: {
-         id,
-      },
-   });
+   try {
+      await prisma.permissions.deleteMany({
+         where: {
+            projetoId: id,
+         },
+      });
+      await prisma.logs.deleteMany({
+         where: {
+            projetoId: id,
+         },
+      });
+      return await prisma.projeto.delete({
+         where: {
+            id,
+         },
+      });
+   } catch (err) {
+      console.log(err);
+   }
 }
 
 async function getProjectUsers(id: number, query?: paramsType) {

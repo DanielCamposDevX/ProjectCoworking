@@ -325,7 +325,7 @@ describe('Delete projects', () => {
       expect(response.text).toBe('Token inválido! Faça login novamente.');
    });
 
-   it('Should respond with 401 when deleted', async () => {
+   it('Should respond with 204 when deleted', async () => {
       const user = await createFakeUser({
          email: faker.internet.email(),
          senha: '123456',
