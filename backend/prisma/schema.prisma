@@ -24,6 +24,7 @@ model Projeto {
   status      StatusProjeto
   usuarios    Usuario[]     @relation("ProjetosUsuarios")
   permissions Permissions[] @relation("ProjetoPermissions")
+  Logs        Logs[]
 }
 
 model Usuario {
@@ -36,6 +37,7 @@ model Usuario {
   session     Session?
   permissions Permissions[] @relation("UsuarioPermissions")
   Projeto     Projeto[]
+  Logs        Logs[]
 }
 
 model Session {
@@ -56,4 +58,14 @@ model Permissions {
   projeto   Projeto @relation("ProjetoPermissions", fields: [projetoId], references: [id], onDelete: Cascade)
 
   @@unique([usuarioId, projetoId])
+}
+
+model Logs {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int
+  projetoId Int
+  data      DateTime
+  acao      String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  projeto   Projeto  @relation(fields: [projetoId], references: [id])
 }
