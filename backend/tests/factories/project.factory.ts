@@ -37,4 +37,13 @@ export async function insertUserInProject(projectId: number, userId: number) {
          },
       },
    });
+   await prisma.permissions.create({
+      data: {
+         usuarioId: userId,
+         projetoId: projectId,
+         create: false,
+         update: false,
+         delete: false,
+      },
+   });
 }

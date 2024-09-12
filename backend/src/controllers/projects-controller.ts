@@ -1,8 +1,8 @@
 import { Response } from 'express';
-import { paramsType } from 'types/query-type.js';
 import { customRequest } from '../middlewares/jwt-verification.js';
 import { projectServices } from '../services/projects-services.js';
 import { userServices } from '../services/user-services.js';
+import { paramsType } from '../types/query-type.js';
 
 async function getProjects(
    req: customRequest & { query: paramsType },
@@ -23,6 +23,7 @@ async function updateProject(req: customRequest, res: Response) {
    await userServices.getAuthUser(req.token, req.id);
    const project = await projectServices.updateProject(
       Number(req.params.id),
+      req.id,
       req.body,
    );
    res.status(200).json(project);
@@ -30,7 +31,7 @@ async function updateProject(req: customRequest, res: Response) {
 
 async function deleteProject(req: customRequest, res: Response) {
    await userServices.getAuthUser(req.token, req.id);
-   await projectServices.deleteProject(Number(req.params.id));
+   await projectServices.deleteProject(req.id, Number(req.params.id));
    res.status(204).send();
 }
 

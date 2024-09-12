@@ -1,9 +1,10 @@
 import 'dotenv/config';
-import { paramsType } from 'types/query-type.js';
 import { errors } from '../errors/errors.js';
 import { projectsRepositories } from '../repositories/projects-repositories';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
+import { paramsType } from '../types/query-type.js';
+import { permissionServices } from './permission-services.js';
 
 async function getProjects(userId: number, query: paramsType) {
    const projects = await projectsRepositories.getProjects(query, userId);
@@ -15,12 +16,26 @@ async function createProject(data: projectType, userId: number) {
    return await projectsRepositories.createProject(data, userId);
 }
 
-async function updateProject(id: number, data: updateProjectType) {
+async function updateProject(
+   id: number,
+   userId: number,
+   data: updateProjectType,
+) {
    const project = await projectsRepositories.getProjectById(id);
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
    }
-
+   if (project.created_by !== userId) {
+      const permissions = await permissionServices.getUserPermission(
+         userId,
+         id,
+      );
+      if (!permissions || !permissions.update) {
+         throw errors.unauthorized(
+            'Usuário não tem permissão para editar o projeto',
+         );
+      }
+   }
    if (data.data_inicio && data.data_fim) {
       const dataInicio = new Date(data.data_inicio);
       const dataFim = new Date(data.data_fim);
@@ -57,10 +72,21 @@ async function updateProject(id: number, data: updateProjectType) {
    return await projectsRepositories.updateProject(id, data);
 }
 
-async function deleteProject(id: number) {
+async function deleteProject(userId: number, id: number) {
    const project = await projectsRepositories.getProjectById(id);
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
+   }
+   if (project.created_by !== userId) {
+      const permissions = await permissionServices.getUserPermission(
+         userId,
+         id,
+      );
+      if (!permissions || !permissions.delete) {
+         throw errors.unauthorized(
+            'Usuário não tem permissão para remover o projeto',
+         );
+      }
    }
 
    await projectsRepositories.deleteProject(id);
@@ -84,7 +110,19 @@ async function postProjectUsers(id: number, userId: number) {
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
    }
+   if (project.created_by !== userId) {
+      const permissions = await permissionServices.getUserPermission(
+         userId,
+         id,
+      );
+      if (!permissions || !permissions.create) {
+         throw errors.unauthorized(
+            'Usuário não tem permissão para vincular pessoas ao projeto',
+         );
+      }
+   }
    await projectsRepositories.postProjectUsers(id, userId);
+   await permissionServices.createUserPermission(userId, id);
    return user;
 }
 
@@ -97,7 +135,17 @@ async function deleteProjectUsers(id: number, userId: number) {
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
    }
-
+   if (project.created_by !== userId) {
+      const permissions = await permissionServices.getUserPermission(
+         userId,
+         id,
+      );
+      if (!permissions || !permissions.delete) {
+         throw errors.unauthorized(
+            'Usuário não tem permissão para remover pessoas do projeto',
+         );
+      }
+   }
    await projectsRepositories.deleteProjectUsers(id);
 }
 

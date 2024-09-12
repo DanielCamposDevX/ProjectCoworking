@@ -120,16 +120,14 @@ async function getProjectUsers(id: number, query?: paramsType) {
          usuarios: {
             select: {
                id: true,
+               nome: true,
+               email: true,
+               papel: true,
+               permissions: true,
             },
             skip,
             take: query.limit,
          },
-      },
-   });
-
-   const userDetails = await prisma.usuario.findMany({
-      where: {
-         id: { in: project.usuarios.map((user) => user.id) },
       },
    });
 
@@ -143,7 +141,7 @@ async function getProjectUsers(id: number, query?: paramsType) {
       },
    });
 
-   return { users: userDetails, total: totalUsers };
+   return { users: project.usuarios, total: totalUsers };
 }
 
 async function postProjectUsers(id: number, usuario_id: number) {
