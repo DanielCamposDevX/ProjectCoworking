@@ -56,6 +56,9 @@ describe('Get projects', () => {
          ...project,
          data_inicio: project.data_inicio.toISOString(),
          data_fim: project.data_fim ? project.data_fim.toISOString() : null,
+         creator: {
+            nome: user.nome,
+         },
          _count: { usuarios: 0 },
       };
       const response = await server
@@ -64,6 +67,62 @@ describe('Get projects', () => {
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toStrictEqual({
          projects: [formattedProject],
+         total: 1,
+         totalPages: 1,
+         currentPage: 1,
+      });
+   });
+
+   it('Should respond with 200 and return filtered projects', async () => {
+      const user = await createFakeUser({
+         email: faker.internet.email(),
+         senha: '123456',
+      });
+      const session = await createFakeSession(user.id);
+
+      await createFakeProject(
+         { nome: 'Project A', status: 'CONCLUIDO' },
+         user.id,
+      );
+      await createFakeProject(
+         { nome: 'Project B', status: 'PENDENTE' },
+         user.id,
+      );
+      const project3 = await createFakeProject(
+         {
+            nome: 'Project C',
+            status: 'CONCLUIDO',
+            data_inicio: new Date('2023-09-01'),
+            data_fim: new Date('2023-09-10'),
+         },
+         user.id,
+      );
+
+      const formattedProjects = [
+         {
+            ...project3,
+            data_inicio: project3.data_inicio.toISOString(),
+            data_fim: project3.data_fim
+               ? project3.data_fim.toISOString()
+               : null,
+            creator: { nome: user.nome },
+            _count: { usuarios: 0 },
+         },
+      ];
+
+      const response = await server
+         .get('/api/projetos')
+         .set('Authorization', `Bearer ${session}`)
+         .query({
+            search: 'Project',
+            status: 'CONCLUIDO',
+            data_inicio: '2023-09-01',
+            data_fim: '2023-09-10',
+         });
+
+      expect(response.status).toBe(httpStatus.OK);
+      expect(response.body).toStrictEqual({
+         projects: formattedProjects,
          total: 1,
          totalPages: 1,
          currentPage: 1,

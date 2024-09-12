@@ -1,11 +1,12 @@
 import 'dotenv/config';
+import { paramsType } from 'types/query-type.js';
 import { errors } from '../errors/errors.js';
 import { projectsRepositories } from '../repositories/projects-repositories';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
 
-async function getProjects(userId: number, page = 1, limit = 10) {
-   const projects = await projectsRepositories.getProjects(page, limit, userId);
+async function getProjects(userId: number, query: paramsType) {
+   const projects = await projectsRepositories.getProjects(query, userId);
    return projects;
 }
 
@@ -65,12 +66,12 @@ async function deleteProject(id: number) {
    await projectsRepositories.deleteProject(id);
 }
 
-async function getProjectUsers(id: number, page = 1, limit = 10) {
+async function getProjectUsers(id: number, query?: paramsType) {
    const project = await projectsRepositories.getProjectById(id);
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
    }
-   const users = await projectsRepositories.getProjectUsers(id, page, limit);
+   const users = await projectsRepositories.getProjectUsers(id, query);
    return users;
 }
 

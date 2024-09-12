@@ -1,17 +1,15 @@
 import { Response } from 'express';
+import { paramsType } from 'types/query-type.js';
 import { customRequest } from '../middlewares/jwt-verification.js';
 import { projectServices } from '../services/projects-services.js';
 import { userServices } from '../services/user-services.js';
 
-async function getProjects(req: customRequest, res: Response) {
+async function getProjects(
+   req: customRequest & { query: paramsType },
+   res: Response,
+) {
    await userServices.getAuthUser(req.token, req.id);
-   req.query.page = req.query.page || '1';
-   req.query.limit = req.query.limit || '10';
-   const projects = await projectServices.getProjects(
-      req.id,
-      Number(req.query.page),
-      Number(req.query.limit),
-   );
+   const projects = await projectServices.getProjects(req.id, req.query);
    res.status(200).json(projects);
 }
 
@@ -36,13 +34,15 @@ async function deleteProject(req: customRequest, res: Response) {
    res.status(204).send();
 }
 
-async function getProjectUsers(req: customRequest, res: Response) {
+async function getProjectUsers(
+   req: customRequest & { query: paramsType },
+   res: Response,
+) {
    await userServices.getAuthUser(req.token, req.id);
    if (req.query.page && req.query.limit) {
       const users = await projectServices.getProjectUsers(
          Number(req.params.id),
-         Number(req.query.page),
-         Number(req.query.limit),
+         req.query,
       );
       res.status(200).json(users);
    } else {

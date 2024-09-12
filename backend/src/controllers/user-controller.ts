@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { paramsType } from 'types/params-type.js';
 import { customRequest } from '../middlewares/jwt-verification.js';
 import { userServices } from '../services/user-services.js';
+import { paramsType } from '../types/query-type.js';
 import { createUserData, loginUserData } from '../types/user-types.js';
 
 async function createUser(req: Request, res: Response): Promise<void> {
@@ -26,18 +26,13 @@ async function getAuthUser(req: customRequest, res: Response) {
    res.status(200).json(user);
 }
 
-async function getUsers(req: customRequest, res: Response) {
+async function getUsers(
+   req: customRequest & { query: paramsType },
+   res: Response,
+) {
    await userServices.getAuthUser(req.token, req.id);
-   const searchTerm = req.query.search || '';
-   req.query.page = req.query.page || '1';
-   req.query.limit = req.query.limit || '10';
-   const params: paramsType = {
-      page: Number(req.query.page),
-      limit: Number(req.query.limit),
-      search: String(searchTerm),
-   };
 
-   const users = await userServices.getUsers(params);
+   const users = await userServices.getUsers(req.query);
    res.status(200).json(users);
 }
 

@@ -1,5 +1,5 @@
-import { paramsType } from 'types/params-type.js';
 import { prisma } from '../config/database.js';
+import { paramsType } from '../types/query-type.js';
 import { createUserData } from '../types/user-types.js';
 
 async function findUserByEmail(email: string) {

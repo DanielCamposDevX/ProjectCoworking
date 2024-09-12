@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const statusEnum = ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDO'];
+export const statusEnum = ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDO'];
 
 export const projectSchema = Joi.object({
    nome: Joi.string().required().max(50).messages({

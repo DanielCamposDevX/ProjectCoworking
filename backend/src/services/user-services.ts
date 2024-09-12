@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import jwt from 'jsonwebtoken';
-import { paramsType } from 'types/params-type.js';
 import { errors } from '../errors/errors.js';
 import { userRepositories } from '../repositories/user-repositories.js';
+import { paramsType } from '../types/query-type.js';
 import { createUserData, loginUserData } from '../types/user-types.js';
 
 async function createUser(userData: createUserData) {

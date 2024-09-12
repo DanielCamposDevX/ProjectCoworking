@@ -2,13 +2,14 @@ import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { ObjectSchema } from 'joi';
 
-export function validate(schema: ObjectSchema) {
+export function queryValidations<T>(schema: ObjectSchema<T>) {
    return (req: Request, res: Response, next: NextFunction) => {
-      const { error } = schema.validate(req.body, {
+      const { error, value } = schema.validate(req.query, {
          abortEarly: false,
       });
 
       if (!error) {
+         req.query = value;
          next();
       } else {
          let errorMessage = '';

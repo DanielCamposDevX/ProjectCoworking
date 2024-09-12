@@ -1,18 +1,55 @@
+import { StatusProjeto } from '@prisma/client';
 import { prisma } from '../config/database.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
+import { paramsType } from '../types/query-type.js';
 
-async function getProjects(page: number, limit: number, userId: number) {
-   const skip = (page - 1) * limit;
+interface WhereClauseType {
+   nome?: { contains: string };
+   status?: StatusProjeto;
+   usuarios?: { some: { id: number } };
+   created_by?: number;
+   data_inicio?: { gte?: Date };
+   data_fim?: { lte?: Date };
+   OR?: Array<{ created_by: number } | { usuarios: { some: { id: number } } }>;
+}
 
+async function getProjects(query: paramsType, userId: number) {
+   const skip = (query.page - 1) * query.limit;
+
+   const whereClause: WhereClauseType = {};
+
+   if (query.search) {
+      whereClause.nome = { contains: query.search };
+   }
+   if (query.status) {
+      whereClause.status = query.status;
+   }
+   if (query.data_inicio) {
+      whereClause.data_inicio = { gte: new Date(query.data_inicio) };
+   }
+   if (query.data_fim) {
+      whereClause.data_fim = { lte: new Date(query.data_fim) };
+   }
+   if (query.userId) {
+      whereClause.usuarios = { some: { id: query.userId } };
+   }
+
+   whereClause.OR = [
+      { created_by: userId },
+      { usuarios: { some: { id: userId } } },
+   ];
    const [projects, totalProjects] = await prisma.$transaction([
       prisma.projeto.findMany({
-         where: {
-            OR: [
-               { created_by: userId },
-               { usuarios: { some: { id: userId } } },
-            ],
+         where: whereClause,
+         orderBy: {
+            [query.sortBy]: query.order,
          },
          include: {
+            creator: {
+               select: {
+                  nome: true,
+               },
+            },
             _count: {
                select: {
                   usuarios: true,
@@ -20,21 +57,21 @@ async function getProjects(page: number, limit: number, userId: number) {
             },
          },
          skip,
-         take: limit,
+         take: query.limit,
       }),
       prisma.projeto.count({
-         where: {
-            OR: [
-               { created_by: userId },
-               { usuarios: { some: { id: userId } } },
-            ],
-         },
+         where: whereClause,
       }),
    ]);
 
-   const totalPages = Math.ceil(totalProjects / limit);
+   const totalPages = Math.ceil(totalProjects / query.limit);
 
-   return { projects, total: totalProjects, totalPages, currentPage: page };
+   return {
+      projects,
+      total: totalProjects,
+      totalPages,
+      currentPage: query.page,
+   };
 }
 
 async function getProjectById(id: number) {
@@ -75,8 +112,8 @@ async function deleteProject(id: number) {
    });
 }
 
-async function getProjectUsers(id: number, page: number, limit: number) {
-   const skip = (page - 1) * limit;
+async function getProjectUsers(id: number, query?: paramsType) {
+   const skip = (query.page - 1) * query.limit;
    const project = await prisma.projeto.findUnique({
       where: { id },
       select: {
@@ -85,7 +122,7 @@ async function getProjectUsers(id: number, page: number, limit: number) {
                id: true,
             },
             skip,
-            take: limit,
+            take: query.limit,
          },
       },
    });
