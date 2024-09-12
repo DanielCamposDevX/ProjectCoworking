@@ -23,17 +23,19 @@ model Projeto {
   creator     Usuario       @relation(fields: [created_by], references: [id])
   status      StatusProjeto
   usuarios    Usuario[]     @relation("ProjetosUsuarios")
+  permissions Permissions[] @relation("ProjetoPermissions")
 }
 
 model Usuario {
-  id       Int       @id @default(autoincrement())
-  nome     String
-  email    String    @unique
-  senha    String
-  papel    String
-  projetos Projeto[] @relation("ProjetosUsuarios")
-  Session  Session?
-  Projeto  Projeto[]
+  id          Int           @id @default(autoincrement())
+  nome        String
+  email       String        @unique
+  senha       String
+  papel       String
+  projetos    Projeto[]     @relation("ProjetosUsuarios")
+  session     Session?
+  permissions Permissions[] @relation("UsuarioPermissions")
+  Projeto     Projeto[]
 }
 
 model Session {
@@ -41,4 +43,17 @@ model Session {
   userId Int     @unique
   user   Usuario @relation(fields: [userId], references: [id])
   token  String  @unique @default(uuid())
+}
+
+model Permissions {
+  id        Int     @id @default(autoincrement())
+  create    Boolean
+  delete    Boolean
+  update    Boolean
+  usuarioId Int
+  projetoId Int
+  usuario   Usuario @relation("UsuarioPermissions", fields: [usuarioId], references: [id], onDelete: Cascade)
+  projeto   Projeto @relation("ProjetoPermissions", fields: [projetoId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, projetoId])
 }
