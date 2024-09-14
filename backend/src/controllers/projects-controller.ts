@@ -4,6 +4,12 @@ import { projectServices } from '../services/projects-services.js';
 import { userServices } from '../services/user-services.js';
 import { paramsType } from '../types/query-type.js';
 
+async function getDashboard(req: customRequest, res: Response) {
+   await userServices.getAuthUser(req.token, req.id);
+   const projects = await projectServices.getDashboard(req.id);
+   res.status(200).json(projects);
+}
+
 async function getProjects(
    req: customRequest & { query: paramsType },
    res: Response,
@@ -77,6 +83,7 @@ async function deleteProjectUsers(req: customRequest, res: Response) {
 
 export const projectControllers = {
    getProjects,
+   getDashboard,
    createProject,
    updateProject,
    deleteProject,

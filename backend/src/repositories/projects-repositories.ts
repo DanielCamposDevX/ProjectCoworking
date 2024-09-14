@@ -13,6 +13,39 @@ interface WhereClauseType {
    OR?: Array<{ created_by: number } | { usuarios: { some: { id: number } } }>;
 }
 
+async function getDashboard(userId) {
+   const projetos = await prisma.projeto.findMany({
+      where: {
+         usuarios: {
+            some: {
+               id: userId,
+            },
+         },
+      },
+      include: {
+         Task: true,
+         Comment: true,
+         Logs: true,
+         permissions: true,
+      },
+   });
+
+   const dashboard = {
+      totalProjetos: projetos.length,
+      projetosEmAndamento: projetos.filter((p) => p.status === 'EM_ANDAMENTO')
+         .length,
+      projetosPendentes: projetos.filter((p) => p.status === 'PENDENTE').length,
+      projetosConcluidos: projetos.filter((p) => p.status === 'CONCLUIDO')
+         .length,
+      tarefasPorProjeto: projetos.map((projeto) => {
+         return projeto.Task;
+      }, 0),
+      logsRecentes: projetos.flatMap((p) => p.Logs).slice(-5),
+   };
+
+   return dashboard;
+}
+
 async function getProjects(query: paramsType, userId: number) {
    const skip = (query.page - 1) * query.limit;
 
@@ -196,6 +229,7 @@ async function deleteProjectUsers(userId: number) {
 
 export const projectsRepositories = {
    getProjects,
+   getDashboard,
    createProject,
    updateProject,
    getProjectById,

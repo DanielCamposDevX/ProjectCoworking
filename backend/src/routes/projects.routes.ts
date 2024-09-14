@@ -13,6 +13,7 @@ import { queryParamsSchema } from '../schemas/query-schema.js';
 const projectRouter = Router();
 
 projectRouter
+   .get('/api/projetos/dashboard', authUser, projectControllers.getDashboard)
    .get(
       '/api/projetos',
       authUser,
