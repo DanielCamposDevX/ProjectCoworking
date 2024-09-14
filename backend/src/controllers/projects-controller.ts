@@ -4,9 +4,12 @@ import { projectServices } from '../services/projects-services.js';
 import { userServices } from '../services/user-services.js';
 import { paramsType } from '../types/query-type.js';
 
-async function getDashboard(req: customRequest, res: Response) {
+async function getDashboard(
+   req: customRequest & { query: paramsType },
+   res: Response,
+) {
    await userServices.getAuthUser(req.token, req.id);
-   const projects = await projectServices.getDashboard(req.id);
+   const projects = await projectServices.getDashboard(req.id, req.query);
    res.status(200).json(projects);
 }
 

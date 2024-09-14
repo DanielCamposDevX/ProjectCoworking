@@ -13,7 +13,9 @@ interface WhereClauseType {
    OR?: Array<{ created_by: number } | { usuarios: { some: { id: number } } }>;
 }
 
-async function getDashboard(userId) {
+async function getDashboard(userId: number, query?: paramsType) {
+   const { data_inicio, data_fim, userId: queryUserId } = query || {};
+
    const projetos = await prisma.projeto.findMany({
       where: {
          usuarios: {
@@ -21,6 +23,21 @@ async function getDashboard(userId) {
                id: userId,
             },
          },
+         ...(data_inicio || data_fim
+            ? {
+                 data_inicio: {
+                    gte: data_inicio || undefined,
+                 },
+                 data_fim: {
+                    lte: data_fim || undefined,
+                 },
+              }
+            : {}),
+         ...(queryUserId
+            ? {
+                 created_by: queryUserId,
+              }
+            : {}),
       },
       include: {
          Task: true,
@@ -37,9 +54,7 @@ async function getDashboard(userId) {
       projetosPendentes: projetos.filter((p) => p.status === 'PENDENTE').length,
       projetosConcluidos: projetos.filter((p) => p.status === 'CONCLUIDO')
          .length,
-      tarefasPorProjeto: projetos.map((projeto) => {
-         return projeto.Task;
-      }, 0),
+      tarefasPorProjeto: projetos.map((projeto) => projeto.Task),
       logsRecentes: projetos.flatMap((p) => p.Logs).slice(-5),
    };
 

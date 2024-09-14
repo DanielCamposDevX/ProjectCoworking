@@ -7,8 +7,8 @@ import { projectType, updateProjectType } from '../types/project-type.js';
 import { paramsType } from '../types/query-type.js';
 import { permissionServices } from './permission-services.js';
 
-async function getDashboard(userId: number) {
-   const projects = await projectsRepositories.getDashboard(userId);
+async function getDashboard(userId: number, query?: paramsType) {
+   const projects = await projectsRepositories.getDashboard(userId, query);
    return projects;
 }
 
