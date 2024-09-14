@@ -25,6 +25,8 @@ model Projeto {
   usuarios    Usuario[]     @relation("ProjetosUsuarios")
   permissions Permissions[] @relation("ProjetoPermissions")
   Logs        Logs[]
+  Comment     Comment[]
+  Task        Task[]
 }
 
 model Usuario {
@@ -38,6 +40,8 @@ model Usuario {
   permissions Permissions[] @relation("UsuarioPermissions")
   Projeto     Projeto[]
   Logs        Logs[]
+  Comment     Comment[]
+  Task        Task[]
 }
 
 model Session {
@@ -68,4 +72,26 @@ model Logs {
   acao      String
   usuario   Usuario  @relation(fields: [usuarioId], references: [id])
   projeto   Projeto  @relation(fields: [projetoId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  texto     String
+  usuarioId Int
+  projetoId Int
+  data      DateTime
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  projeto   Projeto  @relation(fields: [projetoId], references: [id])
+}
+
+model Task {
+  id        Int           @id @default(autoincrement())
+  nome      String
+  descricao String
+  term      DateTime?
+  projetoId Int
+  projeto   Projeto       @relation(fields: [projetoId], references: [id])
+  usuarioId Int
+  usuario   Usuario       @relation(fields: [usuarioId], references: [id])
+  status    StatusProjeto
 }
