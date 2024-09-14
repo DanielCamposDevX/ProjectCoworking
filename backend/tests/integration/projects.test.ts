@@ -275,6 +275,85 @@ describe('Update projects', () => {
       expect(response.status).toBe(httpStatus.BAD_REQUEST);
    });
 
+   it('Should respond with 400 when data_inicio is greater than data_fim', async () => {
+      const user = await createFakeUser({
+         email: faker.internet.email(),
+         senha: '123456',
+      });
+      const session = await createFakeSession(user.id);
+      const project = await createFakeProject({}, user.id);
+
+      const response = await server
+         .put(`/api/projetos/${project.id}`)
+         .set('Authorization', `Bearer ${session}`)
+         .send({
+            nome: faker.person.firstName(),
+            descricao: faker.lorem.sentence(),
+            status: 'PENDENTE',
+            data_inicio: faker.date.future(),
+            data_fim: faker.date.past(),
+         });
+
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
+      expect(response.text).toBe(
+         'Data de início não pode ser maior que a data de fim',
+      );
+   });
+
+   it('Should respond with 400 when data_inicio is greater than project data_fim', async () => {
+      const user = await createFakeUser({
+         email: faker.internet.email(),
+         senha: '123456',
+      });
+      const session = await createFakeSession(user.id);
+      const project = await createFakeProject(
+         {
+            data_fim: faker.date.past(),
+         },
+         user.id,
+      );
+
+      const response = await server
+         .put(`/api/projetos/${project.id}`)
+         .set('Authorization', `Bearer ${session}`)
+         .send({
+            nome: faker.person.firstName(),
+            descricao: faker.lorem.sentence(),
+            status: 'PENDENTE',
+            data_inicio: faker.date.future(),
+         });
+
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
+      expect(response.text).toBe(
+         'Data de início não pode ser maior que a data de fim',
+      );
+   });
+
+   it('Should respond with 400 when data_fim is before data_inicio', async () => {
+      const user = await createFakeUser({
+         email: faker.internet.email(),
+         senha: '123456',
+      });
+      const session = await createFakeSession(user.id);
+      const project = await createFakeProject({}, user.id);
+
+      const response = await server
+         .put(`/api/projetos/${project.id}`)
+         .set('Authorization', `Bearer ${session}`)
+         .send({
+            nome: faker.person.firstName(),
+            descricao: faker.lorem.sentence(),
+            status: 'PENDENTE',
+            data_inicio: faker.date.past(),
+            data_fim: faker.date.past(),
+         });
+
+      expect(response.status).toBe(httpStatus.BAD_REQUEST);
+      expect(response.text).toBe(
+         'Data de fim não pode ser anterior à data de início',
+      );
+   });
+
    it('Should respond with 201 when updated', async () => {
       const user = await createFakeUser({
          email: faker.internet.email(),
