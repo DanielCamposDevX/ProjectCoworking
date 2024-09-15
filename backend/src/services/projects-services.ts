@@ -5,6 +5,7 @@ import { projectsRepositories } from '../repositories/projects-repositories';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
 import { paramsType } from '../types/query-type.js';
+import { sendNotificationMail } from '../utils/sendMail.js';
 import { permissionServices } from './permission-services.js';
 
 async function getDashboard(userId: number, query?: paramsType) {
@@ -22,6 +23,10 @@ async function createProject(data: projectType, userId: number) {
    const project = await projectsRepositories.createProject(data, userId);
    const message = `Projeto ${project.nome} criado por ${project.creator.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
+   sendNotificationMail({
+      projectId: project.id,
+      text: message,
+   });
    return project;
 }
 
@@ -82,6 +87,10 @@ async function updateProject(
    const user = await userRepositories.findUserById(userId);
    const message = `Projeto ${project.nome} atualizado por ${user.id}`;
    await logsRepositories.createLog(userId, project.id, message);
+   sendNotificationMail({
+      projectId: project.id,
+      text: message,
+   });
    return finalProject;
 }
 
@@ -137,6 +146,10 @@ async function postProjectUsers(id: number, userId: number) {
    await permissionServices.createUserPermission(userId, id);
    const message = `${user.nome} adicionado no projeto ${project.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
+   sendNotificationMail({
+      projectId: project.id,
+      text: message,
+   });
    return user;
 }
 
@@ -162,6 +175,10 @@ async function deleteProjectUsers(id: number, userId: number) {
    }
    const message = `${user.nome} removido do projeto ${project.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
+   sendNotificationMail({
+      projectId: project.id,
+      text: message,
+   });
    await projectsRepositories.deleteProjectUsers(id);
 }
 

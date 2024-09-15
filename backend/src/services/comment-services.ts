@@ -4,6 +4,7 @@ import { commentRepositories } from '../repositories/comments-repositories.js';
 import { projectsRepositories } from '../repositories/projects-repositories.js';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { commentType } from '../types/comment-type.js';
+import { sendNotificationMail } from '../utils/sendMail.js';
 
 import { logsRepositories } from '../repositories/logs-repositories.js';
 
@@ -34,6 +35,10 @@ async function createComment(
    );
    const message = `Comentário criado por ${user.nome}`;
    await logsRepositories.createLog(userId, projectId, message);
+   sendNotificationMail({
+      projectId,
+      text: message,
+   });
    return comment;
 }
 
@@ -49,6 +54,10 @@ async function updateComment(id: number, data: Partial<commentType>) {
       updatedComment.projeto.id,
       message,
    );
+   sendNotificationMail({
+      projectId: updatedComment.projeto.id,
+      text: message,
+   });
    return updatedComment;
 }
 
@@ -64,6 +73,10 @@ async function deleteComment(id: number) {
       comment.projetoId,
       message,
    );
+   sendNotificationMail({
+      projectId: comment.projetoId,
+      text: message,
+   });
 }
 
 async function getComment(id: number) {

@@ -4,6 +4,7 @@ import { permissionRepositories } from '../repositories/permission-repositories.
 import { projectsRepositories } from '../repositories/projects-repositories.js';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { PermissionType } from '../types/permission-type.js';
+import { sendNotificationMail } from '../utils/sendMail.js';
 
 async function getUserPermission(userId: number, projectId: number) {
    const userPermission = await permissionRepositories.getUserPermission(
@@ -37,6 +38,10 @@ async function updateUserPermission(
    }
    const message = `Alterado permissões do usuário ${user.nome} no projeto ${project.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
+   sendNotificationMail({
+      projectId,
+      text: message,
+   });
    return await permissionRepositories.updateUserPermission(
       userId,
       projectId,

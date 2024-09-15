@@ -8,6 +8,7 @@ import { taskType } from '../types/task-type.js';
 
 import { userRepositories } from '../repositories/user-repositories.js';
 import { paramsType } from '../types/query-type.js';
+import { sendNotificationMail } from '../utils/sendMail.js';
 import { permissionServices } from './permission-services.js';
 
 async function getTasks(projectId: number, query?: paramsType) {
@@ -38,6 +39,10 @@ async function createTask(data: taskType, userId: number, projectId: number) {
    const task = await taskRepositories.createTask(data, userId, projectId);
    const message = `Tarefa criada por ${user.nome}`;
    await logsRepositories.createLog(userId, projectId, message);
+   sendNotificationMail({
+      projectId,
+      text: message,
+   });
    return task;
 }
 
@@ -54,6 +59,10 @@ async function updateTask(id: number, data: Partial<taskType>) {
       updatedTask.projeto.id,
       message,
    );
+   sendNotificationMail({
+      projectId: updatedTask.projeto.id,
+      text: message,
+   });
    return updatedTask;
 }
 
@@ -65,6 +74,10 @@ async function deleteTask(id: number) {
    await taskRepositories.deleteTask(id);
    const message = `${task.usuario.nome} deletou uma tarefa em ${task.projeto.nome}`;
    await logsRepositories.createLog(task.usuarioId, task.projetoId, message);
+   sendNotificationMail({
+      projectId: task.projetoId,
+      text: message,
+   });
 }
 
 async function getTask(id: number) {
