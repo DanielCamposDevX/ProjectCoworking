@@ -38,7 +38,7 @@ async function updateUserPermission(
    }
    const message = `Alterado permissões do usuário ${user.nome} no projeto ${project.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId,
       text: message,
    });

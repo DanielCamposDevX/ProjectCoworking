@@ -379,13 +379,13 @@ describe('Update projects', () => {
             nome: faker.person.firstName(),
             descricao: faker.lorem.sentence(),
             status: 'PENDENTE',
-            data_inicio: faker.date.past(),
+            data_inicio: faker.date.future(),
             data_fim: faker.date.past(),
          });
 
       expect(response.status).toBe(httpStatus.BAD_REQUEST);
       expect(response.text).toBe(
-         'Data de fim não pode ser anterior à data de início',
+         'Data de início não pode ser maior que a data de fim',
       );
    });
 

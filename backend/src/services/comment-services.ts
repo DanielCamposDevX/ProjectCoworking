@@ -35,7 +35,7 @@ async function createComment(
    );
    const message = `Comentário criado por ${user.nome}`;
    await logsRepositories.createLog(userId, projectId, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId,
       text: message,
    });
@@ -54,7 +54,7 @@ async function updateComment(id: number, data: Partial<commentType>) {
       updatedComment.projeto.id,
       message,
    );
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: updatedComment.projeto.id,
       text: message,
    });
@@ -73,7 +73,7 @@ async function deleteComment(id: number) {
       comment.projetoId,
       message,
    );
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: comment.projetoId,
       text: message,
    });

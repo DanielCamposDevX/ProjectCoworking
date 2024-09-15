@@ -23,7 +23,7 @@ async function createProject(data: projectType, userId: number) {
    const project = await projectsRepositories.createProject(data, userId);
    const message = `Projeto ${project.nome} criado por ${project.creator.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: project.id,
       text: message,
    });
@@ -61,7 +61,7 @@ async function updateProject(
       }
    }
 
-   if (data.data_inicio && project.data_fim) {
+   if (data.data_inicio && project.data_fim && !data.data_fim) {
       const dataInicio = new Date(data.data_inicio);
       const dataFim = new Date(project.data_fim);
 
@@ -72,7 +72,7 @@ async function updateProject(
       }
    }
 
-   if (data.data_fim && project.data_inicio) {
+   if (data.data_fim && project.data_inicio && !data.data_inicio) {
       const dataFim = new Date(data.data_fim);
       const dataInicio = new Date(project.data_inicio);
 
@@ -87,7 +87,7 @@ async function updateProject(
    const user = await userRepositories.findUserById(userId);
    const message = `Projeto ${project.nome} atualizado por ${user.id}`;
    await logsRepositories.createLog(userId, project.id, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: project.id,
       text: message,
    });
@@ -146,7 +146,7 @@ async function postProjectUsers(id: number, userId: number) {
    await permissionServices.createUserPermission(userId, id);
    const message = `${user.nome} adicionado no projeto ${project.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: project.id,
       text: message,
    });
@@ -175,7 +175,7 @@ async function deleteProjectUsers(id: number, userId: number) {
    }
    const message = `${user.nome} removido do projeto ${project.nome}`;
    await logsRepositories.createLog(userId, project.id, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: project.id,
       text: message,
    });

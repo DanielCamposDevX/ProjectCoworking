@@ -39,7 +39,7 @@ async function createTask(data: taskType, userId: number, projectId: number) {
    const task = await taskRepositories.createTask(data, userId, projectId);
    const message = `Tarefa criada por ${user.nome}`;
    await logsRepositories.createLog(userId, projectId, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId,
       text: message,
    });
@@ -59,7 +59,7 @@ async function updateTask(id: number, data: Partial<taskType>) {
       updatedTask.projeto.id,
       message,
    );
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: updatedTask.projeto.id,
       text: message,
    });
@@ -74,7 +74,7 @@ async function deleteTask(id: number) {
    await taskRepositories.deleteTask(id);
    const message = `${task.usuario.nome} deletou uma tarefa em ${task.projeto.nome}`;
    await logsRepositories.createLog(task.usuarioId, task.projetoId, message);
-   sendNotificationMail({
+   await sendNotificationMail({
       projectId: task.projetoId,
       text: message,
    });
