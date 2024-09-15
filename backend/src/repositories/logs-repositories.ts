@@ -1,4 +1,4 @@
-import { prisma } from 'config/database';
+import { prisma } from '../config/database';
 
 async function createLog(userId: number, projectId: number, action: string) {
    return await prisma.logs.create({

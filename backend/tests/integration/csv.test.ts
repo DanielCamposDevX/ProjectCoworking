@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import supertest from 'supertest';
 import app, { close, init } from '../../src/app';
-import { prisma } from '../../src/config/database';
 import { createFakeSession, createFakeUser } from '../factories/user.factory';
 import { cleanDb } from '../helpers';
 
@@ -42,6 +41,5 @@ describe('POST /api/projetos/many', () => {
          });
 
       expect(response.status).toBe(200);
-      console.log(await prisma.projeto.findMany({}));
    });
 });

@@ -1,5 +1,5 @@
-import { prisma } from 'config/database';
-import { PermissionType } from 'types/permission-type';
+import { prisma } from '../config/database';
+import { PermissionType } from '../types/permission-type';
 
 async function getUserPermission(userId: number, projectId: number) {
    return await prisma.permissions.findUnique({
