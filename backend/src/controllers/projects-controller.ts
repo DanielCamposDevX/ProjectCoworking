@@ -28,6 +28,17 @@ async function createProject(req: customRequest, res: Response) {
    res.status(201).json(project);
 }
 
+async function uploadCSV(req: customRequest, res: Response) {
+   await userServices.getAuthUser(req.token, req.id);
+   const filePath = req.file?.path;
+   if (!filePath) {
+      return res.status(400).json({ message: 'Arquivo não fornecido' });
+   }
+
+   const result = await projectServices.processCSV(filePath, req.id);
+   res.status(200).json(result);
+}
+
 async function updateProject(req: customRequest, res: Response) {
    await userServices.getAuthUser(req.token, req.id);
    const project = await projectServices.updateProject(
@@ -87,6 +98,7 @@ async function deleteProjectUsers(req: customRequest, res: Response) {
 export const projectControllers = {
    getProjects,
    getDashboard,
+   uploadCSV,
    createProject,
    updateProject,
    deleteProject,

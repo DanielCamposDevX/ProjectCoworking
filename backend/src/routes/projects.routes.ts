@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { projectControllers } from '../controllers/projects-controller.js';
+import { upload } from '../middlewares/csv-handling.js';
 import { authUser } from '../middlewares/jwt-verification.js';
 import { queryValidations } from '../middlewares/query-validation.js';
 import { validate } from '../middlewares/schema-validation.js';
@@ -30,6 +31,12 @@ projectRouter
       authUser,
       validate(projectSchema),
       projectControllers.createProject,
+   )
+   .post(
+      '/api/projetos/many',
+      upload.single('file'),
+      authUser,
+      projectControllers.uploadCSV,
    )
    .put(
       '/api/projetos/:id',

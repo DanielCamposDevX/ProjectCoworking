@@ -1,11 +1,16 @@
+import csvParser from 'csv-parser';
 import 'dotenv/config';
+import moment from 'moment';
+import { createReadStream } from 'node:fs';
 import { errors } from '../errors/errors.js';
 import { logsRepositories } from '../repositories/logs-repositories.js';
 import { projectsRepositories } from '../repositories/projects-repositories';
 import { userRepositories } from '../repositories/user-repositories.js';
 import { projectType, updateProjectType } from '../types/project-type.js';
 import { paramsType } from '../types/query-type.js';
+import { deleteCSVFile } from '../utils/deleteCsv.js';
 import { sendNotificationMail } from '../utils/sendMail.js';
+import { statusParser } from '../utils/statusParse.js';
 import { permissionServices } from './permission-services.js';
 
 async function getDashboard(userId: number, query?: paramsType) {
@@ -28,6 +33,43 @@ async function createProject(data: projectType, userId: number) {
       text: message,
    });
    return project;
+}
+
+async function processCSV(filePath: string, userId: number) {
+   return new Promise((resolve, reject) => {
+      const projetos: projectType[] = [];
+
+      createReadStream(filePath)
+         .pipe(csvParser({ separator: ';' }))
+         .on('data', (row) => {
+            const projeto = {
+               nome: row.nome,
+               descricao: row.descricao || null,
+               data_inicio: moment(row.data_inicio, 'YYYY-MM-DD').toDate(),
+               data_fim: row.data_fim
+                  ? moment(row.data_fim, 'YYYY-MM-DD').toDate()
+                  : null,
+               status: statusParser(row.status),
+            };
+            projetos.push(projeto);
+         })
+         .on('end', async () => {
+            try {
+               await Promise.all(
+                  projetos.map((projeto) =>
+                     projectsRepositories.createProject(projeto, userId),
+                  ),
+               );
+               deleteCSVFile(filePath);
+               resolve({ message: 'CSV processado com sucesso', projetos });
+            } catch (error) {
+               reject(error);
+            }
+         })
+         .on('error', (error) => {
+            reject(error);
+         });
+   });
 }
 
 async function updateProject(
@@ -186,6 +228,7 @@ export const projectServices = {
    getProjects,
    getDashboard,
    createProject,
+   processCSV,
    updateProject,
    deleteProject,
    getProjectUsers,
