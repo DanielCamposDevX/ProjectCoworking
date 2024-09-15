@@ -41,10 +41,20 @@ async function getTask(req: customRequest, res: Response) {
    res.status(200).json(task);
 }
 
+async function generateTasks(req: customRequest, res: Response) {
+   await userServices.getAuthUser(req.token, req.id);
+   if (!req.params.id || Number.isNaN(Number(req.params.id))) {
+      res.status(400).json({ message: 'Project ID is required' });
+   }
+   const result = await taskServices.generateTasks(Number(req.params.id));
+   res.status(200).json(result);
+}
+
 export const taskControllers = {
    getTasks,
    createTask,
    updateTask,
    deleteTask,
    getTask,
+   generateTasks,
 };

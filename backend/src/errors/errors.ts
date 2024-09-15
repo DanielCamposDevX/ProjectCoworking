@@ -35,10 +35,18 @@ function badRequest(resource: string | string[]): ErrorType {
    };
 }
 
+function internalServerError(resource: string | string[]): ErrorType {
+   return {
+      type: 'internalServerError',
+      message: `${resource}`,
+   };
+}
+
 export const errors = {
    unprocEntity,
    conflict,
    notFound,
    unauthorized,
    badRequest,
+   internalServerError,
 };

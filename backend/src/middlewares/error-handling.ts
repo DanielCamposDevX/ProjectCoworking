@@ -30,6 +30,9 @@ export default function errorHandler(
    if (error.type === 'badRequest') {
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
    }
+   if (error.type === 'internalServerError') {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+   }
 
    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send('Erro inesperado');
 }

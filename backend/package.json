@@ -60,6 +60,7 @@
       "http-status": "^1.7.0",
       "joi": "^17.10.2",
       "jsonwebtoken": "^9.0.2",
+      "openai": "^4.61.0",
       "prisma": "^5.3.1",
       "tsx": "^3.13.0"
    }

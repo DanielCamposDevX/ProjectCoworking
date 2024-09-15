@@ -130,20 +130,28 @@ async function getProjectById(id: number) {
    });
 }
 
+async function getEntireProjectById(id: number) {
+   return await prisma.projeto.findUnique({
+      where: {
+         id,
+      },
+      include: {
+         creator: true,
+         usuarios: true,
+      },
+   });
+}
+
 async function createProject(data: projectType, userId: number) {
-   try {
-      return await prisma.projeto.create({
-         data: {
-            ...data,
-            created_by: userId,
-         },
-         include: {
-            creator: true,
-         },
-      });
-   } catch (err) {
-      console.log(err);
-   }
+   return await prisma.projeto.create({
+      data: {
+         ...data,
+         created_by: userId,
+      },
+      include: {
+         creator: true,
+      },
+   });
 }
 
 async function updateProject(id: number, data: updateProjectType) {
@@ -159,25 +167,21 @@ async function updateProject(id: number, data: updateProjectType) {
 }
 
 async function deleteProject(id: number) {
-   try {
-      await prisma.permissions.deleteMany({
-         where: {
-            projetoId: id,
-         },
-      });
-      await prisma.logs.deleteMany({
-         where: {
-            projetoId: id,
-         },
-      });
-      return await prisma.projeto.delete({
-         where: {
-            id,
-         },
-      });
-   } catch (err) {
-      console.log(err);
-   }
+   await prisma.permissions.deleteMany({
+      where: {
+         projetoId: id,
+      },
+   });
+   await prisma.logs.deleteMany({
+      where: {
+         projetoId: id,
+      },
+   });
+   return await prisma.projeto.delete({
+      where: {
+         id,
+      },
+   });
 }
 
 async function getProjectUsers(id: number, query?: paramsType) {
@@ -248,6 +252,7 @@ export const projectsRepositories = {
    createProject,
    updateProject,
    getProjectById,
+   getEntireProjectById,
    deleteProject,
    getProjectUsers,
    deleteProjectUsers,

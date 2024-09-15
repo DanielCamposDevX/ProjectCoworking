@@ -15,6 +15,11 @@ taskRouter
       queryValidations(queryParamsSchema),
       taskControllers.getTasks,
    )
+   .get(
+      '/api/projetos/:id/tarefas/generate',
+      authUser,
+      taskControllers.generateTasks,
+   )
    .post(
       '/api/projetos/:id/tarefas',
       authUser,

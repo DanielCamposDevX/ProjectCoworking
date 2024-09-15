@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { generationPrompt, openai } from '../config/openai.js';
 import { errors } from '../errors/errors.js';
 import { logsRepositories } from '../repositories/logs-repositories.js';
 import { projectsRepositories } from '../repositories/projects-repositories.js';
@@ -7,6 +8,7 @@ import { taskType } from '../types/task-type.js';
 
 import { userRepositories } from '../repositories/user-repositories.js';
 import { paramsType } from '../types/query-type.js';
+import { permissionServices } from './permission-services.js';
 
 async function getTasks(projectId: number, query?: paramsType) {
    const tasks = await taskRepositories.getTasks(projectId, query);
@@ -22,6 +24,17 @@ async function createTask(data: taskType, userId: number, projectId: number) {
    if (!user) {
       throw errors.notFound('Usuário não encontrado');
    }
+   if (project.created_by !== userId) {
+      const permissions = await permissionServices.getUserPermission(
+         userId,
+         projectId,
+      );
+      if (!permissions || !permissions.create) {
+         throw errors.unauthorized(
+            'Usuário não tem permissão para criar tarefas no projeto',
+         );
+      }
+   }
    const task = await taskRepositories.createTask(data, userId, projectId);
    const message = `Tarefa criada por ${user.nome}`;
    await logsRepositories.createLog(userId, projectId, message);
@@ -33,6 +46,7 @@ async function updateTask(id: number, data: Partial<taskType>) {
    if (!task) {
       throw errors.notFound('Tarefa não encontrada');
    }
+
    const updatedTask = await taskRepositories.updateTask(id, data);
    const message = `${updatedTask.usuario.nome} editou uma tarefa em ${updatedTask.projeto.nome}`;
    await logsRepositories.createLog(
@@ -61,10 +75,46 @@ async function getTask(id: number) {
    return task;
 }
 
+async function generateTasks(projectId: number) {
+   const project = await projectsRepositories.getEntireProjectById(projectId);
+   if (!project) {
+      throw errors.notFound('Projeto não encontrado');
+   }
+   const prompt = generationPrompt(project);
+   const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 150,
+      temperature: 0.7,
+   });
+   const result = JSON.parse(response.choices[0].message.content.trim());
+
+   if (!result.tarefas || !result.comentarios) {
+      const newResponse = await openai.chat.completions.create({
+         model: 'gpt-4o-mini',
+         messages: [{ role: 'user', content: prompt }],
+         max_tokens: 150,
+         temperature: 0.7,
+      });
+      const newResult = JSON.parse(
+         newResponse.choices[0].message.content.trim(),
+      );
+      if (!newResult.tarefas || !newResult.comentarios) {
+         throw errors.internalServerError(
+            'Não foi possível gerar tarefas e comentários',
+         );
+      }
+      return newResult;
+   }
+
+   return result;
+}
+
 export const taskServices = {
    getTasks,
    createTask,
    updateTask,
    deleteTask,
    getTask,
+   generateTasks,
 };
