@@ -29,7 +29,7 @@ export default function LoginForm() {
     const storedToken = localStorage.getItem('PM-token');
     if (storedToken) {
       setToken(storedToken);
-      router.push('/home');
+      router.push('/dash');
     }
   }, [token]);
 
@@ -37,7 +37,7 @@ export default function LoginForm() {
     post({ url: '/api/auth/login', body: data })
       .then(res => {
         setToken(res);
-        router.push('/home');
+        router.push('/dash');
       })
       .catch(err => {
         console.log(err);

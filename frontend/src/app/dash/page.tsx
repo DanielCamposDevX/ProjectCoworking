@@ -1,4 +1,5 @@
 'use client';
+import DashFilters from '@/components/dashFilters';
 import Header from '@/components/default/header';
 import { ChartContainer } from '@/components/ui/chart';
 import { useGet } from '@/hooks/useApi';
@@ -28,7 +29,7 @@ type dashType = {
 };
 
 export default function Dash() {
-  const { loading, response } = useGet({
+  const { loading, response, get } = useGet({
     url: `/api/projetos/dashboard`,
   });
 
@@ -72,7 +73,11 @@ export default function Dash() {
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : dashboardData ? (
           <div className="w-full max-w-4xl">
-            <h1 className="text-2xl font-bold mb-5">Dashboard</h1>
+            <DashFilters
+              applyFilters={filters => {
+                get({ params: filters });
+              }}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
               <div className="p-4 bg-white shadow rounded-md">

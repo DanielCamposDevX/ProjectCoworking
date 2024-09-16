@@ -7,6 +7,7 @@ export type paramsType = {
   page?: number;
   limit?: number;
   userId?: number;
+  userNome?: string;
   status?: StatusProjeto;
   data_inicio?: string;
   data_fim?: string;

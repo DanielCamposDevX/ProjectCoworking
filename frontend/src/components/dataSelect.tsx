@@ -12,10 +12,14 @@ export default function DataSelect({
   url,
   placeholder,
   setValue,
+  setHolder,
+  value,
 }: {
   url: string;
   placeholder: string;
-  setValue: (value: string) => void;
+  setValue: (value: string | undefined) => void;
+  setHolder?: (value: string | undefined) => void;
+  value?: string;
 }) {
   const [data, setData] = useState<{ id: number; nome: string }[]>([]);
   const [search, setSearch] = useState('');
@@ -64,7 +68,8 @@ export default function DataSelect({
     if (id === 'none') {
       setSelected(undefined);
       setSelectedName(undefined);
-      setValue('');
+      setHolder && setHolder(undefined);
+      setValue(undefined);
       setSearch('');
       setData([]);
       return;
@@ -72,6 +77,7 @@ export default function DataSelect({
     const user = data.find(user => user.id === Number(id));
     if (user) {
       setSelectedName(user.nome);
+      setHolder && setHolder(user.nome);
       setSelected(id);
       setValue(id);
     }
@@ -90,7 +96,7 @@ export default function DataSelect({
           onChange={e => setSearch(e.target.value)}
           className="border rounded-full py-2 px-3 w-full mb-2"
         />
-        {selected && <SelectItem value="none">Limpar</SelectItem>}
+        {value && <SelectItem value="none">Limpar</SelectItem>}
         {data.length > 0 ? (
           data.map(user => (
             <SelectItem key={user.id} value={user.id.toString()}>
