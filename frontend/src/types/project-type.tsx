@@ -33,4 +33,5 @@ export type completeprojectType = {
   data_inicio: Date;
   data_fim?: Date;
   usuarios: Array<{ id: number; papel: string; nome: string }>;
+  Logs: Array<{ id: number; acao: string; data: Date }>;
 };

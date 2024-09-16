@@ -152,7 +152,7 @@ export default function Dash() {
               </div>
             </div>
 
-            <h2 className="text-lg font-semibold mb-3">Logs Recentes</h2>
+            <h2 className="text-lg font-semibold mb-3">Notifcações Recentes</h2>
             <ul className="bg-white shadow rounded-md p-4">
               {dashboardData.logsRecentes.length > 0 ? (
                 dashboardData.logsRecentes.map((log, index) => (

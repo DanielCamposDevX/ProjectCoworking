@@ -36,7 +36,7 @@ export default function LinkProjectUserForm({
   get,
 }: {
   project: projectType;
-  get: () => void;
+  get?: () => void;
 }) {
   const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
@@ -72,7 +72,7 @@ export default function LinkProjectUserForm({
 
   function handleClose(arg: boolean) {
     if (!arg) {
-      get();
+      get && get();
     }
     setOpen(arg);
   }
