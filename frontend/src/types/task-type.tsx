@@ -11,5 +11,9 @@ export type taskType = {
     nome: string;
     id: number;
   };
+  projeto: {
+    nome: string;
+    id: number;
+  };
   projetoId: number;
 };
