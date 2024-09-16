@@ -40,7 +40,11 @@ async function getDashboard(userId: number, query?: paramsType) {
             : {}),
       },
       include: {
-         Task: true,
+         Task: {
+            include: {
+               projeto: true,
+            },
+         },
          Comment: true,
          Logs: true,
          permissions: true,
