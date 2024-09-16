@@ -13,7 +13,11 @@ export async function sendNotificationMail({
          id: projectId,
       },
       include: {
-         usuarios: true,
+         usuarios: {
+            select: {
+               email: true,
+            },
+         },
       },
    });
    project.usuarios.forEach((user) => {

@@ -20,7 +20,12 @@ async function getTasks(projectId: number, query?: paramsType) {
          projetoId: projectId,
       },
       include: {
-         usuario: true,
+         usuario: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
          projeto: true,
       },
    });
@@ -50,7 +55,12 @@ async function updateTask(id: number, data: Partial<taskType>) {
          ...data,
       },
       include: {
-         usuario: true,
+         usuario: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
          projeto: true,
       },
    });
@@ -67,7 +77,12 @@ async function getTaskById(id: number) {
    const task = await prisma.task.findUnique({
       where: { id },
       include: {
-         usuario: true,
+         usuario: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
          projeto: true,
       },
    });

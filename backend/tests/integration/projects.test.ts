@@ -93,6 +93,7 @@ describe('Get projects', () => {
          data_fim: project.data_fim ? project.data_fim.toISOString() : null,
          creator: {
             nome: user.nome,
+            id: user.id,
          },
          _count: { usuarios: 0 },
       };
@@ -140,7 +141,7 @@ describe('Get projects', () => {
             data_fim: project3.data_fim
                ? project3.data_fim.toISOString()
                : null,
-            creator: { nome: user.nome },
+            creator: { nome: user.nome, id: user.id },
             _count: { usuarios: 0 },
          },
       ];

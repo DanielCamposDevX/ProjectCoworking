@@ -20,7 +20,12 @@ async function getComments(projectId: number, query?: paramsType) {
          projetoId: projectId,
       },
       include: {
-         usuario: true,
+         usuario: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
          projeto: true,
       },
    });
@@ -51,7 +56,12 @@ async function updateComment(id: number, data: Partial<commentType>) {
          texto: data.texto,
       },
       include: {
-         usuario: true,
+         usuario: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
          projeto: true,
       },
    });
@@ -68,7 +78,12 @@ async function getCommentById(id: number) {
    const comment = await prisma.comment.findUnique({
       where: { id },
       include: {
-         usuario: true,
+         usuario: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
          projeto: true,
       },
    });

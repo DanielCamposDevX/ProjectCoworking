@@ -95,6 +95,7 @@ async function getProjects(query: paramsType, userId: number) {
          include: {
             creator: {
                select: {
+                  id: true,
                   nome: true,
                },
             },
@@ -136,7 +137,12 @@ async function getEntireProjectById(id: number) {
          id,
       },
       include: {
-         creator: true,
+         creator: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
          usuarios: true,
       },
    });
@@ -149,7 +155,12 @@ async function createProject(data: projectType, userId: number) {
          created_by: userId,
       },
       include: {
-         creator: true,
+         creator: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
       },
    });
 }
@@ -161,7 +172,12 @@ async function updateProject(id: number, data: updateProjectType) {
       },
       data,
       include: {
-         creator: true,
+         creator: {
+            select: {
+               id: true,
+               nome: true,
+            },
+         },
       },
    });
 }
