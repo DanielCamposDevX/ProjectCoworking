@@ -29,17 +29,22 @@ export function useGet({ url }: { url: string }) {
   const [error, setError] = useState<string| null>(null);
   const [loading, setLoading] = useState(false);
 
+
+  useEffect(() => {
+    get({});
+  }, []);
+
   useEffect(() => {
     if(api.defaults.headers.common['Authorization']){
       get({});
     }
   },[api.defaults.headers.common['Authorization']]);
 
-  const get = async ({newUrl}:{newUrl?: string}) => {
+  const get = async ({newUrl,params}:{newUrl?: string, params?: unknown}) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await api.get(newUrl || url)
+      const res = await api.get(newUrl || url, {params});
       setResponse(res.data);
       return res.data;
     } catch (error) {

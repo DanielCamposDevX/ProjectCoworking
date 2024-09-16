@@ -1,5 +1,6 @@
 'use client';
 import Header from '@/components/default/header';
+import HomeFilters from '@/components/homeFilters';
 import { Pagination } from '@/components/pagination';
 
 import ProjectCard from '@/components/project-card';
@@ -31,7 +32,7 @@ export default function Home() {
         currentPage: number;
       },
     );
-    setCurrentPage((response as { currentPage: number })?.currentPage);
+    setCurrentPage((response as { currentPage: number })?.currentPage || 1);
   }, [response]);
 
   const handlePageChange = (page: number) => {
@@ -50,6 +51,11 @@ export default function Home() {
         ) : (
           <>
             <div className="flex justify-center gap-3">
+              <HomeFilters
+                applyFilters={filter => {
+                  get({ params: filter });
+                }}
+              />
               <CreateProjectForm get={() => get({})} />
             </div>
             <div className="w-full flex flex-wrap gap-5 justify-center">
