@@ -4,6 +4,7 @@ import HomeFilters from '@/components/homeFilters';
 import { Pagination } from '@/components/pagination';
 
 import ProjectCard from '@/components/project-card';
+import UploadCsvButton from '@/components/upload-csv';
 
 import CreateProjectForm from '@/forms/create-project-form';
 import { useGet } from '@/hooks/useApi';
@@ -50,13 +51,15 @@ export default function Home() {
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : (
           <>
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center items-center gap-3">
               <HomeFilters
                 applyFilters={filter => {
                   get({ params: filter });
                 }}
               />
+
               <CreateProjectForm get={() => get({})} />
+              <UploadCsvButton />
             </div>
             <div className="w-full flex flex-wrap gap-5 justify-center">
               {data?.projects &&

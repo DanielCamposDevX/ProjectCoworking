@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { paramsType } from '@/types/params-type';
 import moment from 'moment';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import DataSelect from './dataSelect';
@@ -93,13 +94,18 @@ export default function DashFilters({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          className="gap-2 text-base px-8 py-6 rounded-full bg-white border  mb-4"
-          variant={'secondary'}
-        >
+        <Button className="gap-2 text-base px-8 py-6 rounded-full bg-white  mb-4">
           Filtros
         </Button>
       </DialogTrigger>
+      <Link href="/home">
+        <Button
+          className="gap-2 text-base px-8 py-6 rounded-full bg-white border ml-4 mb-4"
+          variant={'secondary'}
+        >
+          Meus projetos
+        </Button>
+      </Link>
 
       <DialogContent className="sm:max-w-[425px] bg-white p-10">
         <DialogHeader>
