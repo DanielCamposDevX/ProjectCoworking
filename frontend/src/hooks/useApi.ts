@@ -31,8 +31,8 @@ export function useGet({ url }: { url: string }) {
 
 
   useEffect(() => {
-    get({});
-  }, []);
+    get({ newUrl: url });
+  }, [url]);
 
   useEffect(() => {
     if(api.defaults.headers.common['Authorization']){

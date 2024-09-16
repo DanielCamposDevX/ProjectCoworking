@@ -35,7 +35,10 @@ export function useConfirmationDialog() {
 
   const ConfirmationDialog = () => (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-      <AlertDialogContent className="bg-white p-10 rounded-3xl">
+      <AlertDialogContent
+        className="bg-white p-10 rounded-3xl"
+        onClick={e => e.stopPropagation()}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>Tem certeza que deseja deletar?</AlertDialogTitle>
           <AlertDialogDescription>
