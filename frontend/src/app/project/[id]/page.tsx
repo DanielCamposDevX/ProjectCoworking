@@ -1,6 +1,7 @@
 'use client';
 import CommentSection from '@/components/comments';
 import Header from '@/components/default/header';
+import TaskSection from '@/components/tasks';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -101,6 +102,8 @@ export default function ProjectPage() {
                   placeholder={project?.descricao || 'Sem descrição'}
                   className="w-10/12"
                 />
+                <Separator className="my-8" />
+                <TaskSection projectId={project.id} />
                 <Separator className="my-8" />
                 <CommentSection id={project.id} />
               </div>
