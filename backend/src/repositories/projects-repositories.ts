@@ -147,6 +147,17 @@ async function getEntireProjectById(id: number) {
                nome: true,
             },
          },
+         Logs: {
+            orderBy: {
+               data: 'desc',
+            },
+            take: 5,
+            select: {
+               id: true,
+               acao: true,
+               data: true,
+            },
+         },
          usuarios: true,
       },
    });
