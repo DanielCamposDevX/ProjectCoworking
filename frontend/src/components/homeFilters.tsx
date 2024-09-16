@@ -35,6 +35,8 @@ export default function HomeFilters({
     status: undefined,
     data_inicio: undefined,
     data_fim: undefined,
+    order: undefined,
+    sortBy: undefined,
   });
 
   const router = useRouter();
@@ -58,34 +60,85 @@ export default function HomeFilters({
       data_fim: data_fim
         ? moment(data_fim).endOf('day').toISOString()
         : undefined,
+      order: searchParams.get('order') as paramsType['order'],
+      sortBy: searchParams.get('sortBy') as paramsType['sortBy'],
     });
   }, [searchParams]);
 
   const handleFilterChange = (key: string, value: string | undefined) => {
     setFilters(prev => ({ ...prev, [key]: value }));
+    if (key === 'order' || key === 'sortBy') {
+      const queryParams = new URLSearchParams();
+
+      Object.entries(filters).forEach(([keye, valuee]) => {
+        if (valuee !== undefined) {
+          queryParams.set(keye, valuee as string);
+        }
+      });
+
+      queryParams.set(key, value as string);
+
+      router.push(`?${queryParams.toString()}`, undefined);
+
+      applyFilters({ ...filters, [key]: value });
+    }
   };
 
   const handleApplyFilters = () => {
     const queryParams = new URLSearchParams();
 
     Object.entries(filters).forEach(([key, value]) => {
-      if (value) {
+      if (value !== undefined) {
         queryParams.set(key, value as string);
       }
     });
 
     router.push(`?${queryParams.toString()}`, undefined);
+
     applyFilters(filters);
     setOpen(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <Select
+        value={filters.sortBy || ''}
+        onValueChange={value =>
+          value === 'none'
+            ? handleFilterChange('sortBy', undefined)
+            : handleFilterChange('sortBy', value)
+        }
+      >
+        <SelectTrigger className="bg-white border rounded-full w-40 py-6 px-3">
+          <SelectValue placeholder="Ordenar por" />
+        </SelectTrigger>
+
+        <SelectContent className="w-full bg-white">
+          <SelectItem value="none">Ordenar por</SelectItem>
+          <Button
+            onClick={() =>
+              handleFilterChange(
+                'order',
+                filters.order === 'asc' ? 'desc' : 'asc',
+              )
+            }
+            variant={'ghost'}
+            className="px-3 py-6 "
+          >
+            {filters.order === 'asc' ? 'Menor > Maior' : 'Maior > Menor'}
+          </Button>
+          <SelectItem value="data_inicio">Data de Início</SelectItem>
+          <SelectItem value="data_fim">Data de Fim</SelectItem>
+          <SelectItem value="status">Status</SelectItem>
+        </SelectContent>
+      </Select>
+
       <DialogTrigger asChild>
         <Button className="gap-2 text-base px-8 py-6 rounded-full bg-white">
           Filtros
         </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-[425px] bg-white p-10">
         <DialogHeader>
           <DialogTitle>Filtros de Pesquisa</DialogTitle>
@@ -180,7 +233,7 @@ export default function HomeFilters({
 
           <DialogFooter className="flex justify-center items-center gap-2 w-full">
             <Button
-              className=" z-50 bg-white border text-base px-12 py-6 rounded-full mt-4"
+              className="z-50 bg-white border text-base px-12 py-6 rounded-full mt-4"
               variant={'secondary'}
               onClick={() => setOpen(false)}
             >
