@@ -79,12 +79,15 @@ export default function LinkProjectUserForm({
 
   return (
     <Dialog onOpenChange={handleClose} open={open}>
-      <DialogTrigger>
+      <DialogTrigger onClick={e => e.stopPropagation()}>
         <Button variant={'ghost'} className="p-2 rounded-full">
           <Link className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] bg-white p-10">
+      <DialogContent
+        className="sm:max-w-[700px] bg-white p-10"
+        onClick={e => e.stopPropagation()}
+      >
         <DialogHeader>
           <DialogTitle>Usuários em : {project.nome}</DialogTitle>
           <DialogDescription>
@@ -109,7 +112,8 @@ export default function LinkProjectUserForm({
                   <Button
                     variant={'ghost'}
                     className="p-1 rounded-full "
-                    onClick={() => {
+                    onClick={e => {
+                      e.stopPropagation();
                       deleteProjectUser(user.id);
                     }}
                   >
@@ -124,7 +128,10 @@ export default function LinkProjectUserForm({
           <Button
             className=" z-50 border text-base px-8 py-6 rounded-full mt-4 "
             variant={'secondary'}
-            onClick={() => handleClose(false)}
+            onClick={e => {
+              e.stopPropagation();
+              handleClose(false);
+            }}
           >
             Cancelar
           </Button>

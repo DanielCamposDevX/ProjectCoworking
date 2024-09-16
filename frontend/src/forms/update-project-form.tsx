@@ -87,12 +87,15 @@ export default function UpdateProjectForm({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger onClick={e => e.stopPropagation()}>
         <Button variant={'ghost'} className="p-2 rounded-full">
           <Pencil className="h-5 w-5" />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="sm:max-w-[425px] bg-white p-10">
+      <AlertDialogContent
+        className="sm:max-w-[425px] bg-white p-10"
+        onClick={e => e.stopPropagation()}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>Editar Projeto</AlertDialogTitle>
           <AlertDialogDescription>
@@ -183,6 +186,7 @@ export default function UpdateProjectForm({
 
           <AlertDialogFooter className="flex justify-center items-center gap-2 w-full">
             <AlertDialogCancel
+              onClick={e => e.stopPropagation()}
               className=" z-50 border text-base px-8 py-3 rounded-full mt-4 "
               disabled={loading}
             >
@@ -193,6 +197,7 @@ export default function UpdateProjectForm({
               )}
             </AlertDialogCancel>
             <Button
+              onClick={e => e.stopPropagation()}
               className=" z-50 text-white text-base px-8 py-6 rounded-full mt-4"
               variant={'default'}
               disabled={loading}

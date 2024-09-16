@@ -24,3 +24,13 @@ export type updateProjectType = {
     usuarios: number;
   };
 };
+
+export type completeprojectType = {
+  id: number;
+  nome: string;
+  descricao?: string;
+  status: statusProjeto;
+  data_inicio: Date;
+  data_fim?: Date;
+  usuarios: Array<{ id: number; papel: string; nome: string }>;
+};

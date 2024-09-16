@@ -12,6 +12,7 @@ import { useConfirmationDialog } from '@/hooks/useConfirmationDialog';
 import { projectType } from '@/types/project-type';
 import { Trash2 } from 'lucide-react';
 import moment from 'moment';
+import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -58,10 +59,16 @@ export default function ProjectCard({
     }
   }
 
+  const router = useRouter();
   const { ConfirmationDialog, confirm } = useConfirmationDialog();
 
   return (
-    <Card className="w-[300px] bg-card min-h-[200px] rounded-3xl p-2 flex flex-col gap-2 hover:cursor-pointer transition-all hover:shadow-md hover:shadow-blue-100">
+    <Card
+      onClick={() => {
+        router.push(`/project/${project.id}`);
+      }}
+      className="w-[300px] bg-card min-h-[200px] rounded-3xl p-2 flex flex-col gap-2 hover:cursor-pointer transition-all hover:shadow-md hover:shadow-blue-100"
+    >
       <CardHeader className="flex flex-col justify-center items-center h-1/4  border-b border-primary/10 shadow-sm relative">
         <CardTitle className="text-center text-lg font-bold text-primary flex relative w-full justify-between items-center">
           {project.nome}
@@ -72,7 +79,8 @@ export default function ProjectCard({
             <Button
               variant={'ghost'}
               className="p-2 rounded-full"
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
                 handleDelete();
               }}
             >

@@ -105,7 +105,8 @@ export function UsersCommand({
   return (
     <div>
       <Button
-        onClick={() => {
+        onClick={e => {
+          e.stopPropagation();
           setOpen(!open);
         }}
         className=" z-50 text-white text-base px-8 py-6 rounded-full mt-4"
@@ -150,7 +151,8 @@ export function UsersCommand({
                           <Button
                             variant={'ghost'}
                             className="p-1 rounded-full"
-                            onClick={() => {
+                            onClick={e => {
+                              e.stopPropagation();
                               handleUserClick(user.id);
                             }}
                           >

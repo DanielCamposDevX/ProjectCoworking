@@ -60,8 +60,8 @@ export default function HomeFilters({
       data_fim: data_fim
         ? moment(data_fim).endOf('day').toISOString()
         : undefined,
-      order: searchParams.get('order') as paramsType['order'],
-      sortBy: searchParams.get('sortBy') as paramsType['sortBy'],
+      order: (searchParams.get('order') as paramsType['order']) || 'asc',
+      sortBy: (searchParams.get('sortBy') as paramsType['sortBy']) || undefined,
     });
   }, [searchParams]);
 
