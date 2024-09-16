@@ -19,4 +19,10 @@ export const taskSchema = Joi.object({
       'any.required': 'O campo status é obrigatório.',
       'any.only': 'O status deve ser PENDENTE ou CONCLUIDO.',
    }),
+   term: Joi.string().isoDate().optional().messages({
+      'string.base': 'O prazo deve ser uma string.',
+      'string.empty': 'O campo prazo é obrigatório.',
+      'any.required': 'O campo prazo é obrigatório.',
+      'string.isoDate': 'O prazo deve estar no formato ISO.',
+   }),
 });
