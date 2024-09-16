@@ -26,6 +26,7 @@ projectRouter
       queryValidations(queryParamsSchema),
       projectControllers.getProjects,
    )
+   .get('/api/projetos/:id', authUser, projectControllers.getProjectById)
    .post(
       '/api/projetos',
       authUser,

@@ -23,6 +23,14 @@ async function getProjects(userId: number, query: paramsType) {
    return projects;
 }
 
+async function getProjectById(id: number) {
+   const project = await projectsRepositories.getEntireProjectById(id);
+   if (!project) {
+      throw errors.notFound('Projeto não encontrado');
+   }
+   return project;
+}
+
 async function createProject(data: projectType, userId: number) {
    data.data_inicio = new Date(data.data_inicio);
    const project = await projectsRepositories.createProject(data, userId);
@@ -226,6 +234,7 @@ async function deleteProjectUsers(id: number, userId: number) {
 
 export const projectServices = {
    getProjects,
+   getProjectById,
    getDashboard,
    createProject,
    processCSV,

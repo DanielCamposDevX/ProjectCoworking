@@ -138,6 +138,8 @@ async function getEntireProjectById(id: number) {
       include: {
          creator: true,
          usuarios: true,
+         Comment: true,
+         Task: true,
       },
    });
 }

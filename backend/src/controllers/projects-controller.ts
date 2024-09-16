@@ -22,6 +22,12 @@ async function getProjects(
    res.status(200).json(projects);
 }
 
+async function getProjectById(req: customRequest, res: Response) {
+   await userServices.getAuthUser(req.token, req.id);
+   const project = await projectServices.getProjectById(Number(req.params.id));
+   res.status(200).json(project);
+}
+
 async function createProject(req: customRequest, res: Response) {
    await userServices.getAuthUser(req.token, req.id);
    const project = await projectServices.createProject(req.body, req.id);
@@ -97,6 +103,7 @@ async function deleteProjectUsers(req: customRequest, res: Response) {
 
 export const projectControllers = {
    getProjects,
+   getProjectById,
    getDashboard,
    uploadCSV,
    createProject,
