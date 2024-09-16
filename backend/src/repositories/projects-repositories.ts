@@ -248,6 +248,10 @@ async function postProjectUsers(id: number, usuario_id: number) {
             },
          },
       },
+      select: {
+         id: true,
+         nome: true,
+      },
    });
 }
 

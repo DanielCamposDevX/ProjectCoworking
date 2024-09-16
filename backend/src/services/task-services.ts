@@ -37,7 +37,7 @@ async function createTask(data: taskType, userId: number, projectId: number) {
       }
    }
    const task = await taskRepositories.createTask(data, userId, projectId);
-   const message = `Tarefa criada por ${user.nome}`;
+   const message = `Tarefa criada por ${user.nome} no projeto ${project.nome}`;
    await logsRepositories.createLog(userId, projectId, message);
    await sendNotificationMail({
       projectId,
