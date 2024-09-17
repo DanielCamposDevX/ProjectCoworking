@@ -7,6 +7,7 @@ import { ChartContainer } from '@/components/ui/chart';
 import { useGet } from '@/hooks/useApi';
 import { logsType } from '@/types/logs-type';
 import { taskType } from '@/types/task-type';
+import { motion } from 'framer-motion';
 import {
   AlarmClock,
   AlertCircle,
@@ -14,7 +15,7 @@ import {
   FolderOpen,
   Loader2,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -76,18 +77,25 @@ export default function Dash() {
       style={{ backgroundImage: `url('/background.jpg')` }}
     >
       <Header />
-      <main className="mt-16 flex w-10/12 flex-col gap-10 p-10 items-center relative bg-white rounded-3xl">
+      <motion.main
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ ease: 'easeInOut', duration: 0.75 }}
+        className="mt-16 flex w-10/12 flex-col gap-10 p-10 items-center relative bg-white rounded-3xl"
+      >
         {loading ? (
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : dashboardData ? (
           <div className="w-full">
             <div className="flex flex-col items-center py-10 mb-10 gap-8">
               <div className="flex">
-                <DashFilters
-                  applyFilters={filters => {
-                    get({ params: filters });
-                  }}
-                />
+                <Suspense>
+                  <DashFilters
+                    applyFilters={filters => {
+                      get({ params: filters });
+                    }}
+                  />
+                </Suspense>
               </div>
               <div className="flex flex-wrap gap-4 justify-center">
                 <DashCard
@@ -166,7 +174,7 @@ export default function Dash() {
         ) : (
           <p>Nenhum dado disponível.</p>
         )}
-      </main>
+      </motion.main>
     </div>
   );
 }

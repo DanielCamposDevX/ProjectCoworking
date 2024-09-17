@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { useGet } from '@/hooks/useApi';
 import { randomUserImage } from '@/lib/randomUser';
 import { completeprojectType } from '@/types/project-type';
+import { motion } from 'framer-motion';
 import { ChevronLeft, Loader2, User } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -48,7 +49,12 @@ export default function ProjectPage() {
       style={{ backgroundImage: `url('/background.jpg')` }}
     >
       <Header />
-      <main className="w-full md:w-11/12 lg:w-5/6 mt-20 min-h-screen border rounded-lg lg:p-20 p-5 flex flex-col bg-card">
+      <motion.main
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ ease: 'easeInOut', duration: 0.75 }}
+        className="w-full md:w-11/12 lg:w-5/6 mt-20 min-h-screen border rounded-lg lg:p-20 p-5 flex flex-col bg-card"
+      >
         {!loading && project ? (
           <>
             <Button
@@ -107,7 +113,7 @@ export default function ProjectPage() {
             <Loader2 className="animate-spin h-10 w-10 mt-46" />
           </div>
         )}
-      </main>
+      </motion.main>
     </div>
   );
 }

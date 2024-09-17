@@ -9,8 +9,9 @@ import UploadCsvButton from '@/components/upload-csv';
 import CreateProjectForm from '@/forms/create-project-form';
 import { useGet } from '@/hooks/useApi';
 import { projectType } from '@/types/project-type';
+import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,41 +47,53 @@ export default function Home() {
       style={{ backgroundImage: `url('/background.jpg')` }}
     >
       <Header />
-      <main className="mt-16 flex flex-1 flex-col gap-10 p-10 items-center relative">
+      <motion.main
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ ease: 'easeInOut', duration: 0.75 }}
+        className="mt-16 flex flex-1 flex-col gap-10 p-10 items-center relative"
+      >
         {loading ? (
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : (
           <>
             <div className="flex flex-col md:flex-row justify-center items-center gap-3">
-              <HomeFilters
-                applyFilters={filter => {
-                  get({ params: filter });
-                }}
-              />
+              <Suspense>
+                <HomeFilters
+                  applyFilters={filter => {
+                    get({ params: filter });
+                  }}
+                />
+              </Suspense>
 
               <CreateProjectForm get={() => get({})} />
-              <UploadCsvButton />
+              <UploadCsvButton get={() => get({})} />
             </div>
             <div className="w-full flex flex-wrap gap-5 justify-center">
-              {data?.projects &&
+              {data?.projects && data?.projects.length > 0 ? (
                 data.projects.map(project => (
                   <ProjectCard
                     project={project}
                     key={project.id}
                     get={() => get({})}
                   />
-                ))}
+                ))
+              ) : (
+                <div>Nenhum projeto encontrado</div>
+              )}
             </div>
-            {data?.totalPages && data?.totalPages >= 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={data.totalPages}
-                onPageChange={handlePageChange}
-              />
-            )}
+            {data?.totalPages &&
+              data?.totalPages >= 0 &&
+              data?.projects.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={data.totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
           </>
         )}
-      </main>
+      </motion.main>
     </div>
   );
 }

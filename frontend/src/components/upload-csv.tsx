@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Button } from './ui/button';
 
-export default function UploadCsvButton() {
+export default function UploadCsvButton({ get }: { get: () => void }) {
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -14,6 +14,7 @@ export default function UploadCsvButton() {
       setLoading(true);
       const selectedFile = event.target.files[0];
       await handleUpload(selectedFile);
+      get();
       setLoading(false);
     }
   };
@@ -57,7 +58,7 @@ export default function UploadCsvButton() {
         onClick={triggerFileInput}
       >
         {loading ? (
-          <Loader2 className="animate-spin h-7 w-7 mt-10" />
+          <Loader2 className="animate-spin h-7 w-7" />
         ) : (
           'Importar CSV'
         )}
