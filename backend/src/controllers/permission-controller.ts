@@ -18,6 +18,7 @@ async function updatePermission(
    const permission = await permissionServices.updateUserPermission(
       userId,
       projectId,
+      req.id,
       data,
    );
    res.status(200).json(permission);

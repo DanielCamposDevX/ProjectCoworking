@@ -226,7 +226,16 @@ async function getProjectUsers(id: number, query?: paramsType) {
                nome: true,
                email: true,
                papel: true,
-               permissions: true,
+               permissions: {
+                  where: {
+                     projetoId: id,
+                  },
+                  select: {
+                     create: true,
+                     update: true,
+                     delete: true,
+                  },
+               },
             },
             skip,
             take: query.limit,

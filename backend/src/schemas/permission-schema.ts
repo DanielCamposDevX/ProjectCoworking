@@ -1,16 +1,13 @@
 import Joi from 'joi';
 
 export const permissionSchema = Joi.object({
-   create: Joi.boolean().required().messages({
+   create: Joi.boolean().optional().messages({
       'boolean.base': 'O campo create deve ser um booleano.',
-      'any.required': 'O campo create é obrigatório.',
    }),
-   update: Joi.boolean().required().messages({
+   update: Joi.boolean().optional().messages({
       'boolean.base': 'O campo update deve ser um booleano.',
-      'any.required': 'O campo update é obrigatório.',
    }),
-   delete: Joi.boolean().required().messages({
+   delete: Joi.boolean().optional().messages({
       'boolean.base': 'O campo delete deve ser um booleano.',
-      'any.required': 'O campo delete é obrigatório.',
    }),
 });

@@ -21,6 +21,7 @@ async function createUserPermission(userId: number, projectId: number) {
 async function updateUserPermission(
    userId: number,
    projectId: number,
+   creatorId: number,
    data: PermissionType,
 ) {
    const user = await userRepositories.findUserById(userId);
@@ -31,7 +32,7 @@ async function updateUserPermission(
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
    }
-   if (project.created_by !== userId) {
+   if (project.created_by !== creatorId) {
       throw errors.unauthorized(
          'Usuário não tem permissão para editar permissões no projeto',
       );
