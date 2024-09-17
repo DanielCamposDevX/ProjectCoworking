@@ -19,7 +19,7 @@ export default function Header() {
     <div className="w-full bg-white/90">
       <div className="flex items-center justify-around z-50 h-32">
         <div
-          className="flex items-center"
+          className="flex items-center cursor-pointer"
           onClick={() => {
             router.push('/dash');
           }}

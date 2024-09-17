@@ -2,14 +2,14 @@ import { completeprojectType } from '@/types/project-type';
 import { BellDot } from 'lucide-react';
 import moment from 'moment';
 
-export default function Logs({ project }: { project: completeprojectType }) {
+export default function Logs({ logs }: { logs: completeprojectType['Logs'] }) {
   return (
     <div>
       <h2 className="text-xl font-semibold  flex items-center gap-3 mt-20 mb-6">
         <BellDot className="h-6 w-6 text-blue-600" />
         Notificações:
       </h2>
-      {project.Logs?.map(log => (
+      {logs?.map(log => (
         <div
           key={log.id}
           className="flex flex-col gap-2 py-4 px-3 border rounded-lg mb-4 shadow-md"

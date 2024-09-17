@@ -25,6 +25,11 @@ export type User = {
   nome: string;
   email: string;
   papel: string;
+  permissions: {
+    create: boolean;
+    update: boolean;
+    delete: boolean;
+  }[];
 };
 
 export function UsersCommand({

@@ -98,7 +98,7 @@ export default function ProjectPage() {
                 ) : (
                   <span>Nenhum usuário encontrado.</span>
                 )}
-                <Logs project={project} />
+                <Logs logs={project.Logs} />
               </div>
             </div>
           </>

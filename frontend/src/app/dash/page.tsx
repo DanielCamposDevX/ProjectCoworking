@@ -2,6 +2,7 @@
 import DashCard from '@/components/dashCard';
 import DashFilters from '@/components/dashFilters';
 import Header from '@/components/default/header';
+import Logs from '@/components/logs';
 import { ChartContainer } from '@/components/ui/chart';
 import { useGet } from '@/hooks/useApi';
 import { logsType } from '@/types/logs-type';
@@ -160,19 +161,7 @@ export default function Dash() {
                 </ChartContainer>
               </div>
             </div>
-
-            <h2 className="text-lg font-semibold mb-3">Notifcações Recentes</h2>
-            <ul className="bg-white shadow rounded-md p-4">
-              {dashboardData.logsRecentes.length > 0 ? (
-                dashboardData.logsRecentes.map((log, index) => (
-                  <li key={index} className="border-b py-2">
-                    {log.acao}
-                  </li>
-                ))
-              ) : (
-                <p>Nenhum log recente disponível.</p>
-              )}
-            </ul>
+            <Logs logs={dashboardData.logsRecentes} />
           </div>
         ) : (
           <p>Nenhum dado disponível.</p>

@@ -3,6 +3,7 @@ import { api } from '@/app/config/api';
 import { User, UsersCommand } from '@/components/project-users-command';
 
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -70,6 +71,24 @@ export default function LinkProjectUserForm({
       });
   }
 
+  function updatePermissions(
+    userId: number,
+    permission: string,
+    value: boolean,
+  ) {
+    api
+      .put(`/api/permissions/${project.id}/${userId}`, {
+        [permission]: value,
+      })
+      .then(() => {
+        toast.success('Permissão atualizada com sucesso');
+        getProjectusers();
+      })
+      .catch(err => {
+        toast.error(err.response.data || 'Erro ao atualizar permissão');
+      });
+  }
+
   function handleClose(arg: boolean) {
     if (!arg) {
       get && get();
@@ -98,16 +117,43 @@ export default function LinkProjectUserForm({
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead className="hidden lg:flex">Email</TableHead>
               <TableHead>Papel</TableHead>
+              <TableHead>Criar</TableHead>
+              <TableHead>Atualizar</TableHead>
+              <TableHead>Deletar</TableHead>
+              <TableHead>Ação</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.map(user => (
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.nome}</TableCell>
-                <TableCell className="hidden lg:flex">{user.email}</TableCell>
                 <TableCell>{user.papel}</TableCell>
+                <TableCell>
+                  <Checkbox
+                    checked={Boolean(user.permissions[0].create)}
+                    onCheckedChange={value =>
+                      updatePermissions(user.id, 'create', Boolean(value))
+                    }
+                  />
+                </TableCell>
+                <TableCell>
+                  <Checkbox
+                    checked={Boolean(user.permissions[0].update)}
+                    onCheckedChange={value =>
+                      updatePermissions(user.id, 'update', Boolean(value))
+                    }
+                  />
+                </TableCell>
+                <TableCell>
+                  <Checkbox
+                    checked={Boolean(user.permissions[0].delete)}
+                    onCheckedChange={value =>
+                      updatePermissions(user.id, 'delete', Boolean(value))
+                    }
+                  />
+                </TableCell>
+
                 <TableCell>
                   <Button
                     variant={'ghost'}
