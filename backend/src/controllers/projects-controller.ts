@@ -85,6 +85,7 @@ async function postProjectUsers(req: customRequest, res: Response) {
    const user = await projectServices.postProjectUsers(
       Number(req.params.id),
       Number(req.body.usuario_id),
+      Number(req.id),
    );
    res.status(200).json(user);
 }
@@ -97,6 +98,7 @@ async function deleteProjectUsers(req: customRequest, res: Response) {
    await projectServices.deleteProjectUsers(
       Number(req.params.id),
       Number(req.params.usuario_id),
+      Number(req.id),
    );
    res.status(204).send();
 }

@@ -172,7 +172,7 @@ async function getProjectUsers(id: number, query?: paramsType) {
    return users;
 }
 
-async function postProjectUsers(id: number, userId: number) {
+async function postProjectUsers(id: number, userId: number, creatorId: number) {
    const user = await userRepositories.findUserById(userId);
    if (!user) {
       throw errors.notFound('Usuário não encontrado');
@@ -181,7 +181,7 @@ async function postProjectUsers(id: number, userId: number) {
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
    }
-   if (project.created_by !== userId) {
+   if (project.created_by !== creatorId) {
       const permissions = await permissionServices.getUserPermission(
          userId,
          id,
@@ -203,7 +203,11 @@ async function postProjectUsers(id: number, userId: number) {
    return user;
 }
 
-async function deleteProjectUsers(id: number, userId: number) {
+async function deleteProjectUsers(
+   id: number,
+   userId: number,
+   reqUserId: number,
+) {
    const user = await userRepositories.findUserById(userId);
    if (!user) {
       throw errors.notFound('Usuário não encontrado');
@@ -212,7 +216,7 @@ async function deleteProjectUsers(id: number, userId: number) {
    if (!project) {
       throw errors.notFound('Projeto não encontrado');
    }
-   if (project.created_by !== userId) {
+   if (project.created_by !== reqUserId) {
       const permissions = await permissionServices.getUserPermission(
          userId,
          id,
@@ -229,7 +233,7 @@ async function deleteProjectUsers(id: number, userId: number) {
       projectId: project.id,
       text: message,
    });
-   await projectsRepositories.deleteProjectUsers(id);
+   await projectsRepositories.deleteProjectUsers(id, userId);
 }
 
 export const projectServices = {

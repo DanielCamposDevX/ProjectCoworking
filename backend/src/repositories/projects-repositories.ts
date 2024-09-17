@@ -266,10 +266,10 @@ async function postProjectUsers(id: number, usuario_id: number) {
    });
 }
 
-async function deleteProjectUsers(userId: number) {
+async function deleteProjectUsers(projectId: number, userId: number) {
    return await prisma.projeto.update({
       where: {
-         id: userId,
+         id: projectId,
       },
       data: {
          usuarios: {
