@@ -51,7 +51,7 @@ export default function Home() {
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : (
           <>
-            <div className="flex justify-center items-center gap-3">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-3">
               <HomeFilters
                 applyFilters={filter => {
                   get({ params: filter });
