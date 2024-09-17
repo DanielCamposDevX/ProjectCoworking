@@ -18,10 +18,13 @@ export default function Header() {
   return (
     <div className="w-full bg-white/90">
       <div className="flex items-center justify-around z-50 h-32">
-        <div className="flex items-center">
-          <h1 className="text-xl">
-            <Image src={Logo} alt="Logo" className={`z-50 w-[200px]`} />
-          </h1>
+        <div
+          className="flex items-center"
+          onClick={() => {
+            router.push('/dash');
+          }}
+        >
+          <Image src={Logo} alt="Logo" className={`z-50 w-[200px]`} />
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" onClick={handleSignOut} className=" border">
