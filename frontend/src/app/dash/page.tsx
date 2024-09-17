@@ -1,11 +1,18 @@
 'use client';
+import DashCard from '@/components/dashCard';
 import DashFilters from '@/components/dashFilters';
 import Header from '@/components/default/header';
 import { ChartContainer } from '@/components/ui/chart';
 import { useGet } from '@/hooks/useApi';
 import { logsType } from '@/types/logs-type';
 import { taskType } from '@/types/task-type';
-import { Loader2 } from 'lucide-react';
+import {
+  AlarmClock,
+  AlertCircle,
+  FolderCheck,
+  FolderOpen,
+  Loader2,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import {
   Bar,
@@ -68,46 +75,48 @@ export default function Dash() {
       style={{ backgroundImage: `url('/background.jpg')` }}
     >
       <Header />
-      <main className="mt-16 flex flex-1 flex-col gap-10 p-10 items-center relative">
+      <main className="mt-16 flex w-10/12 flex-col gap-10 p-10 items-center relative bg-white rounded-3xl">
         {loading ? (
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : dashboardData ? (
-          <div className="w-full max-w-4xl">
-            <DashFilters
-              applyFilters={filters => {
-                get({ params: filters });
-              }}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-              <div className="p-4 bg-white shadow rounded-md">
-                <h2>Total de Projetos</h2>
-                <p className="text-lg font-semibold">
-                  {dashboardData.totalProjetos}
-                </p>
+          <div className="w-full">
+            <div className="flex flex-col items-center py-10 mb-10 gap-8">
+              <div className="flex">
+                <DashFilters
+                  applyFilters={filters => {
+                    get({ params: filters });
+                  }}
+                />
               </div>
-              <div className="p-4 bg-white shadow rounded-md">
-                <h2>Projetos em Andamento</h2>
-                <p className="text-lg font-semibold">
-                  {dashboardData.projetosEmAndamento}
-                </p>
-              </div>
-              <div className="p-4 bg-white shadow rounded-md">
-                <h2>Projetos Pendentes</h2>
-                <p className="text-lg font-semibold">
-                  {dashboardData.projetosPendentes}
-                </p>
-              </div>
-              <div className="p-4 bg-white shadow rounded-md">
-                <h2>Projetos Concluídos</h2>
-                <p className="text-lg font-semibold">
-                  {dashboardData.projetosConcluidos}
-                </p>
+              <div className="flex flex-wrap gap-4 justify-center">
+                <DashCard
+                  icon={<FolderOpen className="h-7 w-7 text-blue-500" />}
+                  title="Total de Projetos"
+                  number={dashboardData.totalProjetos}
+                  color="bg-blue-500"
+                />
+                <DashCard
+                  icon={<AlarmClock className="h-7 w-7 text-yellow-500" />}
+                  title="Projetos em Andamento"
+                  number={dashboardData.projetosEmAndamento}
+                  color="bg-yellow-500"
+                />
+                <DashCard
+                  icon={<AlertCircle className="h-7 w-7 text-red-500" />}
+                  title="Projetos Pendentes"
+                  number={dashboardData.projetosPendentes}
+                  color="bg-red-500"
+                />
+                <DashCard
+                  icon={<FolderCheck className="h-7 w-7 text-green-600" />}
+                  title="Projetos Concluídos"
+                  number={dashboardData.projetosConcluidos}
+                  color="bg-green-600"
+                />
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-10">
+              <div className="p-8 border rounded-xl shadow-lg">
                 <h2 className="text-lg font-semibold mb-3">
                   Gráfico de Tarefas por Projeto
                 </h2>
@@ -117,12 +126,12 @@ export default function Dash() {
                     <YAxis tickCount={1} />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="quantidade" fill="#8884d8" />
+                    <Bar dataKey="quantidade" fill="#3b82f6" />
                   </BarChart>
                 </ChartContainer>
               </div>
 
-              <div>
+              <div className="p-8 border rounded-xl shadow-lg">
                 <h2 className="text-lg font-semibold mb-3">
                   Distribuição dos Status dos Projetos
                 </h2>
@@ -141,7 +150,7 @@ export default function Dash() {
                       {pieChartData.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={['#1e66c4', 'green', 'gray'][index % 3]}
+                          fill={['#eab308', '#ef4444', '#16a34a'][index % 3]}
                         />
                       ))}
                     </Pie>

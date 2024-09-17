@@ -177,6 +177,16 @@ export default function TaskSection({ projectId }: { projectId: number }) {
                       <SelectItem value="CONCLUIDO">Concluído</SelectItem>
                     </SelectContent>
                   </Select>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mt-4">
+                      Prazo
+                    </label>
+                    <Input
+                      type="date"
+                      {...register('term')}
+                      error={errors?.term?.message}
+                    />
+                  </div>
                   {errors?.status && (
                     <p className="text-red-500 text-sm">
                       {errors.status.message}
