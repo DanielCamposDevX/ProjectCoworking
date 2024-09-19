@@ -1,5 +1,5 @@
-import { useAuth } from '@/app/context/AuthContext';
 import Logo from '@/assets/logo.png';
+import { useAuth } from '@/context/AuthContext';
 import { LogOut } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

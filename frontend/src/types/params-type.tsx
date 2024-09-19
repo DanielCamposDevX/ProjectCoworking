@@ -4,7 +4,7 @@ type StatusProjeto = 'PENDENTE' | 'EM_ANDAMENTO' | 'CONCLUIDO';
 
 export type paramsType = {
   search?: string;
-  page?: number;
+  page: number;
   limit?: number;
   userId?: number;
   userNome?: string;

@@ -1,5 +1,5 @@
-import { api } from '@/app/config/api';
-import { useAuth } from '@/app/context/AuthContext';
+import { api } from '@/config/api';
+import { useAuth } from '@/context/AuthContext';
 import { useGet } from '@/hooks/useApi';
 import { commentType } from '@/types/comment-type';
 import { MessageCircle, Trash2 } from 'lucide-react';

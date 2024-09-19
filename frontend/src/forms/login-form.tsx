@@ -1,7 +1,7 @@
 'use client';
-import { useAuth } from '@/app/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/context/AuthContext';
 import { usePost } from '@/hooks/useApi';
 import { loginUserFormData, loginUserFormSchema } from '@/schemas/user-schema';
 import { zodResolver } from '@hookform/resolvers/zod';

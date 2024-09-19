@@ -1,4 +1,4 @@
-import { api } from '@/app/config/api';
+import { api } from '@/config/api';
 import LinkProjectUserForm from '@/forms/link-project-user';
 import UpdateProjectForm from '@/forms/update-project-form';
 import { useConfirmationDialog } from '@/hooks/useConfirmationDialog';

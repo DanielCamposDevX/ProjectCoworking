@@ -1,4 +1,4 @@
-import { api } from '@/app/config/api';
+import { api } from '@/config/api';
 import { Loader2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Button } from './ui/button';

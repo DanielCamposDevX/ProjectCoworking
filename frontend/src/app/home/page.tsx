@@ -1,44 +1,25 @@
 'use client';
+import { useHome } from '@/api/callers/home';
 import Header from '@/components/default/header';
 import HomeFilters from '@/components/homeFilters';
 import { Pagination } from '@/components/pagination';
-
 import ProjectCard from '@/components/project-card';
 import UploadCsvButton from '@/components/upload-csv';
-
 import CreateProjectForm from '@/forms/create-project-form';
-import { useGet } from '@/hooks/useApi';
-import { projectType } from '@/types/project-type';
+import { paramsType } from '@/types/params-type';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-import { Suspense, useEffect, useState } from 'react';
+
+import { Suspense, useState } from 'react';
 
 export default function Home() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [projectsPerPage] = useState(10);
-  const { loading, response, get } = useGet({
-    url: `/api/projetos?page=${currentPage}&limit=${projectsPerPage}`,
-  });
-  const [data, setData] = useState<{
-    projects: projectType[];
-    total: number;
-    totalPages: number;
-  } | null>(null);
+  const [params, setParams] = useState<paramsType>({ limit: 10, page: 1 });
 
-  useEffect(() => {
-    setData(
-      response as {
-        projects: projectType[];
-        total: number;
-        totalPages: number;
-        currentPage: number;
-      },
-    );
-    setCurrentPage((response as { currentPage: number })?.currentPage || 1);
-  }, [response]);
+  const { index } = useHome(params);
+  const data = index.data?.pages[0];
 
   const handlePageChange = (page: number) => {
-    get({ newUrl: `/api/projetos?page=${page}&limit=${projectsPerPage}` });
+    setParams({ ...params, page });
   };
 
   return (
@@ -53,7 +34,7 @@ export default function Home() {
         transition={{ ease: 'easeInOut', duration: 0.75 }}
         className="mt-16 flex flex-1 flex-col gap-10 p-10 items-center relative"
       >
-        {loading ? (
+        {index.isLoading ? (
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : (
           <>
@@ -61,13 +42,13 @@ export default function Home() {
               <Suspense>
                 <HomeFilters
                   applyFilters={filter => {
-                    get({ params: filter });
+                    setParams({ ...params, ...filter });
                   }}
                 />
               </Suspense>
 
-              <CreateProjectForm get={() => get({})} />
-              <UploadCsvButton get={() => get({})} />
+              <CreateProjectForm get={() => index.refetch()} />
+              <UploadCsvButton get={() => index.refetch()} />
             </div>
             <div className="w-full flex flex-wrap gap-5 justify-center">
               {data?.projects && data?.projects.length > 0 ? (
@@ -75,7 +56,7 @@ export default function Home() {
                   <ProjectCard
                     project={project}
                     key={project.id}
-                    get={() => get({})}
+                    get={() => index.refetch()}
                   />
                 ))
               ) : (
@@ -86,7 +67,7 @@ export default function Home() {
               data?.totalPages >= 0 &&
               data?.projects.length > 0 && (
                 <Pagination
-                  currentPage={currentPage}
+                  currentPage={params.page}
                   totalPages={data.totalPages}
                   onPageChange={handlePageChange}
                 />

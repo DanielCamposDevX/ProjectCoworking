@@ -1,11 +1,11 @@
 'use client';
-import { api } from '@/app/config/api';
 import {
   Command,
   CommandEmpty,
   CommandInput,
   CommandList,
 } from '@/components/ui/command';
+import { api } from '@/config/api';
 import { projectType } from '@/types/project-type';
 import { ChevronDown, ChevronUp, PlusCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';

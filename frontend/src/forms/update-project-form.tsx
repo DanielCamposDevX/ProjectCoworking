@@ -1,5 +1,4 @@
 'use client';
-import { api } from '@/app/config/api';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -17,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { api } from '@/config/api';
 import {
   updateProjectFormData,
   updateProjectFormSchema,

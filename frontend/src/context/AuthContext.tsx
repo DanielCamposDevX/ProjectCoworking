@@ -1,3 +1,4 @@
+import { api } from '@/config/api';
 import { jwtDecode } from 'jwt-decode';
 import {
   createContext,
@@ -6,7 +7,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { api } from '../config/api';
 
 interface AuthContextType {
   token: string | null;

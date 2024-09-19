@@ -31,6 +31,7 @@ export default function HomeFilters({
 }) {
   const [open, setOpen] = useState(false);
   const [filters, setFilters] = useState<paramsType>({
+    page: 1,
     userId: undefined,
     status: undefined,
     data_inicio: undefined,
@@ -52,6 +53,7 @@ export default function HomeFilters({
     const data_fim = searchParams.get('data_fim') || undefined;
 
     setFilters({
+      page: Number(searchParams.get('page')) || 1,
       userId: userId ? Number(userId) : undefined,
       status: status as paramsType['status'],
       data_inicio: data_inicio

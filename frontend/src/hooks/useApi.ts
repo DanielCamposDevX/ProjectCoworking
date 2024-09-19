@@ -1,4 +1,4 @@
-import { api } from "@/app/config/api";
+import { api } from "@/config/api";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 export function usePost() {

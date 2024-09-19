@@ -1,4 +1,4 @@
-import { api } from '@/app/config/api';
+import { api } from '@/config/api';
 import TaskUpdateForm from '@/forms/task-update-form';
 import { taskType } from '@/types/task-type';
 import { Trash2 } from 'lucide-react';

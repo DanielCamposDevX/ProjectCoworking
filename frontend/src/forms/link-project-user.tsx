@@ -1,6 +1,6 @@
 'use client';
-import { api } from '@/app/config/api';
 import { User, UsersCommand } from '@/components/project-users-command';
+import { api } from '@/config/api';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';

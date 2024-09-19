@@ -1,4 +1,3 @@
-import { api } from '@/app/config/api';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,6 +10,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { api } from '@/config/api';
 import {
   createTaskFormData,
   createTaskFormSchema,

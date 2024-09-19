@@ -1,14 +1,18 @@
 'use client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Poppins } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthProvider } from './context/AuthContext';
+
+import { AuthProvider } from '@/context/AuthContext';
 import './globals.css';
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
+
+const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -25,9 +29,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={poppins.className}>
-        <AuthProvider>
-          {children} <ToastContainer />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            {children} <ToastContainer />
+          </AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
