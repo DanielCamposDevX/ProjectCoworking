@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Coworking gestor de projetos.
 
-## Getting Started
+O Gestor Coworking tem como foco ajudar no processo de organização e visualização de um projeto, podendo ser criadas tarefas e comentários em cada projeto. O Coworking conta também com um sistema robusto de notificações em tempo real tanto por e-mail quanto na própria plataforma para facilitar o gerencimento do projeto e se manter atualizado. Todo sistema é pensado para ser o mais simples prático e performático e para que você possa gerir seu projeto sem dores de cabeça.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Para rodar o projeto:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Sem Docker:
+Utilize o NPM para instalar as dependências: npm install ou npm i ;
+Atualize o .env com suas variáveis de ambiente
+Para iniciar o projeto como dev utilize: npm run dev;
+Para iniciar em produção: npm run build && npm start;
 
-## Learn More
+# Com Docker:
+Na raiz do projeto digite o comando docker compose up --build -d para buildar a imagem do projeto e subir o container em segundo plano.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tecnologias:
+NextJS(framework react),
+TailwindCSS(rodar o CSS de uma forma mais direta no código)
+RadixUI(Lib para facilitar a criação da UI),
+ReactHookForm(Otimização de formulários para evitar uso excessivo de states e re-renderizações desnecessárias),
+Zod e ZodResolver(Para fazer a criação dos schemas e integra-los com o formulário do hookForm),
+lucide(biblioteca de ícones),
+framer(Biblioteca para criar animações),
+Tanstack query(Biblioteca para otimizar a utilização de cache para entregar uma experiência mais fluida)
+Eslint e Prettier(Formatador de código com intuito de manter padrões e clean coding)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
