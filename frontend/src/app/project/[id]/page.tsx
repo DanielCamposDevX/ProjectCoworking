@@ -1,4 +1,5 @@
 'use client';
+import { useProject } from '@/api/callers/project';
 import CommentSection from '@/components/comments';
 import Header from '@/components/default/header';
 import Logs from '@/components/logs';
@@ -7,26 +8,18 @@ import TaskSection from '@/components/tasks';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useGet } from '@/hooks/useApi';
 import { randomUserImage } from '@/lib/randomUser';
-import { completeprojectType } from '@/types/project-type';
 import { motion } from 'framer-motion';
 import { ChevronLeft, Loader2, User } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 
-import { useEffect, useState } from 'react';
-
 export default function ProjectPage() {
   const { id } = useParams();
-  const { response, loading, get } = useGet({ url: `/api/projetos/${id}` });
-  const [project, setProject] = useState<completeprojectType | null>(null);
-  const router = useRouter();
+  const { index } = useProject(`/api/projetos/${id}`);
 
-  useEffect(() => {
-    if (response) {
-      setProject(response as completeprojectType);
-    }
-  }, [response]);
+  const project = index.data;
+
+  const router = useRouter();
 
   const groupUsersByRole = () => {
     const groups: {
@@ -55,7 +48,7 @@ export default function ProjectPage() {
         transition={{ ease: 'easeInOut', duration: 0.75 }}
         className="w-full md:w-11/12 lg:w-5/6 mt-20 min-h-screen border rounded-lg lg:p-20 p-5 flex flex-col bg-card"
       >
-        {!loading && project ? (
+        {!index.isFetching && project ? (
           <>
             <Button
               variant={'secondary'}
@@ -68,7 +61,7 @@ export default function ProjectPage() {
             </Button>
             <div className="w-full flex justify-between flex-col  lg:flex-row">
               <div className="lg:p-10 flex flex-col w-full lg:w-9/12  border-r">
-                <ProjectHeader project={project} get={() => get({})} />
+                <ProjectHeader project={project} get={() => index.refetch()} />
                 <div className="flex flex-col gap-2 ">
                   <TaskSection projectId={project.id} />
                   <Separator className="my-8" />

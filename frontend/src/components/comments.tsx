@@ -1,59 +1,44 @@
+import { useComments } from '@/api/callers/comments';
 import { api } from '@/config/api';
 import { useAuth } from '@/context/AuthContext';
-import { useGet } from '@/hooks/useApi';
-import { commentType } from '@/types/comment-type';
 import { MessageCircle, Trash2 } from 'lucide-react';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pagination } from './pagination';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 
-type responseType = {
-  comments: commentType[];
-  total: number;
-};
-
 export default function CommentSection({ id }: { id: number }) {
-  const [comments, setComments] = useState<Array<commentType>>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [params, setParams] = useState({ page: 1, limit: 5 });
   const [newComment, setNewComment] = useState('');
-  const [totalComments, setTotalComments] = useState(0);
-  const commentsPerPage = 5;
   const { userId } = useAuth();
 
-  const { response, get } = useGet({
-    url: `/api/projetos/${id}/comentarios?page=${currentPage}&limit=${commentsPerPage}`,
-  });
+  const { index } = useComments(`/api/projetos/${id}/comentarios`, params);
 
-  useEffect(() => {
-    if (response) {
-      const { comments, total } = response as responseType;
-      setComments(comments);
-      setTotalComments(total);
-    }
-  }, [response]);
+  const comments = index.data?.pages[0].comments;
 
-  const totalPages = Math.ceil(totalComments / commentsPerPage);
+  const totalPages = Math.ceil(
+    (index.data?.pages[0].total || 1) / params.limit,
+  );
 
   const handleAddComment = () => {
     api
       .post(`/api/projetos/${id}/comentarios`, { texto: newComment })
       .then(() => {
         setNewComment('');
-        setCurrentPage(1);
-        get({});
+        setParams({ ...params, page: 1 });
+        index.refetch();
       });
   };
 
   const handleDelete = (commentId: number) => {
     api.delete(`/api/projetos/comentarios/${commentId}`).then(() => {
-      get({});
+      index.refetch();
     });
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setParams({ ...params, page });
   };
 
   return (
@@ -93,7 +78,7 @@ export default function CommentSection({ id }: { id: number }) {
         <div className="flex justify-center items-center py-4">
           {totalPages > 1 && (
             <Pagination
-              currentPage={currentPage}
+              currentPage={params.page}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />

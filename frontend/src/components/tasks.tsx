@@ -1,15 +1,14 @@
 import { api } from '@/config/api';
 import { useAuth } from '@/context/AuthContext';
-import { useGet } from '@/hooks/useApi';
-import { taskType } from '@/types/task-type';
 
+import { useTasks } from '@/api/callers/tasks';
 import {
   createTaskFormData,
   createTaskFormSchema,
 } from '@/schemas/task-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ClipboardList, LoaderCircle, PlusCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Pagination } from './pagination';
 import TaskCard from './taskCard';
@@ -33,18 +32,10 @@ import {
   SelectValue,
 } from './ui/select';
 
-type responseType = {
-  tasks: taskType[];
-  total: number;
-};
-
 export default function TaskSection({ projectId }: { projectId: number }) {
-  const [tasks, setTasks] = useState<Array<taskType>>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalTasks, setTotalTasks] = useState(0);
+  const [params, setParams] = useState({ page: 1, limit: 5 });
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const tasksPerPage = 5;
   const { userId } = useAuth();
 
   const {
@@ -57,19 +48,13 @@ export default function TaskSection({ projectId }: { projectId: number }) {
     resolver: zodResolver(createTaskFormSchema),
   });
 
-  const { response, get } = useGet({
-    url: `/api/projetos/${projectId}/tarefas?page=${currentPage}&limit=${tasksPerPage}`,
-  });
+  const { index } = useTasks(`/api/projetos/${projectId}/tarefas`, params);
 
-  useEffect(() => {
-    if (response) {
-      const { tasks, total } = response as responseType;
-      setTasks(tasks);
-      setTotalTasks(total);
-    }
-  }, [response]);
+  const tasks = index.data?.pages[0].tasks;
 
-  const totalPages = Math.ceil(totalTasks / tasksPerPage);
+  const totalPages = Math.ceil(
+    (index.data?.pages[0].total || 1) / params.limit,
+  );
 
   const handleAddTask = (taskData: createTaskFormData) => {
     setLoading(true);
@@ -77,13 +62,13 @@ export default function TaskSection({ projectId }: { projectId: number }) {
       setLoading(false);
       setOpen(false);
       reset();
-      setCurrentPage(1);
-      get({});
+      setParams({ ...params, page: 1 });
+      index.refetch();
     });
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setParams({ ...params, page });
   };
 
   return (
@@ -96,13 +81,18 @@ export default function TaskSection({ projectId }: { projectId: number }) {
       <div className="border shadow-lg rounded-lg py-10 px-10 mt-2">
         <div className="space-y-4 ">
           {tasks?.map(task => (
-            <TaskCard key={task.id} task={task} userId={userId} get={get} />
+            <TaskCard
+              key={task.id}
+              task={task}
+              userId={userId}
+              get={() => index.refetch()}
+            />
           ))}
         </div>
         <div className="flex justify-center items-center py-4">
           {totalPages > 1 && (
             <Pagination
-              currentPage={currentPage}
+              currentPage={params.page}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />
