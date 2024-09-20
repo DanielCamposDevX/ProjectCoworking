@@ -21,17 +21,10 @@ import {
 export default function DashFilters({
   applyFilters,
 }: {
-  applyFilters: (filters: paramsType) => void;
+  applyFilters: (filters: Partial<paramsType>) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [filters, setFilters] = useState<paramsType>({
-    userId: undefined,
-    status: undefined,
-    data_inicio: undefined,
-    data_fim: undefined,
-    userNome: undefined,
-  });
-
+  const [filters, setFilters] = useState<Partial<paramsType>>({});
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -44,57 +37,60 @@ export default function DashFilters({
     const data_inicio = searchParams.get('data_inicio') || undefined;
     const data_fim = searchParams.get('data_fim') || undefined;
 
-    setFilters({
+    const newFilters = {
       userId: userId ? Number(userId) : undefined,
       status: status as paramsType['status'],
-      userNome: searchParams.get('userNome') || undefined,
       data_inicio: data_inicio
         ? moment(data_inicio).startOf('day').toISOString()
         : undefined,
       data_fim: data_fim
         ? moment(data_fim).endOf('day').toISOString()
         : undefined,
+      userNome: searchParams.get('userNome') || undefined,
+    };
+
+    setFilters(newFilters);
+    applyFilters({
+      userId: newFilters.userId,
+      status: newFilters.status,
+      data_inicio: newFilters.data_inicio,
+      data_fim: newFilters.data_fim,
     });
   }, [searchParams]);
 
-  const handleFilterChange = (key: string, value: string | undefined) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-    if (key === 'order' || key === 'sortBy') {
-      const queryParams = new URLSearchParams();
-
-      Object.entries(filters).forEach(([keye, valuee]) => {
-        if (valuee !== undefined) {
-          queryParams.set(keye, valuee as string);
-        }
-      });
-
-      queryParams.set(key, value as string);
-
-      router.push(`?${queryParams.toString()}`, undefined);
-
-      applyFilters({ ...filters, [key]: value });
-    }
+  const handleFilterChange = (key: keyof paramsType, value: unknown) => {
+    setFilters(prev => {
+      const newFilters = { ...prev };
+      if (value === undefined || value === null) {
+        delete newFilters[key];
+      } else {
+        newFilters[key] = value as never;
+      }
+      return newFilters;
+    });
   };
 
   const handleApplyFilters = () => {
     const queryParams = new URLSearchParams();
-
     Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined) {
+      if (value !== undefined && value !== null) {
         queryParams.set(key, value as string);
       }
     });
 
     router.push(`?${queryParams.toString()}`, undefined);
-
-    applyFilters(filters);
+    applyFilters({
+      userId: filters.userId,
+      status: filters.status,
+      data_inicio: filters.data_inicio,
+      data_fim: filters.data_fim,
+    });
     setOpen(false);
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 text-base px-8 py-6 rounded-full bg-white  mb-4">
+        <Button className="gap-2 text-base px-8 py-6 rounded-full bg-white mb-4">
           Filtros
         </Button>
       </DialogTrigger>
@@ -126,12 +122,8 @@ export default function DashFilters({
             <DataSelect
               placeholder={filters.userNome || 'Pesquisar usuários...'}
               url="/api/usuarios"
-              setValue={value => {
-                handleFilterChange('userId', value);
-              }}
-              setHolder={value => {
-                handleFilterChange('userNome', value);
-              }}
+              setValue={value => handleFilterChange('userId', value)}
+              setHolder={value => setFilters({ ...filters, userNome: value })}
               value={filters.userId?.toString()}
             />
           </div>
@@ -150,7 +142,7 @@ export default function DashFilters({
               onChange={e =>
                 handleFilterChange(
                   'data_inicio',
-                  moment(e.target.value).toISOString(),
+                  moment(e.target.value).startOf('day').toISOString(),
                 )
               }
             />
@@ -170,7 +162,7 @@ export default function DashFilters({
               onChange={e =>
                 handleFilterChange(
                   'data_fim',
-                  moment(e.target.value).toISOString(),
+                  moment(e.target.value).endOf('day').toISOString(),
                 )
               }
             />

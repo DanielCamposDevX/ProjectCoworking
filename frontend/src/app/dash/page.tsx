@@ -1,12 +1,11 @@
 'use client';
+import { useDashboard } from '@/api/callers/dash';
 import DashCard from '@/components/dashCard';
 import DashFilters from '@/components/dashFilters';
 import Header from '@/components/default/header';
 import Logs from '@/components/logs';
 import { ChartContainer } from '@/components/ui/chart';
-import { useGet } from '@/hooks/useApi';
-import { logsType } from '@/types/logs-type';
-import { taskType } from '@/types/task-type';
+import { paramsType } from '@/types/params-type';
 import { motion } from 'framer-motion';
 import {
   AlarmClock,
@@ -15,7 +14,7 @@ import {
   FolderOpen,
   Loader2,
 } from 'lucide-react';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -28,27 +27,11 @@ import {
   YAxis,
 } from 'recharts';
 
-type dashType = {
-  totalProjetos: number;
-  projetosEmAndamento: number;
-  projetosPendentes: number;
-  projetosConcluidos: number;
-  tarefasPorProjeto: taskType[];
-  logsRecentes: logsType[];
-};
-
 export default function Dash() {
-  const { loading, response, get } = useGet({
-    url: `/api/projetos/dashboard`,
-  });
+  const [params, setParams] = useState<paramsType>({ limit: 10, page: 1 });
 
-  const [dashboardData, setDashboardData] = useState<dashType | null>(null);
-
-  useEffect(() => {
-    if (response) {
-      setDashboardData(response as dashType);
-    }
-  }, [response]);
+  const { index } = useDashboard(params);
+  const dashboardData = index.data;
 
   const barChartData =
     dashboardData?.tarefasPorProjeto.flat().reduce((acc, task) => {
@@ -83,7 +66,7 @@ export default function Dash() {
         transition={{ ease: 'easeInOut', duration: 0.75 }}
         className="mt-16 flex w-10/12 flex-col gap-10 p-10 items-center relative bg-white rounded-3xl"
       >
-        {loading ? (
+        {index.isFetching ? (
           <Loader2 className="animate-spin h-7 w-7 mt-10" />
         ) : dashboardData ? (
           <div className="w-full">
@@ -91,8 +74,8 @@ export default function Dash() {
               <div className="flex">
                 <Suspense>
                   <DashFilters
-                    applyFilters={filters => {
-                      get({ params: filters });
+                    applyFilters={filter => {
+                      setParams(filter as paramsType);
                     }}
                   />
                 </Suspense>
