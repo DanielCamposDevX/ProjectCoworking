@@ -21,7 +21,7 @@ export const useHome = (query: paramsType) => {
     queryFn: () => api.index(query),
     initialPageParam: 1,
     getNextPageParam: (lastPage: Pagination) =>
-      lastPage.currentPage < lastPage.totalPages
+      lastPage?.currentPage < lastPage.totalPages
         ? lastPage.currentPage * (query.limit || 10)
         : undefined,
   });

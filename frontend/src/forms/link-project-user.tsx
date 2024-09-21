@@ -129,30 +129,46 @@ export default function LinkProjectUserForm({
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.nome}</TableCell>
                 <TableCell>{user.papel}</TableCell>
-                <TableCell>
-                  <Checkbox
-                    checked={Boolean(user.permissions[0].create)}
-                    onCheckedChange={value =>
-                      updatePermissions(user.id, 'create', Boolean(value))
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <Checkbox
-                    checked={Boolean(user.permissions[0].update)}
-                    onCheckedChange={value =>
-                      updatePermissions(user.id, 'update', Boolean(value))
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <Checkbox
-                    checked={Boolean(user.permissions[0].delete)}
-                    onCheckedChange={value =>
-                      updatePermissions(user.id, 'delete', Boolean(value))
-                    }
-                  />
-                </TableCell>
+                {project.created_by !== user.id ? (
+                  <>
+                    <TableCell>
+                      <Checkbox
+                        checked={Boolean(user.permissions[0].create)}
+                        onCheckedChange={value =>
+                          updatePermissions(user.id, 'create', Boolean(value))
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Checkbox
+                        checked={Boolean(user.permissions[0].update)}
+                        onCheckedChange={value =>
+                          updatePermissions(user.id, 'update', Boolean(value))
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Checkbox
+                        checked={Boolean(user.permissions[0].delete)}
+                        onCheckedChange={value =>
+                          updatePermissions(user.id, 'delete', Boolean(value))
+                        }
+                      />
+                    </TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell>
+                      <Checkbox checked={true} disabled />
+                    </TableCell>
+                    <TableCell>
+                      <Checkbox checked={true} disabled />
+                    </TableCell>
+                    <TableCell>
+                      <Checkbox checked={true} disabled />
+                    </TableCell>
+                  </>
+                )}
 
                 <TableCell>
                   <Button

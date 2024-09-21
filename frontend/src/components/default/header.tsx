@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { LogOut } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Notifications from '../notifications';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 
@@ -27,6 +28,9 @@ export default function Header() {
           <Image src={Logo} alt="Logo" className={`z-50 w-[200px]`} />
         </div>
         <div className="flex items-center gap-3">
+          <div>
+            <Notifications />
+          </div>
           <Button variant="outline" onClick={handleSignOut} className=" border">
             <LogOut className="h-4 w-4" />
           </Button>

@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider } from '@/context/AuthContext';
+import { NotificationsProvider } from '@/context/NotificationContext';
 import './globals.css';
 
 const poppins = Poppins({
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body className={poppins.className}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            {children} <ToastContainer />
+            <NotificationsProvider>
+              {children} <ToastContainer />
+            </NotificationsProvider>
           </AuthProvider>
         </QueryClientProvider>
       </body>
