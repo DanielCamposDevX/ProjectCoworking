@@ -1,5 +1,6 @@
 import { prisma } from '../config/database.js';
 import { io } from '../server.js';
+import { paramsType } from '../types/query-type.js';
 
 async function createLog(userId: number, projectId: number, action: string) {
    const newLog = await prisma.logs.create({
@@ -32,4 +33,24 @@ async function createLog(userId: number, projectId: number, action: string) {
    return newLog;
 }
 
-export const logsRepositories = { createLog };
+async function getLogs(userId: number, query?: paramsType) {
+   const { limit = 5 } = query || {};
+
+   const logs = await prisma.logs.findMany({
+      orderBy: {
+         data: 'desc',
+      },
+      take: limit,
+      where: {
+         usuarioId: userId,
+      },
+      select: {
+         data: true,
+         acao: true,
+      },
+   });
+
+   return logs;
+}
+
+export const logsRepositories = { getLogs, createLog };
