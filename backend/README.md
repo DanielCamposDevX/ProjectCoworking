@@ -1,149 +1,206 @@
-# **Backend**
+## Para rodar o projeto:
 
-O backend será responsável por fornecer uma API RESTful que permitirá a interação com os dados do sistema. A API terá endpoints para realizar operações CRUD (Create, Read, Update, Delete) em projetos e usuários além da autenticação do login e registro de usuários usando JWT.
+# Sem Docker:
+Utilize o NPM para instalar as dependências: npm install ou npm i ;
+Atualize o .env com suas variáveis de ambiente;
+Após isso rode as migrations no seu banco: npx prisma migrate dev;
+Para iniciar o projeto como dev utilize: npm run dev;
+Para iniciar em produção: npm run build && npm start;
 
-# **Estrutura do Backend**
+# Com Docker:
+Na raiz do projeto digite o comando docker compose up --build -d para buildar a imagem do projeto e subir o container em segundo plano.
 
--  Diretório backend: Contém o código do servidor.
--  Container (opcional): Para facilitar a execução e o isolamento do ambiente.
 
-## Observação
 
-Solicitamos que façam o uso do Node JS em uma versão 18 ou superior
+### Rotas:
 
-## Endpoints da API
 
-Esperamos os seguintes endpoints da API para este primeiro projeto:
+# 1. Obter Usuários
+Método: GET
+Endpoint: /api/usuarios
+Middleware: authUser, queryValidations(queryParamsSchema)
+Controller: userControllers.getUsers
+Descrição: Retorna uma lista de usuários.
 
-### **Projetos**
 
--  **Listar projetos (GET):** `/api/projetos`
+# 2. Registrar Usuário
+Método: POST
+Endpoint: /api/auth/register
+Middleware: validate(userSchema)
+Controller: userControllers.createUser
+Descrição: Cria um novo usuário.
 
-   -  **Resposta de Sucesso (200):** Retorna um array com os projetos.
 
-   ```json
-   [
-      {
-         "id": 1,
-         "nome": "Nome do Projeto",
-         "descricao": "Descrição do Projeto",
-         "data_inicio": "2024-01-01",
-         "data_fim": "2024-12-31",
-         "status": "Em andamento"
-      }
-   ]
-   ```
+# 3. Login do Usuário
+Método: POST
+Endpoint: /api/auth/login
+Middleware: validate(loginSchema)
+Controller: userControllers.loginUser
+Descrição: Realiza o login de um usuário.
 
-   -  **Resposta de Erro (404):** Retorna uma mensagem indicando que nenhum projeto foi encontrado.
 
--  **Cadastrar Projeto (POST):** `/api/projetos`
+# 4. Obter Usuário Autenticado
+Método: GET
+Endpoint: /api/auth/me
+Middleware: authUser
+Controller: userControllers.getAuthUser
+Descrição: Retorna os dados do usuário autenticado.
+taskRouter
 
-   -  **Corpo da Requisição:**
 
-   ```json
-   {
-      "nome": "Nome do Projeto",
-      "descricao": "Descrição do Projeto",
-      "data_inicio": "2024-12-31",
-      "status": "Em andamento"
-   }
-   ```
+# 1. Obter Tarefas por Projeto
+Método: GET
+Endpoint: /api/projetos/:id/tarefas
+Middleware: authUser, queryValidations(queryParamsSchema)
+Controller: taskControllers.getTasks
+Descrição: Retorna as tarefas de um projeto específico.
 
-   -  **Resposta de Sucesso (200):** Retorna o novo projeto criado.
-   -  **Resposta de Erro (400):** Retorna uma mensagem indicando que o corpo da requisição está incorreto.
 
--  **Editar Projeto (PUT):** `/api/projetos/:id`
+# 2. Gerar Tarefas
+Método: GET
+Endpoint: /api/projetos/:id/tarefas/generate
+Middleware: authUser
+Controller: taskControllers.generateTasks
+Descrição: Gera novas tarefas para o projeto.
 
-   -  **Corpo da Requisição:**
 
-   ```json
-   {
-      "nome": "Novo Nome do Projeto",
-      "descricao": "Nova Descrição do Projeto",
-      "data_inicio": "2024-01-01",
-      "data_fim": "2024-12-31",
-      "status": "Concluído"
-   }
-   ```
+# 3. Criar Tarefa
+Método: POST
+Endpoint: /api/projetos/:id/tarefas
+Middleware: authUser, validate(taskSchema)
+Controller: taskControllers.createTask
+Descrição: Cria uma nova tarefa para o projeto.
 
-   -  **Resposta de Sucesso (200):** Retorna o projeto atualizado.
-   -  **Resposta de Erro (400):** Retorna uma mensagem indicando que o corpo da requisição está incorreto.
 
--  **Remover Projeto (DELETE):** `/api/projetos/:id`
-   -  **Resposta de Sucesso (204):** Confirma que o projeto foi removido com sucesso.
-   -  **Resposta de Erro (400):** Retorna uma mensagem indicando problemas na remoção.
+# 4. Atualizar Tarefa
+Método: PUT
+Endpoint: /api/projetos/tarefas/:id
+Middleware: authUser, validate(taskSchema)
+Controller: taskControllers.updateTask
+Descrição: Atualiza os dados de uma tarefa existente.
 
-### **Usuários em Projetos**
 
--  **Listar usuários em um projeto (GET):** `/api/projetos/{projetoId}/usuarios`
+# 5. Deletar Tarefa
+Método: DELETE
+Endpoint: /api/projetos/tarefas/:id
+Middleware: authUser
+Controller: taskControllers.deleteTask
+Descrição: Deleta uma tarefa específica.
+projectRouter
 
-   -  **Resposta de Sucesso (200):** Retorna a lista de usuários vinculados ao projeto.
+# 1. Obter Dashboard de Projetos
+Método: GET
+Endpoint: /api/projetos/dashboard
+Middleware: authUser, queryValidations(queryParamsSchema)
+Controller: projectControllers.getDashboard
+Descrição: Retorna o dashboard de projetos.
+# 2. Obter Projetos
+Método: GET
+Endpoint: /api/projetos
+Middleware: authUser, queryValidations(queryParamsSchema)
+Controller: projectControllers.getProjects
+Descrição: Retorna uma lista de projetos.
 
-   ```json
-   [
-      {
-         "id": 1,
-         "nome": "Nome do Usuário",
-         "email": "email@exemplo.com",
-         "papel": "Desenvolvedor"
-      }
-   ]
-   ```
 
-   -  **Resposta de Erro (404):** Retorna uma mensagem indicando que nenhum usuário foi encontrado para o projeto especificado..
+# 3. Obter Projeto por ID
+Método: GET
+Endpoint: /api/projetos/:id
+Middleware: authUser
+Controller: projectControllers.getProjectById
+Descrição: Retorna os detalhes de um projeto específico.
 
--  **Cadastrar Usuário em Projeto (POST):** `/api/projetos/{projetoId}/usuarios`
 
-   -  **Corpo da Requisição:**
+# 4. Criar Projeto
+Método: POST
+Endpoint: /api/projetos
+Middleware: authUser, validate(projectSchema)
+Controller: projectControllers.createProject
+Descrição: Cria um novo projeto.
 
-   ```json
-   {
-      "usuario_id": 1
-   }
-   ```
 
-   -  **Resposta de Sucesso (201):** Retorna o usuário adicionado ao projeto.
-   -  **Resposta de Erro (400):** Retorna uma mensagem indicando que o corpo da requisição está incorreto.
+# 5. Upload de CSV
+Método: POST
+Endpoint: /api/projetos/many
+Middleware: upload.single('file'), authUser
+Controller: projectControllers.uploadCSV
+Descrição: Faz upload de um arquivo CSV para criar múltiplos projetos.
 
--  **Remover Usuário em Projeto (DELETE):** `/api/projetos/{projetoId}/usuarios/{usuarioId}`
-   -  **Resposta de Sucesso (204):** Confirma que o usuário foi removido do projeto com sucesso.
-   -  **Resposta de Erro (400):** Retorna uma mensagem indicando problemas na remoção.
 
-### **Autenticação**
+# 6. Atualizar Projeto
+Método: PUT
+Endpoint: /api/projetos/:id
+Middleware: authUser, validate(updateProjectSchema)
+Controller: projectControllers.updateProject
+Descrição: Atualiza os detalhes de um projeto existente.
 
--  **Registrar novo usuário (POST):** `/api/auth/register`
 
-   -  **Corpo da Requisição:**
+# 7. Deletar Projeto
+Método: DELETE
+Endpoint: /api/projetos/:id
+Middleware: authUser
+Controller: projectControllers.deleteProject
+Descrição: Deleta um projeto específico.
 
-   ```json
-   {
-      "nome": "Nome do Usuário",
-      "email": "email@exemplo.com",
-      "senha": "senha123",
-      "papel": "Desenvolvedor"
-   }
-   ```
 
-   -  **Resposta de Sucesso (201):** Usuário criado com sucesso:
+# 8. Obter Usuários do Projeto
+Método: GET
+Endpoint: /api/projetos/:id/usuarios
+Middleware: authUser, queryValidations(queryParamsSchema)
+Controller: projectControllers.getProjectUsers
+Descrição: Retorna os usuários associados a um projeto.
 
-   ```json
-   {
-      "id": 1,
-      "nome": "Nome do Usuário",
-      "email": "email@exemplo.com",
-      "papel": "Desenvolvedor",
-      "token": "jwt_token"
-   }
-   ```
 
-   -  **Resposta de Erro (400):** Dados inválidos ou usuário já existente.
+# 9. Adicionar Usuário ao Projeto
+Método: POST
+Endpoint: /api/projetos/:id/usuarios
+Middleware: authUser, validate(projectUserSchema)
+Controller: projectControllers.postProjectUsers
+Descrição: Adiciona um usuário a um projeto.
 
--  **Realizar login de usuário (POST): ** `/api/auth/login`
 
-   -  **Resposta de Sucesso (201):** Retorna um token JWT válido:
-   -  **Resposta de Erro (400):** Credenciais inválidas.
+# 10. Deletar Usuário do Projeto
+Método: DELETE
+Endpoint: /api/projetos/:id/usuarios/:usuario_id
+Middleware: authUser
+Controller: projectControllers.deleteProjectUsers
+Descrição: Remove um usuário de um projeto.
+permissionRouter
+Atualizar Permissão
+Método: PUT
+Endpoint: /api/permissions/:projectId/:userId
+Middleware: authUser, validate(permissionSchema)
+Controller: permissionControllers.updatePermission
+Descrição: Atualiza as permissões de um usuário em um projeto.
+commentRouter
 
--  **Retornar dados do usuário autenticado (GET):** `/api/auth/me`
 
-   -  **Resposta de Sucesso (201):** Retorna os dados do usuário autenticado:
-   -  **Resposta de Erro (400):** Token inválido ou não fornecido.
+# 1. Obter Comentários
+Método: GET
+Endpoint: /api/projetos/:id/comentarios
+Middleware: authUser, queryValidations(queryParamsSchema)
+Controller: commentControllers.getComments
+Descrição: Retorna os comentários de um projeto específico.
+
+
+# 2. Criar Comentário
+Método: POST
+Endpoint: /api/projetos/:id/comentarios
+Middleware: authUser, validate(commentSchema)
+Controller: commentControllers.createComment
+Descrição: Adiciona um novo comentário a um projeto.
+
+
+# 3. Atualizar Comentário
+Método: PUT
+Endpoint: /api/projetos/comentarios/:id
+Middleware: authUser, validate(commentSchema)
+Controller: commentControllers.updateComment
+Descrição: Atualiza um comentário existente.
+
+
+# 4. Deletar Comentário
+Método: DELETE
+Endpoint: /api/projetos/comentarios/:id
+Middleware: authUser
+Controller: commentControllers.deleteComment
+Descrição: Remove um comentário específico.

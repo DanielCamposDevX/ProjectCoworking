@@ -1,0 +1,519 @@
+openapi: 3.0.0
+info:
+  title: API de Usuários, Projetos e Tarefas
+  version: 1.0.0
+  description: API para gerenciar usuários, projetos e tarefas, incluindo autenticação e registro.
+
+paths:
+  # Usuários
+  /api/usuarios:
+    get:
+      summary: Listar usuários
+      security:
+        - authUser: []
+      responses:
+        '200':
+          description: Lista de usuários retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userSchema'
+
+  /api/auth/register:
+    post:
+      summary: Registrar um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userSchema'
+      responses:
+        '201':
+          description: Usuário registrado com sucesso.
+        '400':
+          description: Erro de validação.
+
+  /api/auth/login:
+    post:
+      summary: Login de usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginSchema'
+      responses:
+        '200':
+          description: Login realizado com sucesso.
+        '401':
+          description: Credenciais inválidas.
+
+  /api/auth/me:
+    get:
+      summary: Obter informações do usuário autenticado
+      security:
+        - authUser: []
+      responses:
+        '200':
+          description: Informações do usuário autenticado retornadas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userSchema'
+
+  # Projetos
+  /api/projetos/dashboard:
+    get:
+      summary: Obter informações do dashboard de projetos
+      security:
+        - authUser: []
+      responses:
+        '200':
+          description: Informações do dashboard retornadas com sucesso.
+
+  /api/projetos:
+    get:
+      summary: Listar projetos
+      security:
+        - authUser: []
+      responses:
+        '200':
+          description: Lista de projetos retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/projectSchema'
+
+    post:
+      summary: Criar um novo projeto
+      security:
+        - authUser: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/projectSchema'
+      responses:
+        '201':
+          description: Projeto criado com sucesso.
+        '400':
+          description: Erro de validação.
+
+  /api/projetos/{id}:
+    get:
+      summary: Obter projeto por ID
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Projeto encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/projectSchema'
+        '404':
+          description: Projeto não encontrado.
+
+    put:
+      summary: Atualizar um projeto
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateProjectSchema'
+      responses:
+        '200':
+          description: Projeto atualizado com sucesso.
+        '400':
+          description: Erro de validação.
+
+    delete:
+      summary: Deletar um projeto
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Projeto deletado com sucesso.
+        '404':
+          description: Projeto não encontrado.
+
+  # Tarefas
+  /api/projetos/{id}/tarefas:
+    get:
+      summary: Listar tarefas de um projeto por ID
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de tarefas retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/taskSchema'
+
+    post:
+      summary: Criar uma nova tarefa
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/taskSchema'
+      responses:
+        '201':
+          description: Tarefa criada com sucesso.
+        '400':
+          description: Erro de validação.
+
+  /api/projetos/{id}/tarefas/generate:
+    get:
+      summary: Gerar tarefas para um projeto
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tarefas geradas com sucesso.
+
+  /api/projetos/tarefas/{id}:
+    put:
+      summary: Atualizar uma tarefa
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/taskSchema'
+      responses:
+        '200':
+          description: Tarefa atualizada com sucesso.
+        '400':
+          description: Erro de validação.
+
+    delete:
+      summary: Deletar uma tarefa
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Tarefa deletada com sucesso.
+        '404':
+          description: Tarefa não encontrada.
+
+  # Permissões
+  /api/permissions/{projectId}/{userId}:
+    put:
+      summary: Atualizar permissões de um usuário em um projeto
+      security:
+        - authUser: []
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/permissionSchema'
+      responses:
+        '200':
+          description: Permissões atualizadas com sucesso.
+        '400':
+          description: Erro de validação.
+
+  # Comentários
+  /api/projetos/{id}/comentarios:
+    get:
+      summary: Listar comentários de um projeto
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de comentários retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/commentSchema'
+
+    post:
+      summary: Criar um novo comentário em um projeto
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commentSchema'
+      responses:
+        '201':
+          description: Comentário criado com sucesso.
+        '400':
+          description: Erro de validação.
+
+  /api/projetos/comentarios/{id}:
+    put:
+      summary: Atualizar um comentário
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commentSchema'
+      responses:
+        '200':
+          description: Comentário atualizado com sucesso.
+        '400':
+          description: Erro de validação.
+
+    delete:
+      summary: Deletar um comentário
+      security:
+        - authUser: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Comentário deletado com sucesso.
+        '404':
+          description: Comentário não encontrado.
+
+components:
+  schemas:
+    userSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "João da Silva"
+        email:
+          type: string
+          format: email
+          example: "joao@example.com"
+        senha:
+          type: string
+          maxLength: 30
+          example: "senhaSegura123"
+        papel:
+          type: string
+          example: "admin"
+      required:
+        - nome
+        - email
+        - senha
+        - papel
+
+    loginSchema:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: "joao@example.com"
+        senha:
+          type: string
+          maxLength: 30
+          example: "senhaSegura123"
+      required:
+        - email
+        - senha
+
+    projectSchema:
+      type: object
+      properties:
+        nome:
+          type: string
+          maxLength: 50
+          example: "Novo Projeto"
+        descricao:
+          type: string
+          maxLength: 180
+          example: "Descrição do projeto."
+        data_inicio:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        status:
+          type: string
+          enum: ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDO']
+          example: "EM_ANDAMENTO"
+      required:
+        - nome
+        - data_inicio
+        - status
+
+    updateProjectSchema:
+      type: object
+      properties:
+        nome:
+          type: string
+          maxLength: 50
+          example: "Projeto Atualizado"
+        descricao:
+          type: string
+          maxLength: 180
+          example: "Nova descrição do projeto."
+        data_inicio:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        data_fim:
+          type: string
+          format: date-time
+          example: "2023-12-31T00:00:00Z"
+        status:
+          type: string
+          enum: ['PENDENTE', 'EM_ANDAMENTO', 'CONCLUIDO']
+          example: "CONCLUIDO"
+
+    taskSchema:
+      type: object
+      properties:
+        nome:
+          type: string
+          maxLength: 50
+          example: "Nova Tarefa"
+        descricao:
+          type: string
+          maxLength: 145
+          example: "Descrição da tarefa."
+        status:
+          type: string
+          enum: ['PENDENTE', 'CONCLUIDO']
+          example: "PENDENTE"
+        term:
+          type: string
+          format: date
+          example: "2023-12-31"
+      required:
+        - nome
+        - descricao
+        - status
+
+    permissionSchema:
+      type: object
+      properties:
+        create:
+          type: boolean
+          example: true
+        update:
+          type: boolean
+          example: true
+        delete:
+          type: boolean
+          example: false
+
+    commentSchema:
+      type: object
+      properties:
+        texto:
+          type: string
+          maxLength: 50
+          example: "Novo comentário sobre o projeto"
+      required:
+        - texto
+
+securitySchemes:
+  authUser:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
