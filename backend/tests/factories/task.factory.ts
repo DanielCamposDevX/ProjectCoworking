@@ -1,4 +1,4 @@
-import { prisma } from 'config/database';
+import { prisma } from '../../src/config/database';
 
 export async function createFakeTask(userId: number, projectId: number) {
    return await prisma.task.create({

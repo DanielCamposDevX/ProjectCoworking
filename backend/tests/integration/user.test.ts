@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
-import app, { close, init } from 'app';
 import 'dotenv/config';
 import httpStatus from 'http-status';
 import jwt from 'jsonwebtoken';
 import supertest from 'supertest';
+import app, { close, init } from '../../src/app';
 import { createUserData, loginUserData } from '../../src/types/user-types';
 import { createFakeSession, createFakeUser } from '../factories/user.factory';
 import { cleanDb } from '../helpers';

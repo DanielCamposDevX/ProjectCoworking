@@ -7,6 +7,10 @@
       "moduleResolution": "Node",
       "baseUrl": "src"
    },
+   "include": [
+      "src/**/*",
+      "src/swagger.yaml" 
+   ],
    "ts-node": {
       "esm": true
    }

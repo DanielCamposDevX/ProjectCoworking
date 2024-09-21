@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
-import app, { close, init } from 'app';
-import { prisma } from 'config/database';
 import 'dotenv/config';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
+import app, { close, init } from '../../src/app';
+import { prisma } from '../../src/config/database';
 import { createFakeProject } from '../factories/project.factory';
 import { createFakeSession, createFakeUser } from '../factories/user.factory';
 import { cleanDb } from '../helpers';

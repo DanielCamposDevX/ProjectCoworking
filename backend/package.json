@@ -4,8 +4,8 @@
    "description": "",
    "main": "index.js",
    "scripts": {
-      "build": "tsc",
-      "start": "node dist/src/server.js",
+      "build": "tsc && node scripts/copyswagger.js",
+      "start": "node dist/server.js",
       "dev": "tsx watch ./src/server.ts",
       "test": "jest --runInBand",
       "clear": "jest --clearCache",
