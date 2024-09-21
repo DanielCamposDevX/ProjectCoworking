@@ -8,6 +8,7 @@ import { parse } from 'yaml';
 import { connectDb, disconnectDB } from './config/database.js';
 import errorHandler from './middlewares/error-handling.js';
 import IndexRouter from './routes/index.routes.js';
+import { io } from './server.js';
 
 const app = express();
 
@@ -35,6 +36,7 @@ export async function init(): Promise<Express> {
 }
 
 export async function close(): Promise<void> {
+   io.close();
    await disconnectDB();
 }
 

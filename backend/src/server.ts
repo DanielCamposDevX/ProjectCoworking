@@ -7,16 +7,12 @@ const httpServer = createServer(app);
 const io = new SocketServer(httpServer, { cors: { origin: '*' } });
 
 io.on('connection', (socket) => {
-   console.log('Um cliente conectado:', socket.id);
    socket.emit('log', 'Você está conectado!');
    socket.on('joinRoom', async (room) => {
-      console.log('cliente entrou na sala:', room);
       await socket.join(`${room}`);
    });
 
-   socket.on('disconnect', () => {
-      console.log('Cliente desconectado:', socket.id);
-   });
+   socket.on('disconnect', () => {});
 });
 
 init()
