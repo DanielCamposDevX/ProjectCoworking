@@ -21,9 +21,13 @@ async function createLog(userId: number, projectId: number, action: string) {
          },
       },
    });
-   newLog.projeto.usuarios.forEach((user) =>
-      io.to(user.id.toString()).emit('log', newLog),
-   );
+   newLog.projeto.usuarios.forEach((user) => {
+      io.to(user.id.toString()).emit('log', {
+         acao: action,
+         data: new Date(),
+      });
+      console.log('Enviando log para o usuário:', user.id);
+   });
 
    return newLog;
 }

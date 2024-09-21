@@ -168,6 +168,11 @@ async function createProject(data: projectType, userId: number) {
       data: {
          ...data,
          created_by: userId,
+         usuarios: {
+            connect: {
+               id: userId,
+            },
+         },
       },
       include: {
          creator: {
