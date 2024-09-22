@@ -5,8 +5,6 @@ import DashFilters from '@/components/dashFilters';
 import Header from '@/components/default/header';
 import Logs from '@/components/logs';
 import { ChartContainer } from '@/components/ui/chart';
-import { useAuth } from '@/context/AuthContext';
-import { logsType } from '@/types/logs-type';
 import { paramsType } from '@/types/params-type';
 import { motion } from 'framer-motion';
 import {
@@ -16,7 +14,7 @@ import {
   FolderOpen,
   Loader2,
 } from 'lucide-react';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -28,38 +26,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import io from 'socket.io-client';
-
-const socket = io(process.env.NEXT_PUBLIC_API_URL, {
-  reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
-});
 
 export default function Dash() {
   const [params, setParams] = useState<paramsType>({ limit: 10, page: 1 });
-  const [notifications, setNotifications] = useState<logsType[]>([]);
-
-  const { userId } = useAuth();
-
-  useEffect(() => {
-    socket.connect();
-    console.log('connecting');
-    socket.on('connect', () => {
-      socket.emit('joinRoom', userId);
-    });
-
-    socket.on('log', (log: logsType) => {
-      console.log(log);
-      setNotifications(prev => [log, ...prev]);
-    });
-
-    return () => {
-      socket.off('connect');
-      socket.off('log');
-      socket.disconnect();
-    };
-  }, [userId]);
 
   const { index } = useDashboard(params);
   const dashboardData = index.data;
@@ -182,7 +151,7 @@ export default function Dash() {
                   </PieChart>
                 </ChartContainer>
               </div>
-              <Logs logs={notifications} />
+              <Logs logs={dashboardData.logsRecentes} />
             </div>
           </div>
         ) : (

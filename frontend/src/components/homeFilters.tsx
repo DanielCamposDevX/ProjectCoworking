@@ -64,6 +64,7 @@ export default function HomeFilters({
         : undefined,
       order: (searchParams.get('order') as paramsType['order']) || 'asc',
       sortBy: (searchParams.get('sortBy') as paramsType['sortBy']) || undefined,
+      userNome: searchParams.get('userNome') || undefined,
     });
   }, [searchParams]);
 
@@ -97,7 +98,19 @@ export default function HomeFilters({
 
     router.push(`?${queryParams.toString()}`, undefined);
 
-    applyFilters(filters);
+    applyFilters({
+      page: filters.page,
+      userId: filters.userId,
+      status: filters.status,
+      data_inicio: filters.data_inicio
+        ? moment(filters.data_inicio).startOf('day').toISOString()
+        : undefined,
+      data_fim: filters.data_fim
+        ? moment(filters.data_fim).endOf('day').toISOString()
+        : undefined,
+      order: filters.order || 'asc',
+      sortBy: filters.sortBy || undefined,
+    });
     setOpen(false);
   };
 
@@ -158,11 +171,11 @@ export default function HomeFilters({
               Usuário
             </label>
             <DataSelect
-              placeholder="Pesquisar usuários..."
+              placeholder={filters.userNome || 'Pesquisar usuários...'}
               url="/api/usuarios"
-              setValue={value => {
-                handleFilterChange('userId', value);
-              }}
+              setValue={value => handleFilterChange('userId', value)}
+              setHolder={value => setFilters({ ...filters, userNome: value })}
+              value={filters.userId?.toString()}
             />
           </div>
 

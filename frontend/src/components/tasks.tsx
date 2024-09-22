@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ClipboardList, LoaderCircle, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { Pagination } from './pagination';
 import TaskCard from './taskCard';
 import {
@@ -58,13 +59,20 @@ export default function TaskSection({ projectId }: { projectId: number }) {
 
   const handleAddTask = (taskData: createTaskFormData) => {
     setLoading(true);
-    api.post(`/api/projetos/${projectId}/tarefas`, taskData).then(() => {
-      setLoading(false);
-      setOpen(false);
-      reset();
-      setParams({ ...params, page: 1 });
-      index.refetch();
-    });
+    api
+      .post(`/api/projetos/${projectId}/tarefas`, taskData)
+      .then(() => {
+        setLoading(false);
+        setOpen(false);
+        reset();
+        setParams({ ...params, page: 1 });
+        index.refetch();
+      })
+      .catch(err => {
+        setLoading(false);
+        console.log(err);
+        toast.error(err.response.data ?? 'Erro ao criar tarefa');
+      });
   };
 
   const handlePageChange = (page: number) => {

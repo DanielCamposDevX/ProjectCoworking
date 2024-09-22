@@ -35,6 +35,7 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<createProjectFormData>({
     resolver: zodResolver(createProjectFormSchema),
@@ -54,6 +55,8 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
     })
       .then(() => {
         toast.success('Projeto criado com sucesso');
+        reset();
+        setOpen(false);
         get();
       })
       .catch(err => {

@@ -51,6 +51,7 @@ export default function UpdateProjectForm({
     resolver: zodResolver(updateProjectFormSchema),
   });
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (project) {
@@ -74,6 +75,7 @@ export default function UpdateProjectForm({
       .put(`/api/projetos/${project.id}`, data)
       .then(() => {
         toast.success('Projeto atualizado com sucesso');
+        setOpen(false);
         get();
         setLoading(false);
       })
@@ -86,7 +88,7 @@ export default function UpdateProjectForm({
   const status = useWatch({ name: 'status', control });
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger onClick={e => e.stopPropagation()}>
         <Button variant={'ghost'} className="p-2 rounded-full">
           <Pencil className="h-5 w-5" />

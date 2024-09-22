@@ -10,13 +10,10 @@ import {
 
 export interface NotificationsContextType {
   notifications: logsType[];
-  handleNotificationChange: (
-    notifications: logsType[],
-    newNotificationCount: number,
-  ) => void;
-  newNotificationCount: number;
+  handleNotificationChange: (notifications: logsType[]) => void;
   setNotifications: (notifications: logsType[]) => void;
-  cleanNotificationsCounter: () => void;
+  newNotification: boolean;
+  setNewNotification: (newNotification: boolean) => void;
 }
 
 const NotificationsContext = createContext<
@@ -29,34 +26,23 @@ export const NotificationsProvider = ({
   children: ReactNode;
 }) => {
   const [notifications, setNotifications] = useState<logsType[]>([]);
-  const [newNotificationCount, setNewNotificationCount] = useState(0);
+  const [newNotification, setNewNotification] = useState(false);
 
-  const handleNotificationChange = (
-    notifications: logsType[],
-    newNotificationCount: number,
-  ) => {
-    setNotifications(notifications);
-    localStorage.setItem('notifications', JSON.stringify(notifications));
-    setNewNotificationCount(newNotificationCount);
-    localStorage.setItem(
-      'newNotificationCount',
-      JSON.stringify(newNotificationCount),
-    );
-  };
+  const handleNotificationChange = (newNotifications: logsType[]) => {
+    setNotifications(prevNotifications => [
+      ...prevNotifications,
+      ...newNotifications,
+    ]);
+    setNewNotification(true);
 
-  const cleanNotificationsCounter = () => {
-    localStorage.setItem('newNotificationCount', JSON.stringify(0));
-    setNewNotificationCount(0);
+    const updatedNotifications = [...notifications, ...newNotifications];
+    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
   };
 
   useEffect(() => {
     localStorage.getItem('notifications') &&
       setNotifications(
         JSON.parse(localStorage.getItem('notifications') || '[]'),
-      );
-    localStorage.getItem('newNotificationCount') &&
-      setNewNotificationCount(
-        JSON.parse(localStorage.getItem('newNotificationCount') || '0'),
       );
   }, []);
 
@@ -65,9 +51,9 @@ export const NotificationsProvider = ({
       value={{
         notifications,
         handleNotificationChange,
-        newNotificationCount,
         setNotifications,
-        cleanNotificationsCounter,
+        newNotification,
+        setNewNotification,
       }}
     >
       {children}
