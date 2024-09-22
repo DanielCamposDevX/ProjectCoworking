@@ -11,9 +11,7 @@ io.on('connection', (socket) => {
       await socket.join(room);
    });
 
-   socket.on('disconnect', () => {
-      console.log('Um cliente se desconectou:', socket.id);
-   });
+   socket.on('disconnect', () => {});
 });
 
 init()

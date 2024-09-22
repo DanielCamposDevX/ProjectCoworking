@@ -27,7 +27,6 @@ async function createLog(userId: number, projectId: number, action: string) {
          acao: action,
          data: new Date(),
       });
-      console.log('Enviando log para o usuário:', user.id);
    });
 
    return newLog;

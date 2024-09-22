@@ -44,21 +44,41 @@ async function createProject(data: projectType, userId: number) {
 }
 
 async function processCSV(filePath: string, userId: number) {
-   return new Promise((resolve, reject) => {
-      const projetos: projectType[] = [];
+   const projetos: projectType[] = [];
 
+   return new Promise<void>((resolve, reject) => {
       createReadStream(filePath)
          .pipe(csvParser({ separator: ';' }))
          .on('data', (row) => {
-            const projeto = {
+            if (!row.nome || !row.data_inicio || !row.status) {
+               reject(
+                  errors.unprocEntity(
+                     'A planilha contém campos obrigatórios não preenchidos',
+                  ),
+               );
+               return;
+            }
+
+            const dataInicio = moment(row.data_inicio, 'YYYY-MM-DD', true);
+            if (!dataInicio.isValid()) {
+               reject(
+                  errors.unprocEntity(
+                     'A planilha contém campos de data inválidos',
+                  ),
+               );
+               return;
+            }
+
+            const projeto: projectType = {
                nome: row.nome,
                descricao: row.descricao || null,
-               data_inicio: moment(row.data_inicio, 'YYYY-MM-DD').toDate(),
+               data_inicio: dataInicio.toDate(),
                data_fim: row.data_fim
-                  ? moment(row.data_fim, 'YYYY-MM-DD').toDate()
+                  ? moment(row.data_fim, 'YYYY-MM-DD', true).toDate()
                   : null,
                status: statusParser(row.status),
             };
+
             projetos.push(projeto);
          })
          .on('end', async () => {
@@ -69,13 +89,13 @@ async function processCSV(filePath: string, userId: number) {
                   ),
                );
                deleteCSVFile(filePath);
-               resolve({ message: 'CSV processado com sucesso', projetos });
+               resolve();
             } catch (error) {
-               reject(error);
+               reject(errors.unprocEntity(error.message));
             }
          })
          .on('error', (error) => {
-            reject(error);
+            reject(errors.unprocEntity(error.message));
          });
    });
 }
