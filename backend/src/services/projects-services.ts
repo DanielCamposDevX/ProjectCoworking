@@ -43,30 +43,47 @@ async function createProject(data: projectType, userId: number) {
    return project;
 }
 
-async function processCSV(filePath: string, userId: number) {
+async function processCSV(
+   filePath: string,
+   userId: number,
+): Promise<{ message: string; projetos: projectType[] }> {
    const projetos: projectType[] = [];
+   let linhaAtual = 0;
 
-   return new Promise<void>((resolve, reject) => {
+   return new Promise((resolve, reject) => {
       createReadStream(filePath)
          .pipe(csvParser({ separator: ';' }))
          .on('data', (row) => {
+            linhaAtual += 1;
+
             if (!row.nome || !row.data_inicio || !row.status) {
-               reject(
+               return reject(
                   errors.unprocEntity(
-                     'A planilha contém campos obrigatórios não preenchidos',
+                     `Linha ${linhaAtual}: Campos obrigatórios não preenchidos`,
                   ),
                );
-               return;
             }
 
             const dataInicio = moment(row.data_inicio, 'YYYY-MM-DD', true);
             if (!dataInicio.isValid()) {
-               reject(
+               return reject(
                   errors.unprocEntity(
-                     'A planilha contém campos de data inválidos',
+                     `Linha ${linhaAtual}: A planilha contém campos de data inválidos`,
                   ),
                );
-               return;
+            }
+
+            if (row.data_inicio && row.data_fim) {
+               const dateInicio = new Date(row.data_inicio);
+               const dataFim = new Date(row.data_fim);
+
+               if (dateInicio > dataFim) {
+                  return reject(
+                     errors.unprocEntity(
+                        `Linha ${linhaAtual}:Data de início não pode ser maior que a data de fim`,
+                     ),
+                  );
+               }
             }
 
             const projeto: projectType = {
@@ -89,7 +106,7 @@ async function processCSV(filePath: string, userId: number) {
                   ),
                );
                deleteCSVFile(filePath);
-               resolve();
+               resolve({ message: 'CSV processado com sucesso', projetos });
             } catch (error) {
                reject(errors.unprocEntity(error.message));
             }
