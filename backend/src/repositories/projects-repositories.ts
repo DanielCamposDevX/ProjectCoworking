@@ -35,7 +35,11 @@ async function getDashboard(userId: number, query?: paramsType) {
             : {}),
          ...(queryUserId
             ? {
-                 created_by: queryUserId,
+                 usuarios: {
+                    some: {
+                       id: queryUserId,
+                    },
+                 },
               }
             : {}),
       },
