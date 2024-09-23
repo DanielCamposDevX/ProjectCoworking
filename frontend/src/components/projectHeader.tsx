@@ -57,13 +57,13 @@ export default function ProjectHeader({
   const { ConfirmationDialog, confirm } = useConfirmationDialog();
 
   return (
-    <header className="shadow-lg rounded-lg border md:mt-0 mt-10">
+    <header className="shadow-lg rounded-lg border md:mt-0 mt-10 overflow-hidden">
       <section className="flex  justify-between items-start  py-10 px-6">
         <div className="flex flex-col gap-6">
           <h1 className="md:text-3xl text-lg font-bold text-primary">
             {project?.nome}
           </h1>
-          <label className="block text-md font-medium text-gray-700">
+          <label className="block text-md font-medium text-gray-700 ">
             {project?.descricao}
           </label>
         </div>

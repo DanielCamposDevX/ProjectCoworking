@@ -67,7 +67,7 @@ export default function ProjectCard({
       onClick={() => {
         router.push(`/project/${project.id}`);
       }}
-      className="w-[300px] bg-card min-h-[200px] rounded-3xl p-2 flex flex-col gap-2 hover:cursor-pointer transition-all hover:shadow-md hover:shadow-blue-100"
+      className="w-[300px] bg-card min-h-[200px] rounded-3xl p-2 flex flex-col gap-2 hover:cursor-pointer transition-all hover:shadow-md hover:shadow-blue-100 overflow-hidden"
     >
       <CardHeader className="flex flex-col justify-center items-center h-1/4  border-b border-primary/10 shadow-sm relative">
         <CardTitle className="text-center text-lg font-bold text-primary flex relative w-full justify-between items-center">
@@ -103,9 +103,11 @@ export default function ProjectCard({
         </p>
       </CardContent>
 
-      <CardFooter className="flex flex-col justify-start items-start text-sm gap-2 h-1/4">
+      <CardFooter className="flex flex-col justify-start items-start text-sm gap-2 h-1/4 ">
         <p className="text-justify">Descrição:</p>
-        <p className="text-justify">{project.descricao}</p>
+        <p className="text-justify overflow-hidden overflow-ellipsis line-clamp-3">
+          {project.descricao}
+        </p>
       </CardFooter>
       <div className="w-full flex justify-center mt-4 mb-4">
         <Badge
