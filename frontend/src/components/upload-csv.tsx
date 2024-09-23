@@ -1,6 +1,7 @@
 import { api } from '@/config/api';
 import { Loader2 } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Button } from './ui/button';
 
 export default function UploadCsvButton({ get }: { get: () => void }) {
@@ -32,7 +33,10 @@ export default function UploadCsvButton({ get }: { get: () => void }) {
 
       console.log('Arquivo enviado com sucesso:', response.data);
     } catch (error) {
-      console.error('Erro ao enviar arquivo:', error);
+      toast.error(
+        (error as { response: { data: string } }).response.data ??
+          'Erro ao enviar arquivo',
+      );
     }
   };
 

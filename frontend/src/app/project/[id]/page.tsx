@@ -26,10 +26,10 @@ export default function ProjectPage() {
       [key: string]: Array<{ id: number; papel: string; nome: string }>;
     } = {};
     project?.usuarios.forEach(usuario => {
-      if (!groups[usuario.papel]) {
-        groups[usuario.papel] = [];
+      if (!groups[usuario.papel.toLowerCase()]) {
+        groups[usuario.papel.toLowerCase()] = [];
       }
-      groups[usuario.papel].push(usuario);
+      groups[usuario.papel.toLowerCase()].push(usuario);
     });
     return groups;
   };
@@ -76,12 +76,14 @@ export default function ProjectPage() {
                 {Object.entries(userGroups).length > 0 ? (
                   Object.entries(userGroups).map(([role, usuarios]) => (
                     <div key={role} className="mt-5">
-                      <h4 className="font-bold text-md">{role}s:</h4>
+                      <h4 className="font-bold text-md">
+                        {role.charAt(0).toUpperCase() + role.slice(1)}:
+                      </h4>
                       <div className="flex flex-col">
                         {usuarios.map(usuario => (
                           <div
                             key={usuario.id}
-                            className="flex items-center my-2 gap-3"
+                            className="flex items-center my-2 gap-3 border p-2 rounded-xl shadow-md"
                           >
                             <Avatar>
                               <AvatarImage

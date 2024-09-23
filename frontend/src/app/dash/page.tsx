@@ -108,7 +108,7 @@ export default function Dash() {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-10">
-              <div className="p-8 border rounded-xl shadow-lg">
+              <div className="p-2 md:p-8 border rounded-xl shadow-lg">
                 <h2 className="text-lg font-semibold mb-3">
                   Gráfico de Tarefas por Projeto
                 </h2>
@@ -123,7 +123,7 @@ export default function Dash() {
                 </ChartContainer>
               </div>
 
-              <div className="p-8 border rounded-xl shadow-lg">
+              <div className="p-2 md:p-8 border rounded-xl shadow-lg">
                 <h2 className="text-lg font-semibold mb-3">
                   Distribuição dos Status dos Projetos
                 </h2>
@@ -135,7 +135,6 @@ export default function Dash() {
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      outerRadius={80}
                       fill="#8884d8"
                       label
                     >

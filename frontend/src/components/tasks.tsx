@@ -46,6 +46,9 @@ export default function TaskSection({ projectId }: { projectId: number }) {
     formState: { errors },
     reset,
   } = useForm<createTaskFormData>({
+    defaultValues: {
+      status: 'PENDENTE',
+    },
     resolver: zodResolver(createTaskFormSchema),
   });
 

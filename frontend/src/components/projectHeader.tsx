@@ -57,7 +57,7 @@ export default function ProjectHeader({
   const { ConfirmationDialog, confirm } = useConfirmationDialog();
 
   return (
-    <header className="shadow-lg rounded-lg border">
+    <header className="shadow-lg rounded-lg border md:mt-0 mt-10">
       <section className="flex  justify-between items-start  py-10 px-6">
         <div className="flex flex-col gap-6">
           <h1 className="md:text-3xl text-lg font-bold text-primary">
@@ -84,9 +84,9 @@ export default function ProjectHeader({
         </div>
       </section>
 
-      <section className="flex justify-around py-4 border-t">
+      <section className="flex justify-around items-center md:items-start py-4 border-t flex-col gap-4 md:gap-0 md:flex-row">
         <h3 className="text-accent-foreground">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="hidden md:block text-sm font-medium text-gray-700 mb-2">
             Status
           </label>
           <Badge
@@ -94,26 +94,26 @@ export default function ProjectHeader({
               backgroundColor: projectStatus[project.status].color,
               color: projectStatus[project.status].textColor,
             }}
-            className="text-justify justify-self-end"
+            className="text-justify justify-self-end  text-sm"
           >
             {projectStatus[project.status].text}
           </Badge>
         </h3>
 
-        <div className="w-[1px] bg-border" />
+        <div className="w-full h-[1px] md:h-full  md:w-[1px] bg-border" />
 
-        <div className="flex flex-col gap-2">
-          <label className="block text-sm font-medium text-gray-700">
+        <div className="flex flex-col gap-2 text-xs md:text-base">
+          <label className="block text-xs md:text-sm font-medium text-gray-700">
             Data de início
           </label>
           {moment(project?.data_inicio).format('DD/MM/YYYY')}
         </div>
         {project.data_fim && (
           <>
-            <div className="w-[1px] bg-border" />
+            <div className="w-full h-[1px] md:h-full  md:w-[1px] bg-border" />
 
-            <div className="flex flex-col gap-2">
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="flex flex-col gap-2 text-xs md:text-base">
+              <label className="block text-xs md:text-sm font-medium text-gray-700">
                 Data final
               </label>
               {moment(project?.data_fim).format('DD/MM/YYYY')}

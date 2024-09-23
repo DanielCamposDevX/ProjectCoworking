@@ -174,6 +174,7 @@ export default function LinkProjectUserForm({
                   <Button
                     variant={'ghost'}
                     className="p-1 rounded-full "
+                    disabled={project.created_by === user.id}
                     onClick={e => {
                       e.stopPropagation();
                       deleteProjectUser(user.id);
