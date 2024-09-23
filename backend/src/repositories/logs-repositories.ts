@@ -35,21 +35,30 @@ async function createLog(userId: number, projectId: number, action: string) {
 async function getLogs(userId: number, query?: paramsType) {
    const { limit = 5 } = query || {};
 
-   const logs = await prisma.logs.findMany({
-      orderBy: {
-         data: 'desc',
-      },
-      take: limit,
+   const projects = await prisma.projeto.findMany({
       where: {
-         usuarioId: userId,
+         usuarios: {
+            some: {
+               id: userId,
+            },
+         },
       },
       select: {
-         data: true,
-         acao: true,
+         Logs: {
+            orderBy: {
+               data: 'desc',
+            },
+            take: limit,
+         },
       },
    });
 
-   return logs;
+   const allLogs = projects.flatMap((p) => p.Logs);
+   const sortedLogs = allLogs.sort(
+      (a, b) => b.data.getTime() - a.data.getTime(),
+   );
+
+   return sortedLogs.slice(0, limit);
 }
 
 export const logsRepositories = { getLogs, createLog };

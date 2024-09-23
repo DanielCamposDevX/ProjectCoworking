@@ -51,6 +51,8 @@ async function getDashboard(userId: number, query?: paramsType) {
       },
    });
 
+   const allLogs = projetos.flatMap((p) => p.Logs);
+
    const dashboard = {
       totalProjetos: projetos.length,
       projetosEmAndamento: projetos.filter((p) => p.status === 'EM_ANDAMENTO')
@@ -59,7 +61,9 @@ async function getDashboard(userId: number, query?: paramsType) {
       projetosConcluidos: projetos.filter((p) => p.status === 'CONCLUIDO')
          .length,
       tarefasPorProjeto: projetos.map((projeto) => projeto.Task),
-      logsRecentes: projetos.flatMap((p) => p.Logs).slice(-5),
+      logsRecentes: allLogs
+         .sort((a, b) => b.data.getTime() - a.data.getTime())
+         .slice(0, 5),
    };
 
    return dashboard;
