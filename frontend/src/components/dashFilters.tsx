@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { paramsType } from '@/types/params-type';
-import moment from 'moment';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import DataSelect from './dataSelect';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { paramsType } from "@/types/params-type";
+import moment from "moment";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import DataSelect from "./dataSelect";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from "./ui/dialog";
+import { TemplateButton } from "./templates/Button";
 
 export default function DashFilters({
   applyFilters,
@@ -30,23 +31,23 @@ export default function DashFilters({
 
   useEffect(() => {
     const userId =
-      searchParams.get('userId') !== 'none'
-        ? searchParams.get('userId')
+      searchParams.get("userId") !== "none"
+        ? searchParams.get("userId")
         : undefined;
-    const status = searchParams.get('status') || undefined;
-    const data_inicio = searchParams.get('data_inicio') || undefined;
-    const data_fim = searchParams.get('data_fim') || undefined;
+    const status = searchParams.get("status") || undefined;
+    const data_inicio = searchParams.get("data_inicio") || undefined;
+    const data_fim = searchParams.get("data_fim") || undefined;
 
     const newFilters = {
       userId: userId ? Number(userId) : undefined,
-      status: status as paramsType['status'],
+      status: status as paramsType["status"],
       data_inicio: data_inicio
-        ? moment(data_inicio).startOf('day').toISOString()
+        ? moment(data_inicio).startOf("day").toISOString()
         : undefined,
       data_fim: data_fim
-        ? moment(data_fim).endOf('day').toISOString()
+        ? moment(data_fim).endOf("day").toISOString()
         : undefined,
-      userNome: searchParams.get('userNome') || undefined,
+      userNome: searchParams.get("userNome") || undefined,
     };
 
     setFilters(newFilters);
@@ -59,7 +60,7 @@ export default function DashFilters({
   }, [searchParams]);
 
   const handleFilterChange = (key: keyof paramsType, value: unknown) => {
-    setFilters(prev => {
+    setFilters((prev) => {
       const newFilters = { ...prev };
       if (value === undefined || value === null) {
         delete newFilters[key];
@@ -90,17 +91,10 @@ export default function DashFilters({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 text-base px-8 py-6 rounded-full bg-white mb-4">
-          Filtros
-        </Button>
+        <TemplateButton.Primary text="Filtros" />
       </DialogTrigger>
       <Link href="/home">
-        <Button
-          className="gap-2 text-base px-8 py-6 rounded-full bg-white border ml-4 mb-4"
-          variant={'secondary'}
-        >
-          Meus projetos
-        </Button>
+        <TemplateButton.Secondary text="Meus projetos" className="ml-4 mb-4" />
       </Link>
 
       <DialogContent className="sm:max-w-[425px] bg-white p-10">
@@ -120,10 +114,10 @@ export default function DashFilters({
               Usuário
             </label>
             <DataSelect
-              placeholder={filters.userNome || 'Pesquisar usuários...'}
+              placeholder={filters.userNome || "Pesquisar usuários..."}
               url="/api/usuarios"
-              setValue={value => handleFilterChange('userId', value)}
-              setHolder={value => setFilters({ ...filters, userNome: value })}
+              setValue={(value) => handleFilterChange("userId", value)}
+              setHolder={(value) => setFilters({ ...filters, userNome: value })}
               value={filters.userId?.toString()}
             />
           </div>
@@ -136,13 +130,13 @@ export default function DashFilters({
               type="date"
               value={
                 filters.data_inicio
-                  ? moment(filters.data_inicio).format('YYYY-MM-DD')
-                  : ''
+                  ? moment(filters.data_inicio).format("YYYY-MM-DD")
+                  : ""
               }
-              onChange={e =>
+              onChange={(e) =>
                 handleFilterChange(
-                  'data_inicio',
-                  moment(e.target.value).startOf('day').toISOString(),
+                  "data_inicio",
+                  moment(e.target.value).startOf("day").toISOString()
                 )
               }
             />
@@ -156,13 +150,13 @@ export default function DashFilters({
               type="date"
               value={
                 filters.data_fim
-                  ? moment(filters.data_fim).format('YYYY-MM-DD')
-                  : ''
+                  ? moment(filters.data_fim).format("YYYY-MM-DD")
+                  : ""
               }
-              onChange={e =>
+              onChange={(e) =>
                 handleFilterChange(
-                  'data_fim',
-                  moment(e.target.value).endOf('day').toISOString(),
+                  "data_fim",
+                  moment(e.target.value).endOf("day").toISOString()
                 )
               }
             />
@@ -171,14 +165,14 @@ export default function DashFilters({
           <DialogFooter className="flex justify-center items-center gap-2 w-full">
             <Button
               className="z-50 bg-white border text-base px-12 py-6 rounded-full mt-4"
-              variant={'secondary'}
+              variant={"secondary"}
               onClick={() => setOpen(false)}
             >
               Cancelar
             </Button>
             <Button
               className="z-50 text-white text-base px-8 py-6 rounded-full mt-4"
-              variant={'default'}
+              variant={"default"}
               onClick={handleApplyFilters}
             >
               Aplicar Filtros

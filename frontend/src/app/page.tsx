@@ -1,7 +1,7 @@
-import SideImage from '@/components/side-image';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import LoginForm from '@/forms/login-form';
-import Transition from '../components/default/transitions';
+import SideImage from "@/components/side-image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import LoginForm from "@/forms/login-form";
+import Transition from "../components/default/transitions";
 
 export default function LoginPage() {
   return (
@@ -20,10 +20,10 @@ export default function LoginPage() {
           />
           <Card className="w-full lg:w-1/2 h-full rounded-none rounded-ss-[80px] shadow-none flex flex-col justify-center items-center border-0 z-40 bg-[#ffffff] ">
             <CardHeader className="mb-5 flex justify-center items-center">
-              <CardTitle className="text-accent-foreground text-xl">
+              <CardTitle className="text-accent-foreground text-lg">
                 Bem vindo de volta!
               </CardTitle>
-              <CardTitle className="text-accent-foreground text-lg font-medium">
+              <CardTitle className="text-accent-foreground text-sm font-normal">
                 Para começar faça login
               </CardTitle>
             </CardHeader>

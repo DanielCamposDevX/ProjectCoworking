@@ -1,20 +1,20 @@
-'use client';
-import { useDashboard } from '@/api/callers/dash';
-import DashCard from '@/components/dashCard';
-import DashFilters from '@/components/dashFilters';
-import Header from '@/components/default/header';
-import Logs from '@/components/logs';
-import { ChartContainer } from '@/components/ui/chart';
-import { paramsType } from '@/types/params-type';
-import { motion } from 'framer-motion';
+"use client";
+import { useDashboard } from "@/api/callers/dash";
+import DashCard from "@/components/dashCard";
+import DashFilters from "@/components/dashFilters";
+import Header from "@/components/default/header";
+import Logs from "@/components/logs";
+import { ChartContainer } from "@/components/ui/chart";
+import { paramsType } from "@/types/params-type";
+import { motion } from "framer-motion";
 import {
   AlarmClock,
   AlertCircle,
   FolderCheck,
   FolderOpen,
   Loader2,
-} from 'lucide-react';
-import { Suspense, useState } from 'react';
+} from "lucide-react";
+import { Suspense, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -25,7 +25,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from "recharts";
 
 export default function Dash() {
   const [params, setParams] = useState<paramsType>({ limit: 10, page: 1 });
@@ -37,7 +37,7 @@ export default function Dash() {
     dashboardData?.tarefasPorProjeto.flat().reduce((acc, task) => {
       const projectName = task.projeto.nome;
 
-      const existingProject = acc.find(item => item.name === projectName);
+      const existingProject = acc.find((item) => item.name === projectName);
 
       if (existingProject) {
         existingProject.quantidade += 1;
@@ -49,21 +49,21 @@ export default function Dash() {
     }, [] as { name: string; quantidade: number }[]) || [];
 
   const pieChartData = [
-    { name: 'Em Andamento', value: dashboardData?.projetosEmAndamento },
-    { name: 'Pendentes', value: dashboardData?.projetosPendentes },
-    { name: 'Concluídos', value: dashboardData?.projetosConcluidos },
-  ].filter(item => item.value || 0 > 0);
+    { name: "Em Andamento", value: dashboardData?.projetosEmAndamento },
+    { name: "Pendentes", value: dashboardData?.projetosPendentes },
+    { name: "Concluídos", value: dashboardData?.projetosConcluidos },
+  ].filter((item) => item.value || 0 > 0);
 
   return (
     <div
-      className={`min-h-screen w-full flex flex-col items-center bg-cover bg-no-repeat`}
+      className={`min-h-screen w-full flex flex-col items-center bg-cover bg-no-repeat text-muted-foreground`}
       style={{ backgroundImage: `url('/background.jpg')` }}
     >
       <Header />
       <motion.main
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ ease: 'easeInOut', duration: 0.75 }}
+        transition={{ ease: "easeInOut", duration: 0.75 }}
         className="mt-16 flex w-10/12 flex-col gap-10 p-10 items-center relative bg-white rounded-3xl"
       >
         {index.isFetching ? (
@@ -74,7 +74,7 @@ export default function Dash() {
               <div className="flex">
                 <Suspense>
                   <DashFilters
-                    applyFilters={filter => {
+                    applyFilters={(filter) => {
                       setParams(filter as paramsType);
                     }}
                   />
@@ -141,7 +141,7 @@ export default function Dash() {
                       {pieChartData.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={['#eab308', '#ef4444', '#16a34a'][index % 3]}
+                          fill={["#eab308", "#ef4444", "#16a34a"][index % 3]}
                         />
                       ))}
                     </Pie>

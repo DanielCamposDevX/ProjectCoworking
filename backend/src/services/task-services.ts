@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { generationPrompt, openai } from '../config/openai.js';
+import { generationPrompt } from '../config/openai.js';
 import { errors } from '../errors/errors.js';
 import { logsRepositories } from '../repositories/logs-repositories.js';
 import { projectsRepositories } from '../repositories/projects-repositories.js';
@@ -94,23 +94,14 @@ async function generateTasks(projectId: number) {
       throw errors.notFound('Projeto não encontrado');
    }
    const prompt = generationPrompt(project);
-   const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 150,
-      temperature: 0.7,
-   });
-   const result = JSON.parse(response.choices[0].message.content.trim());
+   const response = "Response"
+
+   const result = JSON.parse(response.trim());
 
    if (!result.tarefas || !result.comentarios) {
-      const newResponse = await openai.chat.completions.create({
-         model: 'gpt-4o-mini',
-         messages: [{ role: 'user', content: prompt }],
-         max_tokens: 150,
-         temperature: 0.7,
-      });
+      const newResponse = "Response 2"
       const newResult = JSON.parse(
-         newResponse.choices[0].message.content.trim(),
+         newResponse.trim(),
       );
       if (!newResult.tarefas || !newResult.comentarios) {
          throw errors.internalServerError(

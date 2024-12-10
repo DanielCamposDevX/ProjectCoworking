@@ -1,4 +1,5 @@
-'use client';
+"use client";
+import { TemplateButton } from "@/components/templates/Button";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -7,28 +8,28 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { usePost } from '@/hooks/useApi';
+} from "@/components/ui/select";
+import { usePost } from "@/hooks/useApi";
 import {
   createProjectFormData,
   createProjectFormSchema,
-} from '@/schemas/project-schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertDialogCancel } from '@radix-ui/react-alert-dialog';
-import { LoaderCircle, PlusCircle } from 'lucide-react';
-import moment from 'moment';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+} from "@/schemas/project-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertDialogCancel } from "@radix-ui/react-alert-dialog";
+import { LoaderCircle, PlusCircle } from "lucide-react";
+import moment from "moment";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 export default function CreateProjectForm({ get }: { get: () => void }) {
   const {
@@ -47,32 +48,30 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
 
   const onSubmit = (data: createProjectFormData) => {
     post({
-      url: '/api/projetos',
+      url: "/api/projetos",
       body: {
         ...data,
-        data_inicio: moment(data.data_inicio).startOf('day').toDate(),
+        data_inicio: moment(data.data_inicio).startOf("day").toDate(),
       },
     })
       .then(() => {
-        toast.success('Projeto criado com sucesso');
+        toast.success("Projeto criado com sucesso");
         reset();
         setOpen(false);
         get();
       })
-      .catch(err => {
-        toast.error(err.response.data || 'Erro ao criar projeto');
+      .catch((err) => {
+        toast.error(err.response.data || "Erro ao criar projeto");
       });
   };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button
-          className="gap-2 text-base px-8 py-6 rounded-full bg-white"
-          variant={'secondary'}
-        >
-          Criar novo projeto <PlusCircle className="h-5 w-5" />
-        </Button>
+        <TemplateButton.Secondary
+          text="Criar novo projeto"
+          icon={<PlusCircle className="h-5 w-5" />}
+        />
       </AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-[425px] bg-white p-10">
         <AlertDialogHeader>
@@ -93,7 +92,7 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
             <Input
               id="nome"
               placeholder="Digite o nome do projeto"
-              {...register('nome')}
+              {...register("nome")}
               error={errors?.nome?.message}
             />
           </div>
@@ -108,7 +107,7 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
             <Input
               id="descricao"
               placeholder="Digite uma descrição (opcional)"
-              {...register('descricao')}
+              {...register("descricao")}
               error={errors?.descricao?.message}
             />
           </div>
@@ -123,7 +122,7 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
             <Input
               id="dataInicio"
               type="date"
-              {...register('data_inicio')}
+              {...register("data_inicio")}
               error={errors?.data_inicio?.message}
               required
             />
@@ -138,9 +137,9 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
             </label>
             <Select
               defaultValue=""
-              aria-invalid={errors.status ? 'true' : 'false'}
+              aria-invalid={errors.status ? "true" : "false"}
               required
-              onValueChange={value => setValue('status', value)} // Atualiza o valor no React Hook Form
+              onValueChange={(value) => setValue("status", value)} // Atualiza o valor no React Hook Form
             >
               <SelectTrigger className="w-full border rounded-full py-7 px-3">
                 <SelectValue placeholder="Selecione o status" />
@@ -164,19 +163,19 @@ export default function CreateProjectForm({ get }: { get: () => void }) {
               {loading ? (
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                'Cancelar'
+                "Cancelar"
               )}
             </AlertDialogCancel>
             <Button
               className=" z-50 text-white text-base px-8 py-6 rounded-full mt-4"
-              variant={'default'}
+              variant={"default"}
               disabled={loading}
               type="submit"
             >
               {loading ? (
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                'Criar projeto'
+                "Criar projeto"
               )}
             </Button>
           </AlertDialogFooter>

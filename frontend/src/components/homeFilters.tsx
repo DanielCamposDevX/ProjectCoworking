@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { paramsType } from '@/types/params-type';
-import moment from 'moment';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import DataSelect from './dataSelect';
+} from "@/components/ui/select";
+import { paramsType } from "@/types/params-type";
+import moment from "moment";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import DataSelect from "./dataSelect";
 import {
   Dialog,
   DialogContent,
@@ -22,7 +22,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from './ui/dialog';
+} from "./ui/dialog";
+import { TemplateButton } from "./templates/Button";
 
 export default function HomeFilters({
   applyFilters,
@@ -45,32 +46,32 @@ export default function HomeFilters({
 
   useEffect(() => {
     const userId =
-      searchParams.get('userId') !== 'none'
-        ? searchParams.get('userId')
+      searchParams.get("userId") !== "none"
+        ? searchParams.get("userId")
         : undefined;
-    const status = searchParams.get('status') || undefined;
-    const data_inicio = searchParams.get('data_inicio') || undefined;
-    const data_fim = searchParams.get('data_fim') || undefined;
+    const status = searchParams.get("status") || undefined;
+    const data_inicio = searchParams.get("data_inicio") || undefined;
+    const data_fim = searchParams.get("data_fim") || undefined;
 
     setFilters({
-      page: Number(searchParams.get('page')) || 1,
+      page: Number(searchParams.get("page")) || 1,
       userId: userId ? Number(userId) : undefined,
-      status: status as paramsType['status'],
+      status: status as paramsType["status"],
       data_inicio: data_inicio
-        ? moment(data_inicio).startOf('day').toISOString()
+        ? moment(data_inicio).startOf("day").toISOString()
         : undefined,
       data_fim: data_fim
-        ? moment(data_fim).endOf('day').toISOString()
+        ? moment(data_fim).endOf("day").toISOString()
         : undefined,
-      order: (searchParams.get('order') as paramsType['order']) || 'asc',
-      sortBy: (searchParams.get('sortBy') as paramsType['sortBy']) || undefined,
-      userNome: searchParams.get('userNome') || undefined,
+      order: (searchParams.get("order") as paramsType["order"]) || "asc",
+      sortBy: (searchParams.get("sortBy") as paramsType["sortBy"]) || undefined,
+      userNome: searchParams.get("userNome") || undefined,
     });
   }, [searchParams]);
 
   const handleFilterChange = (key: string, value: string | undefined) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-    if (key === 'order' || key === 'sortBy') {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    if (key === "order" || key === "sortBy") {
       const queryParams = new URLSearchParams();
 
       Object.entries(filters).forEach(([keye, valuee]) => {
@@ -103,12 +104,12 @@ export default function HomeFilters({
       userId: filters.userId,
       status: filters.status,
       data_inicio: filters.data_inicio
-        ? moment(filters.data_inicio).startOf('day').toISOString()
+        ? moment(filters.data_inicio).startOf("day").toISOString()
         : undefined,
       data_fim: filters.data_fim
-        ? moment(filters.data_fim).endOf('day').toISOString()
+        ? moment(filters.data_fim).endOf("day").toISOString()
         : undefined,
-      order: filters.order || 'asc',
+      order: filters.order || "asc",
       sortBy: filters.sortBy || undefined,
     });
     setOpen(false);
@@ -117,14 +118,14 @@ export default function HomeFilters({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <Select
-        value={filters.sortBy || ''}
-        onValueChange={value =>
-          value === 'none'
-            ? handleFilterChange('sortBy', undefined)
-            : handleFilterChange('sortBy', value)
+        value={filters.sortBy || ""}
+        onValueChange={(value) =>
+          value === "none"
+            ? handleFilterChange("sortBy", undefined)
+            : handleFilterChange("sortBy", value)
         }
       >
-        <SelectTrigger className="bg-white border rounded-full w-40 py-6 px-3">
+        <SelectTrigger className="bg-white border rounded-full w-40 h-[39px]  px-3">
           <SelectValue placeholder="Ordenar por" />
         </SelectTrigger>
 
@@ -133,14 +134,14 @@ export default function HomeFilters({
           <Button
             onClick={() =>
               handleFilterChange(
-                'order',
-                filters.order === 'asc' ? 'desc' : 'asc',
+                "order",
+                filters.order === "asc" ? "desc" : "asc"
               )
             }
-            variant={'ghost'}
+            variant={"ghost"}
             className="px-3 py-6 "
           >
-            {filters.order === 'asc' ? 'Menor > Maior' : 'Maior > Menor'}
+            {filters.order === "asc" ? "Menor > Maior" : "Maior > Menor"}
           </Button>
           <SelectItem value="data_inicio">Data de Início</SelectItem>
           <SelectItem value="data_fim">Data de Fim</SelectItem>
@@ -149,9 +150,7 @@ export default function HomeFilters({
       </Select>
 
       <DialogTrigger asChild>
-        <Button className="gap-2 text-base px-8 py-6 rounded-full bg-white">
-          Filtros
-        </Button>
+        <TemplateButton.Primary text="Filtros" />
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px] bg-white p-10">
@@ -171,10 +170,10 @@ export default function HomeFilters({
               Usuário
             </label>
             <DataSelect
-              placeholder={filters.userNome || 'Pesquisar usuários...'}
+              placeholder={filters.userNome || "Pesquisar usuários..."}
               url="/api/usuarios"
-              setValue={value => handleFilterChange('userId', value)}
-              setHolder={value => setFilters({ ...filters, userNome: value })}
+              setValue={(value) => handleFilterChange("userId", value)}
+              setHolder={(value) => setFilters({ ...filters, userNome: value })}
               value={filters.userId?.toString()}
             />
           </div>
@@ -187,11 +186,11 @@ export default function HomeFilters({
               Status
             </label>
             <Select
-              value={filters.status || ''}
-              onValueChange={value =>
-                value === 'none'
-                  ? handleFilterChange('status', undefined)
-                  : handleFilterChange('status', value)
+              value={filters.status || ""}
+              onValueChange={(value) =>
+                value === "none"
+                  ? handleFilterChange("status", undefined)
+                  : handleFilterChange("status", value)
               }
             >
               <SelectTrigger className="w-full border rounded-full py-7 px-3">
@@ -214,13 +213,13 @@ export default function HomeFilters({
               type="date"
               value={
                 filters.data_inicio
-                  ? moment(filters.data_inicio).format('YYYY-MM-DD')
-                  : ''
+                  ? moment(filters.data_inicio).format("YYYY-MM-DD")
+                  : ""
               }
-              onChange={e =>
+              onChange={(e) =>
                 handleFilterChange(
-                  'data_inicio',
-                  moment(e.target.value).toISOString(),
+                  "data_inicio",
+                  moment(e.target.value).toISOString()
                 )
               }
             />
@@ -234,13 +233,13 @@ export default function HomeFilters({
               type="date"
               value={
                 filters.data_fim
-                  ? moment(filters.data_fim).format('YYYY-MM-DD')
-                  : ''
+                  ? moment(filters.data_fim).format("YYYY-MM-DD")
+                  : ""
               }
-              onChange={e =>
+              onChange={(e) =>
                 handleFilterChange(
-                  'data_fim',
-                  moment(e.target.value).toISOString(),
+                  "data_fim",
+                  moment(e.target.value).toISOString()
                 )
               }
             />
@@ -249,14 +248,14 @@ export default function HomeFilters({
           <DialogFooter className="flex justify-center items-center gap-2 w-full">
             <Button
               className="z-50 bg-white border text-base px-12 py-6 rounded-full mt-4"
-              variant={'secondary'}
+              variant={"secondary"}
               onClick={() => setOpen(false)}
             >
               Cancelar
             </Button>
             <Button
               className="z-50 text-white text-base px-8 py-6 rounded-full mt-4"
-              variant={'default'}
+              variant={"default"}
               onClick={handleApplyFilters}
             >
               Aplicar Filtros

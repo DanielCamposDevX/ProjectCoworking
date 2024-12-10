@@ -1,15 +1,14 @@
-'use client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/context/AuthContext';
-import { usePost } from '@/hooks/useApi';
-import { loginUserFormData, loginUserFormSchema } from '@/schemas/user-schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { LoaderCircle } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+"use client";
+import { TemplateButton } from "@/components/templates/Button";
+import { TFormInputs } from "@/components/templates/Form";
+import { useAuth } from "@/context/AuthContext";
+import { usePost } from "@/hooks/useApi";
+import { loginUserFormData, loginUserFormSchema } from "@/schemas/user-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
   const {
@@ -26,20 +25,20 @@ export default function LoginForm() {
   const { setToken, token } = useAuth();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('PM-token');
+    const storedToken = localStorage.getItem("PM-token");
     if (storedToken) {
       setToken(storedToken);
-      router.push('/dash');
+      router.push("/dash");
     }
   }, [token]);
 
   const onSubmit = (data: loginUserFormData) => {
-    post({ url: '/api/auth/login', body: data })
-      .then(res => {
+    post({ url: "/api/auth/login", body: data })
+      .then((res) => {
         setToken(res);
-        router.push('/dash');
+        router.push("/dash");
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
@@ -49,46 +48,37 @@ export default function LoginForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col justify-center items-center"
     >
-      <div className="flex flex-col gap-3">
-        <label className="text-sm">Email</label>
-        <Input
-          type="email"
-          required
-          placeholder="Email"
-          {...register('email', { required: true })}
-          error={errors.email?.message}
-        />
-      </div>
-      <div className="flex flex-col gap-3">
-        <label className="text-sm">Senha</label>
-        <Input
-          type="password"
-          required
-          placeholder="Senha"
-          {...register('senha', { required: true })}
-          error={errors.senha?.message}
-        />
-      </div>
+      <TFormInputs.TextInput
+        type="email"
+        required
+        placeholder="Email"
+        register={register("email", { required: true })}
+        error={errors.email?.message}
+        label="Email"
+      />
+      <TFormInputs.TextInput
+        type="password"
+        required
+        placeholder="Senha"
+        label="Senha"
+        register={register("senha", { required: true })}
+        error={errors.senha?.message}
+      />
       <label className="text-destructive text-sm">{error}</label>
-      <Button
-        className=" z-50 text-white text-base px-14 py-6 rounded-full mt-4"
-        variant={'default'}
-        disabled={loading}
-      >
-        {loading ? (
-          <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          'Login'
-        )}
-      </Button>
-      <Link href={'/signup'}>
-        <Button
-          className="z-50 text-base px-8 py-6 rounded-full mt-4 flex lg:hidden"
-          variant={'outline'}
-        >
-          Criar conta
-        </Button>
-      </Link>
+      <div className="flex flex-col gap-2">
+        <TemplateButton.Primary
+          loading={loading}
+          text="Login"
+          className="w-[120px]"
+        />
+        <Link href={"/signup"}>
+          <TemplateButton.Secondary
+            loading={false}
+            text="Criar conta"
+            className="w-[120px]"
+          />
+        </Link>
+      </div>
     </form>
   );
 }

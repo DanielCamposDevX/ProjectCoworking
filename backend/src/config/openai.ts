@@ -1,9 +1,9 @@
-import { OpenAI } from 'openai';
+
 import { completeprojectType } from 'types/project-type';
 
-export const openai = new OpenAI({
-   apiKey: process.env.OPENAI_API_KEY,
-});
+// export const openai = new OpenAI({
+//    apiKey: "",
+// });
 
 export const generationPrompt = (project: completeprojectType) => {
    return `

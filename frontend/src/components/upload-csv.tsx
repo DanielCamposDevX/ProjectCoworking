@@ -1,15 +1,14 @@
-import { api } from '@/config/api';
-import { Loader2 } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { toast } from 'react-toastify';
-import { Button } from './ui/button';
+import { api } from "@/config/api";
+import { useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { TemplateButton } from "./templates/Button";
 
 export default function UploadCsvButton({ get }: { get: () => void }) {
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (event.target.files && event.target.files.length > 0) {
       setLoading(true);
@@ -22,20 +21,20 @@ export default function UploadCsvButton({ get }: { get: () => void }) {
 
   const handleUpload = async (file: File) => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
 
     try {
-      const response = await api.post('/api/projetos/many', formData, {
+      const response = await api.post("/api/projetos/many", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      console.log('Arquivo enviado com sucesso:', response.data);
+      console.log("Arquivo enviado com sucesso:", response.data);
     } catch (error) {
       toast.error(
         (error as { response: { data: string } }).response.data ??
-          'Erro ao enviar arquivo',
+          "Erro ao enviar arquivo"
       );
     }
   };
@@ -53,20 +52,13 @@ export default function UploadCsvButton({ get }: { get: () => void }) {
         accept=".csv"
         onChange={handleFileChange}
         ref={fileInputRef}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       />
-      <Button
-        className="z-50 text-white text-base px-8 py-6 rounded-full"
-        variant={'default'}
-        disabled={loading}
+      <TemplateButton.Secondary
+        text="Importar CSV"
+        loading={loading}
         onClick={triggerFileInput}
-      >
-        {loading ? (
-          <Loader2 className="animate-spin h-7 w-7" />
-        ) : (
-          'Importar CSV'
-        )}
-      </Button>
+      />
     </div>
   );
 }
